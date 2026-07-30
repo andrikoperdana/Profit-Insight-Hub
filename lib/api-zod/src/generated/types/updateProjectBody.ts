@@ -9,7 +9,8 @@ import type { ProjectKind } from "./projectKind";
 import type { ProjectStatus } from "./projectStatus";
 
 export interface UpdateProjectBody {
-  code?: string;
+  /** SPK / PO Number — pass null to clear */
+  code?: string | null;
   name?: string;
   description?: string;
   clientId?: string;

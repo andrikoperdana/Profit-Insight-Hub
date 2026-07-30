@@ -90,7 +90,7 @@ router.get("/ics", async (req, res) => {
   const [ownProjects, tasks, milestones] = await Promise.all([
     prisma.project.findMany({
       where: {
-        deletedAt: null,
+        deletedAt: null, archivedAt: null,
         OR: [
           { pmId: user.id },
           { salesId: user.id },
@@ -117,7 +117,7 @@ router.get("/ics", async (req, res) => {
     }),
     prisma.billingMilestone.findMany({
       where: {
-        project: { pmId: user.id, deletedAt: null },
+        project: { pmId: user.id, deletedAt: null, archivedAt: null },
         dueDate: { not: null },
         status: { in: ["PLANNED", "INVOICED"] },
       },

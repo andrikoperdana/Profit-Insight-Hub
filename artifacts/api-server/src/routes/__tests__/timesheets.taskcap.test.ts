@@ -47,7 +47,11 @@ vi.mock("@workspace/db", () => ({
       create: (...a: any[]) => tsCreate(...a),
     },
     activity: { create: vi.fn(async () => ({})) },
-    project: { findMany: vi.fn(async () => []) },
+    project: {
+      findMany: vi.fn(async () => []),
+      // assertProjectWritable guard: project exists, not deleted/archived.
+      findUnique: vi.fn(async () => ({ deletedAt: null, archivedAt: null })),
+    },
   },
 }));
 

@@ -4,6 +4,7 @@ import { prisma, type ProjectStatus } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { rateLimitAllow, clientIp } from "../lib/rateLimit.js";
+import { assertProjectWritable } from "../lib/projectAccess.js";
 
 const router: IRouter = Router();
 
@@ -212,6 +213,8 @@ router.get("/projects/:id/client-share", requireAuth, async (req, res) => {
 router.put("/projects/:id/client-share", requireAuth, async (req, res) => {
   const project = await loadProjectForShare(req, res);
   if (!project) return;
+  // Archived projects are read-only.
+  if (!(await assertProjectWritable(project.id, res))) return;
 
   const body = req.body ?? {};
   const data: {

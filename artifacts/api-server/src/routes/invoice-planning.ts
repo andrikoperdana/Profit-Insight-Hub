@@ -81,7 +81,7 @@ router.get("/invoice-planning", async (req, res) => {
   const periodEnd = mode === "month" ? addMonthsUtc(start, periods) : addDaysUtc(start, periods * 7);
 
   const projectWhere: any = {
-    deletedAt: null,
+    deletedAt: null, archivedAt: null,
     status: { in: ["OBSERVATION", "ACTIVE", "PAUSE"] },
   };
   if (role === "PROJECT_MANAGER") projectWhere.pmId = userId;

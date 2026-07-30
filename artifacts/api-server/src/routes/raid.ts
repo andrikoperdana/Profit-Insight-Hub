@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
-import { userCanAccessProject } from "../lib/projectAccess.js";
+import { userCanAccessProject, assertProjectWritable } from "../lib/projectAccess.js";
 import { canViewRaid } from "../lib/roles.js";
 import { prisma as prismaForRaid } from "@workspace/db";
 
@@ -118,6 +118,7 @@ router.post("/projects/:id/raid", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project or Management can add RAID items" });
     return;
   }
+  if (!(await assertProjectWritable(projectId, res))) return;
   const body = req.body || {};
   const type = String(body.type ?? "");
   const title = typeof body.title === "string" ? body.title.trim() : "";
@@ -188,6 +189,7 @@ router.patch("/raid/:itemId", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project or Management can edit RAID items" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   const body = req.body || {};
   const data: Record<string, unknown> = {};
   if (body.type !== undefined) {
@@ -268,6 +270,7 @@ router.delete("/raid/:itemId", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project or Management can delete RAID items" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   await prisma.projectRaidItem.delete({ where: { id } });
   await recordAudit(req, {
     action: "raid.deleted",

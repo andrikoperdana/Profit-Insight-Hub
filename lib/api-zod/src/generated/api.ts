@@ -291,7 +291,14 @@ export const UpdateProjectReportBody = zod.object({
 
 export const UpdateProjectReportResponse = zod.object({
   id: zod.string(),
-  code: zod.string(),
+  projectId: zod
+    .string()
+    .nullish()
+    .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+  code: zod
+    .string()
+    .nullish()
+    .describe("SPK \/ PO Number — optional, user-supplied"),
   name: zod.string(),
   description: zod.string().nullish(),
   status: zod.enum([
@@ -353,6 +360,12 @@ export const UpdateProjectReportResponse = zod.object({
   reportCoverUrl: zod.string().nullish(),
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
+  archivedAt: zod
+    .string()
+    .nullish()
+    .describe(
+      "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+    ),
   lastStatusReason: zod.string().nullish(),
   healthScore: zod
     .number()
@@ -1356,11 +1369,24 @@ export const DeleteClientResponse = zod.object({
 
 export const ListProjectsQueryParams = zod.object({
   status: zod.coerce.string().optional(),
+  includeArchived: zod.coerce
+    .string()
+    .optional()
+    .describe(
+      "MGMT\/SUPER_ADMIN only — 'true' includes archived projects in the list",
+    ),
 });
 
 export const ListProjectsResponseItem = zod.object({
   id: zod.string(),
-  code: zod.string(),
+  projectId: zod
+    .string()
+    .nullish()
+    .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+  code: zod
+    .string()
+    .nullish()
+    .describe("SPK \/ PO Number — optional, user-supplied"),
   name: zod.string(),
   description: zod.string().nullish(),
   status: zod.enum([
@@ -1422,6 +1448,12 @@ export const ListProjectsResponseItem = zod.object({
   reportCoverUrl: zod.string().nullish(),
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
+  archivedAt: zod
+    .string()
+    .nullish()
+    .describe(
+      "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+    ),
   lastStatusReason: zod.string().nullish(),
   healthScore: zod
     .number()
@@ -1468,7 +1500,12 @@ export const ListProjectsResponseItem = zod.object({
 export const ListProjectsResponse = zod.array(ListProjectsResponseItem);
 
 export const CreateProjectBody = zod.object({
-  code: zod.string().nullish(),
+  code: zod
+    .string()
+    .nullish()
+    .describe(
+      "SPK \/ PO Number (optional — auto-assigned Project ID is separate)",
+    ),
   name: zod.string(),
   description: zod.string().optional(),
   clientId: zod.string(),
@@ -1522,8 +1559,14 @@ export const GetProjectParams = zod.object({
 export const GetProjectResponse = zod
   .object({
     id: zod.string(),
-    projectId: zod.string().nullish(),
-    code: zod.string().nullish(),
+    projectId: zod
+      .string()
+      .nullish()
+      .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+    code: zod
+      .string()
+      .nullish()
+      .describe("SPK \/ PO Number — optional, user-supplied"),
     name: zod.string(),
     description: zod.string().nullish(),
     status: zod.enum([
@@ -1585,6 +1628,12 @@ export const GetProjectResponse = zod
     reportCoverUrl: zod.string().nullish(),
     reportLink: zod.string().nullish(),
     reportSubmittedAt: zod.string().nullish(),
+    archivedAt: zod
+      .string()
+      .nullish()
+      .describe(
+        "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+      ),
     lastStatusReason: zod.string().nullish(),
     healthScore: zod
       .number()
@@ -1711,7 +1760,10 @@ export const UpdateProjectParams = zod.object({
 });
 
 export const UpdateProjectBody = zod.object({
-  code: zod.string().nullish(),
+  code: zod
+    .string()
+    .nullish()
+    .describe("SPK \/ PO Number — pass null to clear"),
   name: zod.string().optional(),
   description: zod.string().optional(),
   clientId: zod.string().optional(),
@@ -1760,7 +1812,14 @@ export const UpdateProjectBody = zod.object({
 
 export const UpdateProjectResponse = zod.object({
   id: zod.string(),
-  code: zod.string(),
+  projectId: zod
+    .string()
+    .nullish()
+    .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+  code: zod
+    .string()
+    .nullish()
+    .describe("SPK \/ PO Number — optional, user-supplied"),
   name: zod.string(),
   description: zod.string().nullish(),
   status: zod.enum([
@@ -1822,6 +1881,12 @@ export const UpdateProjectResponse = zod.object({
   reportCoverUrl: zod.string().nullish(),
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
+  archivedAt: zod
+    .string()
+    .nullish()
+    .describe(
+      "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+    ),
   lastStatusReason: zod.string().nullish(),
   healthScore: zod
     .number()
@@ -1873,6 +1938,256 @@ export const DeleteProjectParams = zod.object({
 export const DeleteProjectResponse = zod.object({
   success: zod.boolean(),
   message: zod.string().optional(),
+});
+
+export const ArchiveProjectParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ArchiveProjectResponse = zod.object({
+  id: zod.string(),
+  projectId: zod
+    .string()
+    .nullish()
+    .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+  code: zod
+    .string()
+    .nullish()
+    .describe("SPK \/ PO Number — optional, user-supplied"),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.enum([
+    "DRAFT",
+    "OBSERVATION",
+    "ACTIVE",
+    "NO_NEED_CONSULTANT",
+    "PAUSE",
+    "COMPLETE",
+    "CLOSED",
+  ]),
+  kind: zod
+    .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+    .optional()
+    .describe(
+      "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+    ),
+  clientId: zod.string().optional(),
+  clientName: zod.string().optional(),
+  salesId: zod.string().nullish(),
+  salesName: zod.string().nullish(),
+  pmId: zod.string().nullish(),
+  pmName: zod.string().nullish(),
+  technicalWriterId: zod.string().nullish(),
+  technicalWriterName: zod.string().nullish(),
+  adminProjectId: zod.string().nullish(),
+  adminProjectName: zod.string().nullish(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  contractValue: zod.number(),
+  currency: zod.string().nullish(),
+  exchangeRate: zod.number().nullish(),
+  vatPercent: zod.number().optional(),
+  contractValueIncludesVat: zod.boolean().optional(),
+  useWorkstreams: zod
+    .boolean()
+    .optional()
+    .describe(
+      "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+    ),
+  revenueNet: zod.number().optional(),
+  vatAmount: zod.number().optional(),
+  recognizedRevenue: zod.number().optional(),
+  accruedCost: zod.number().optional(),
+  loadedResourceCost: zod.number().optional(),
+  netActualCost: zod.number().optional(),
+  netActualProfit: zod.number().optional(),
+  netMarginPct: zod.number().optional(),
+  overheadMultiplier: zod.number().optional(),
+  estimatedCost: zod.number(),
+  estimatedProfit: zod.number(),
+  plannedMandays: zod.number(),
+  actualMandays: zod.number().optional(),
+  actualCost: zod.number(),
+  resourceCost: zod.number(),
+  additionalCost: zod.number(),
+  actualProfit: zod.number().optional(),
+  marginPct: zod.number().optional(),
+  reportCoverUrl: zod.string().nullish(),
+  reportLink: zod.string().nullish(),
+  reportSubmittedAt: zod.string().nullish(),
+  archivedAt: zod
+    .string()
+    .nullish()
+    .describe(
+      "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+    ),
+  lastStatusReason: zod.string().nullish(),
+  healthScore: zod
+    .number()
+    .nullish()
+    .describe(
+      "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+    ),
+  healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+  healthComponents: zod
+    .object({
+      margin: zod.number().optional(),
+      raid: zod.number().optional(),
+      expenses: zod.number().optional(),
+      billing: zod.number().optional(),
+      schedule: zod.number().optional(),
+    })
+    .nullish(),
+  healthReasons: zod.array(zod.string()).nullish(),
+  profitOutlook: zod
+    .object({
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
+      contractValue: zod.number().optional(),
+      estimatedCost: zod.number().optional(),
+      estimatedProfit: zod.number().optional(),
+      estimatedMarginPct: zod.number().optional(),
+      actualCost: zod.number().optional(),
+      actualProfit: zod.number().optional(),
+      actualMarginPct: zod.number().optional(),
+      forecastCost: zod.number().optional(),
+      forecastProfit: zod.number().optional(),
+      forecastMarginPct: zod.number().optional(),
+      progressPct: zod.number().optional(),
+    })
+    .nullish()
+    .describe(
+      "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+    ),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
+  createdAt: zod.string(),
+});
+
+export const UnarchiveProjectParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const UnarchiveProjectResponse = zod.object({
+  id: zod.string(),
+  projectId: zod
+    .string()
+    .nullish()
+    .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+  code: zod
+    .string()
+    .nullish()
+    .describe("SPK \/ PO Number — optional, user-supplied"),
+  name: zod.string(),
+  description: zod.string().nullish(),
+  status: zod.enum([
+    "DRAFT",
+    "OBSERVATION",
+    "ACTIVE",
+    "NO_NEED_CONSULTANT",
+    "PAUSE",
+    "COMPLETE",
+    "CLOSED",
+  ]),
+  kind: zod
+    .enum(["CLIENT", "INTERNAL", "PRESALES", "TRAINING"])
+    .optional()
+    .describe(
+      "Project category. CLIENT = paid engagement (default, all financial\nreports include). INTERNAL\/PRESALES\/TRAINING = non-billable initiatives\nexcluded from VAT recap, billing aging, cash inflow forecast, and\nPPN detail reports.\n",
+    ),
+  clientId: zod.string().optional(),
+  clientName: zod.string().optional(),
+  salesId: zod.string().nullish(),
+  salesName: zod.string().nullish(),
+  pmId: zod.string().nullish(),
+  pmName: zod.string().nullish(),
+  technicalWriterId: zod.string().nullish(),
+  technicalWriterName: zod.string().nullish(),
+  adminProjectId: zod.string().nullish(),
+  adminProjectName: zod.string().nullish(),
+  startDate: zod.string().nullish(),
+  endDate: zod.string().nullish(),
+  contractValue: zod.number(),
+  currency: zod.string().nullish(),
+  exchangeRate: zod.number().nullish(),
+  vatPercent: zod.number().optional(),
+  contractValueIncludesVat: zod.boolean().optional(),
+  useWorkstreams: zod
+    .boolean()
+    .optional()
+    .describe(
+      "If true, project is split into Workstreams; per-workstream pickers become available on resources\/tasks\/expenses\/billing.",
+    ),
+  revenueNet: zod.number().optional(),
+  vatAmount: zod.number().optional(),
+  recognizedRevenue: zod.number().optional(),
+  accruedCost: zod.number().optional(),
+  loadedResourceCost: zod.number().optional(),
+  netActualCost: zod.number().optional(),
+  netActualProfit: zod.number().optional(),
+  netMarginPct: zod.number().optional(),
+  overheadMultiplier: zod.number().optional(),
+  estimatedCost: zod.number(),
+  estimatedProfit: zod.number(),
+  plannedMandays: zod.number(),
+  actualMandays: zod.number().optional(),
+  actualCost: zod.number(),
+  resourceCost: zod.number(),
+  additionalCost: zod.number(),
+  actualProfit: zod.number().optional(),
+  marginPct: zod.number().optional(),
+  reportCoverUrl: zod.string().nullish(),
+  reportLink: zod.string().nullish(),
+  reportSubmittedAt: zod.string().nullish(),
+  archivedAt: zod
+    .string()
+    .nullish()
+    .describe(
+      "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+    ),
+  lastStatusReason: zod.string().nullish(),
+  healthScore: zod
+    .number()
+    .nullish()
+    .describe(
+      "0-100 composite health score. Null for DRAFT\/CLOSED projects or callers without financial visibility.",
+    ),
+  healthLabel: zod.enum(["HEALTHY", "AT_RISK", "CRITICAL"]).nullish(),
+  healthComponents: zod
+    .object({
+      margin: zod.number().optional(),
+      raid: zod.number().optional(),
+      expenses: zod.number().optional(),
+      billing: zod.number().optional(),
+      schedule: zod.number().optional(),
+    })
+    .nullish(),
+  healthReasons: zod.array(zod.string()).nullish(),
+  profitOutlook: zod
+    .object({
+      status: zod.enum(["PROFIT", "THIN", "LOSS_RISK", "EARLY"]).optional(),
+      contractValue: zod.number().optional(),
+      estimatedCost: zod.number().optional(),
+      estimatedProfit: zod.number().optional(),
+      estimatedMarginPct: zod.number().optional(),
+      actualCost: zod.number().optional(),
+      actualProfit: zod.number().optional(),
+      actualMarginPct: zod.number().optional(),
+      forecastCost: zod.number().optional(),
+      forecastProfit: zod.number().optional(),
+      forecastMarginPct: zod.number().optional(),
+      progressPct: zod.number().optional(),
+    })
+    .nullish()
+    .describe(
+      "Plain-language profit\/loss outlook. Null for callers without financial visibility.",
+    ),
+  spkFileUrl: zod.string().nullish(),
+  spkFileName: zod.string().nullish(),
+  contractFileUrl: zod.string().nullish(),
+  contractFileName: zod.string().nullish(),
+  createdAt: zod.string(),
 });
 
 export const GetProjectFinancialsParams = zod.object({
@@ -2002,7 +2317,14 @@ export const ReplaceProjectPmBody = zod.object({
 
 export const ReplaceProjectPmResponse = zod.object({
   id: zod.string(),
-  code: zod.string(),
+  projectId: zod
+    .string()
+    .nullish()
+    .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+  code: zod
+    .string()
+    .nullish()
+    .describe("SPK \/ PO Number — optional, user-supplied"),
   name: zod.string(),
   description: zod.string().nullish(),
   status: zod.enum([
@@ -2064,6 +2386,12 @@ export const ReplaceProjectPmResponse = zod.object({
   reportCoverUrl: zod.string().nullish(),
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
+  archivedAt: zod
+    .string()
+    .nullish()
+    .describe(
+      "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+    ),
   lastStatusReason: zod.string().nullish(),
   healthScore: zod
     .number()
@@ -2306,7 +2634,14 @@ export const ListPendingResourceApprovalsResponse = zod.array(
 
 export const ListProjectsNeedingResourceResponseItem = zod.object({
   id: zod.string(),
-  code: zod.string(),
+  projectId: zod
+    .string()
+    .nullish()
+    .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+  code: zod
+    .string()
+    .nullish()
+    .describe("SPK \/ PO Number — optional, user-supplied"),
   name: zod.string(),
   description: zod.string().nullish(),
   status: zod.enum([
@@ -2368,6 +2703,12 @@ export const ListProjectsNeedingResourceResponseItem = zod.object({
   reportCoverUrl: zod.string().nullish(),
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
+  archivedAt: zod
+    .string()
+    .nullish()
+    .describe(
+      "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+    ),
   lastStatusReason: zod.string().nullish(),
   healthScore: zod
     .number()
@@ -5608,7 +5949,14 @@ export const GetStatusBreakdownResponse = zod.array(
 
 export const GetTopProjectsResponseItem = zod.object({
   id: zod.string(),
-  code: zod.string(),
+  projectId: zod
+    .string()
+    .nullish()
+    .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+  code: zod
+    .string()
+    .nullish()
+    .describe("SPK \/ PO Number — optional, user-supplied"),
   name: zod.string(),
   description: zod.string().nullish(),
   status: zod.enum([
@@ -5670,6 +6018,12 @@ export const GetTopProjectsResponseItem = zod.object({
   reportCoverUrl: zod.string().nullish(),
   reportLink: zod.string().nullish(),
   reportSubmittedAt: zod.string().nullish(),
+  archivedAt: zod
+    .string()
+    .nullish()
+    .describe(
+      "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+    ),
   lastStatusReason: zod.string().nullish(),
   healthScore: zod
     .number()
@@ -5960,7 +6314,14 @@ export const GetDashboardOverviewResponse = zod.object({
   topProjects: zod.array(
     zod.object({
       id: zod.string(),
-      code: zod.string(),
+      projectId: zod
+        .string()
+        .nullish()
+        .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+      code: zod
+        .string()
+        .nullish()
+        .describe("SPK \/ PO Number — optional, user-supplied"),
       name: zod.string(),
       description: zod.string().nullish(),
       status: zod.enum([
@@ -6022,6 +6383,12 @@ export const GetDashboardOverviewResponse = zod.object({
       reportCoverUrl: zod.string().nullish(),
       reportLink: zod.string().nullish(),
       reportSubmittedAt: zod.string().nullish(),
+      archivedAt: zod
+        .string()
+        .nullish()
+        .describe(
+          "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+        ),
       lastStatusReason: zod.string().nullish(),
       healthScore: zod
         .number()
@@ -6069,7 +6436,14 @@ export const GetDashboardOverviewResponse = zod.object({
   losingProjects: zod.array(
     zod.object({
       id: zod.string(),
-      code: zod.string(),
+      projectId: zod
+        .string()
+        .nullish()
+        .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+      code: zod
+        .string()
+        .nullish()
+        .describe("SPK \/ PO Number — optional, user-supplied"),
       name: zod.string(),
       description: zod.string().nullish(),
       status: zod.enum([
@@ -6131,6 +6505,12 @@ export const GetDashboardOverviewResponse = zod.object({
       reportCoverUrl: zod.string().nullish(),
       reportLink: zod.string().nullish(),
       reportSubmittedAt: zod.string().nullish(),
+      archivedAt: zod
+        .string()
+        .nullish()
+        .describe(
+          "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+        ),
       lastStatusReason: zod.string().nullish(),
       healthScore: zod
         .number()
@@ -6465,7 +6845,14 @@ export const GetDashboardOverviewResponse = zod.object({
     .array(
       zod.object({
         id: zod.string(),
-        code: zod.string(),
+        projectId: zod
+          .string()
+          .nullish()
+          .describe("Auto-assigned read-only Project ID (PRJ\/YYYY\/NNN)"),
+        code: zod
+          .string()
+          .nullish()
+          .describe("SPK \/ PO Number — optional, user-supplied"),
         name: zod.string(),
         description: zod.string().nullish(),
         status: zod.enum([
@@ -6527,6 +6914,12 @@ export const GetDashboardOverviewResponse = zod.object({
         reportCoverUrl: zod.string().nullish(),
         reportLink: zod.string().nullish(),
         reportSubmittedAt: zod.string().nullish(),
+        archivedAt: zod
+          .string()
+          .nullish()
+          .describe(
+            "Set when the project is archived — excluded from reports\/dashboards and read-only until unarchived",
+          ),
         lastStatusReason: zod.string().nullish(),
         healthScore: zod
           .number()

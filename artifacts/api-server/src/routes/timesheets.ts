@@ -7,6 +7,7 @@ import { validateWorkstreamId } from "../lib/workstreams.js";
 import { getAppSettings } from "../lib/app-settings.js";
 import { validateBody } from "../middlewares/validate.js";
 import { CreateTimesheetBody, CreateBulkTimesheetsBody } from "@workspace/api-zod";
+import { assertProjectWritable } from "../lib/projectAccess.js";
 
 const MAX_HOURS_PER_ENTRY = 24;
 
@@ -243,6 +244,7 @@ router.post("/timesheets", validateBody(CreateTimesheetBody), async (req, res) =
     });
     return;
   }
+  if (!(await assertProjectWritable(String(projectId), res))) return;
 
   const role = req.user!.role;
   // PMs don't need timesheet approval: their own hours are auto-approved on any
@@ -377,6 +379,11 @@ router.post("/timesheets/bulk", validateBody(CreateBulkTimesheetsBody), async (r
   // (PMs auto-approve their own hours on any project, so this no longer gates
   // PM approval — it's only used to notify the project PM about others' entries.)
   const projectIds: string[] = Array.from(new Set(entries.map((e: any) => String(e?.projectId || "")).filter(Boolean)));
+  // Archived projects are read-only: reject the whole batch if any referenced
+  // project is archived (or deleted) rather than silently dropping entries.
+  for (const pid of projectIds) {
+    if (!(await assertProjectWritable(pid, res))) return;
+  }
   const projectPmMap = new Map<string, string | null>();
   const projectNameMap = new Map<string, string>();
   if (projectIds.length > 0) {
@@ -530,6 +537,7 @@ router.post("/timesheets/:id/submit", async (req, res) => {
     res.status(409).json({ error: "Only draft or rejected timesheets can be submitted" });
     return;
   }
+  if (!(await assertProjectWritable(existing.projectId, res))) return;
   const ts = await prisma.timesheet.update({
     where: { id: req.params.id },
     data: { status: "SUBMITTED", rejectionReason: null, approvedById: null, approvedAt: null },
@@ -575,6 +583,11 @@ router.post("/timesheets/bulk-approve", async (req, res) => {
   if (allowedIds.length === 0) {
     res.json({ approved: 0, ids: [] });
     return;
+  }
+  // Archived projects are read-only — block the batch if any selected entry
+  // belongs to an archived (or deleted) project.
+  for (const pid of Array.from(new Set(candidates.map((c) => c.projectId)))) {
+    if (!(await assertProjectWritable(pid, res))) return;
   }
   await prisma.timesheet.updateMany({
     where: { id: { in: allowedIds } },
@@ -639,6 +652,7 @@ router.post("/timesheets/:id/approve", async (req, res) => {
     res.status(409).json({ error: `Cannot approve a timesheet in ${existing.status} state` });
     return;
   }
+  if (!(await assertProjectWritable(existing.projectId, res))) return;
   const ts = await prisma.timesheet.update({
     where: { id: req.params.id },
     data: {
@@ -703,6 +717,7 @@ router.post("/timesheets/:id/reject", async (req, res) => {
     res.status(409).json({ error: `Cannot reject a timesheet in ${existing.status} state` });
     return;
   }
+  if (!(await assertProjectWritable(existing.projectId, res))) return;
   const ts = await prisma.timesheet.update({
     where: { id: req.params.id },
     data: {
@@ -753,6 +768,7 @@ router.delete("/timesheets/:id", async (req, res) => {
     res.status(400).json({ error: "Cannot delete approved timesheet" });
     return;
   }
+  if (!(await assertProjectWritable(existing.projectId, res))) return;
   await prisma.timesheet.delete({ where: { id: req.params.id } });
   await recordAudit(req, {
     action: "timesheet.deleted",

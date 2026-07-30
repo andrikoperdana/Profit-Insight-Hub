@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
-import { userCanWriteProject } from "../lib/projectAccess.js";
+import { userCanWriteProject, assertProjectWritable } from "../lib/projectAccess.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -566,6 +566,7 @@ router.post("/performance-reviews/:id/project-ratings", async (req, res) => {
     res.status(403).json({ error: "Only the project's PM or Management can rate this project" });
     return;
   }
+  if (!(await assertProjectWritable(projectId, res))) return;
   const [tsLink, resourceLink] = await Promise.all([
     prisma.timesheet.findFirst({
       where: {
@@ -639,6 +640,7 @@ router.delete("/performance-reviews/:id/project-ratings/:ratingId", async (req, 
     res.status(403).json({ error: "Only the rater or Management can delete this rating" });
     return;
   }
+  if (!(await assertProjectWritable(rating.projectId, res))) return;
   await prisma.performanceReviewProjectRating.delete({ where: { id: ratingId } });
   await recordAudit(req, {
     action: "performance_review.project_rating_removed",

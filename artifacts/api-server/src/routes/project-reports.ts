@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma, type ProjectReportType } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
-import { userCanAccessProject } from "../lib/projectAccess.js";
+import { userCanAccessProject, assertProjectWritable } from "../lib/projectAccess.js";
 import { notifyUsers } from "../lib/notifications.js";
 
 const router: IRouter = Router();
@@ -167,6 +167,7 @@ router.post("/projects/:id/reports", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project, assigned Technical Writer, or Management can add reports" });
     return;
   }
+  if (!(await assertProjectWritable(projectId, res))) return;
   const b = req.body || {};
   const title = typeof b.title === "string" ? b.title.trim() : "";
   if (!title) {
@@ -275,6 +276,7 @@ router.patch("/project-reports/:reportId", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project, assigned Technical Writer, or Management can edit reports" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   const b = req.body || {};
   const data: Record<string, unknown> = {};
   if (b.title !== undefined) {
@@ -391,6 +393,7 @@ router.delete("/project-reports/:reportId", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project, assigned Technical Writer, or Management can delete reports" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   await prisma.projectReport.delete({ where: { id } });
   await recordAudit(req, {
     action: "project_report.deleted",

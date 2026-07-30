@@ -167,6 +167,7 @@ router.get(
         where: {
           userId: { in: userIds },
           workDate: { gte: start, lt: end },
+          project: { deletedAt: null, archivedAt: null },
         },
         select: {
           userId: true, projectId: true, taskId: true,
@@ -246,7 +247,7 @@ router.get(
       const projects = await prisma.project.findMany({
         where: {
           pmId: { in: userIds },
-          deletedAt: null,
+          deletedAt: null, archivedAt: null,
         },
         select: {
           ...projectMetricsSelect,
@@ -450,7 +451,7 @@ router.get(
       }
 
       const coveredProjects = await prisma.project.findMany({
-        where: { adminProjectId: { in: userIds }, deletedAt: null },
+        where: { adminProjectId: { in: userIds }, deletedAt: null, archivedAt: null },
         select: {
           id: true, adminProjectId: true, status: true, endDate: true, updatedAt: true,
           billingMilestones: {

@@ -102,7 +102,7 @@ router.get(
         resources: {
           where: {
             project: {
-              deletedAt: null,
+              deletedAt: null, archivedAt: null,
               status: { in: ["OBSERVATION", "ACTIVE", "DRAFT"] },
             },
           },

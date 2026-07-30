@@ -45,4 +45,5 @@
 - [Stuck merges hand-applied on main](stuck-merge-hand-apply.md) — mobile receipt shrink, expense approve/reject, shared invoicing were re-done on main; late platform merges may duplicate them.
 - [Shared-lib stale dist types](workspace-shared-stale-dist.md) — new lib/shared exports invisible to consumers' tsc until `tsc --build --force`; pnpm run of a missing script exits 0 (|| fallbacks never fire).
 - [Mobile non-tab routes vs root auth guard](mobile-nontab-routes-guard.md) — new expo-router screens outside (tabs) must be whitelisted in the root layout redirect or signed-in users bounce to "/".
+- [Sed filter extension needs runtime check](sed-filter-extension-runtime-check.md) — var-assigned `: any` Prisma wheres skip excess-property checks; bulk filter edits fail only at runtime, smoke-test endpoints.
 - [AI surfaces consistency](ai-surfaces-consistency.md) — AI money answers go through the uncapped shared billing-facts helper (sums over take-capped queries drift); digest notify-once = create-first P2002 winner.

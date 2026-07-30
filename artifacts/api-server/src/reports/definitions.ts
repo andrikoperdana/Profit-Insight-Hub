@@ -85,7 +85,7 @@ const profitabilityPerProject: ReportDefinition = {
     { key: "burnRatePct", label: "Burn %", type: "percent", align: "right", width: 80, fixed: 1 },
   ],
   query: async (ctx) => {
-    const where: any = { deletedAt: null, kind: "CLIENT" };
+    const where: any = { deletedAt: null, archivedAt: null, kind: "CLIENT" };
     if (ctx.user.role === "PROJECT_MANAGER") where.pmId = ctx.user.sub;
     if (ctx.filters.status) where.status = ctx.filters.status;
     if (ctx.filters.pmId && (ctx.user.role === "MANAGEMENT" || ctx.user.role === "SUPER_ADMIN")) where.pmId = ctx.filters.pmId;
@@ -145,7 +145,7 @@ const marginTrendByBu: ReportDefinition = {
     const year = yearOrCurrent(ctx.filters.year);
     const buFilter = ctx.filters.businessUnitId;
     const projects = await prisma.project.findMany({
-      where: { deletedAt: null, status: { not: "DRAFT" }, kind: "CLIENT" },
+      where: { deletedAt: null, archivedAt: null, status: { not: "DRAFT" }, kind: "CLIENT" },
       include: { ...projectInclude, pm: { include: { businessUnit: true } } } as any,
     });
     // Map: month-bu -> {revenueNet, cost, profit, count}
@@ -221,7 +221,7 @@ const profitabilityPerClient: ReportDefinition = {
   ],
   chart: { type: "bar", xKey: "clientName", yKey: "totalProfit", yLabel: "Total Profit" },
   query: async (ctx) => {
-    const where: any = { deletedAt: null, kind: "CLIENT" };
+    const where: any = { deletedAt: null, archivedAt: null, kind: "CLIENT" };
     if (ctx.filters.status) where.status = ctx.filters.status;
     const from = parseDateOrUndefined(ctx.filters.startFrom);
     const to = parseDateOrUndefined(ctx.filters.startTo);
@@ -306,7 +306,7 @@ const resourceUtilization: ReportDefinition = {
     });
     const userIds = users.map((u) => u.id);
     if (ctx.user.role === "PROJECT_MANAGER") {
-      const pmProjects = await prisma.project.findMany({ where: { pmId: ctx.user.sub, deletedAt: null }, select: { id: true } });
+      const pmProjects = await prisma.project.findMany({ where: { pmId: ctx.user.sub, deletedAt: null, archivedAt: null }, select: { id: true } });
       const projectIds = pmProjects.map((p) => p.id);
       // Filter users to only those who have resource on PM's projects
       const resources = await prisma.projectResource.findMany({ where: { projectId: { in: projectIds }, userId: { in: userIds } }, select: { userId: true } });
@@ -318,7 +318,7 @@ const resourceUtilization: ReportDefinition = {
     const filteredIds = users.map((u) => u.id);
     let allowedProjectIds: string[] | null = null;
     if (ctx.user.role === "PROJECT_MANAGER") {
-      const pmProjects = await prisma.project.findMany({ where: { pmId: ctx.user.sub, deletedAt: null }, select: { id: true } });
+      const pmProjects = await prisma.project.findMany({ where: { pmId: ctx.user.sub, deletedAt: null, archivedAt: null }, select: { id: true } });
       allowedProjectIds = pmProjects.map((p) => p.id);
     }
     const tsWhere: any = {
@@ -410,7 +410,7 @@ const projectBurnRate: ReportDefinition = {
     { key: "daysRemaining", label: "Days Left", type: "number", align: "right", width: 90 },
   ],
   query: async (ctx) => {
-    const where: any = { deletedAt: null };
+    const where: any = { deletedAt: null, archivedAt: null };
     if (ctx.user.role === "PROJECT_MANAGER") where.pmId = ctx.user.sub;
     where.status = ctx.filters.status || "ACTIVE";
     if (ctx.filters.pmId && (ctx.user.role === "MANAGEMENT" || ctx.user.role === "SUPER_ADMIN")) where.pmId = ctx.filters.pmId;
@@ -465,7 +465,7 @@ const pmWorkload: ReportDefinition = {
   chart: { type: "bar", xKey: "pmName", yKey: "totalInflight", yLabel: "In-flight Projects" },
   query: async () => {
     const pms = await prisma.user.findMany({ where: { role: "PROJECT_MANAGER", isActive: true } });
-    const projects = await prisma.project.findMany({ where: { deletedAt: null, pmId: { in: pms.map((p) => p.id) } }, include: projectInclude });
+    const projects = await prisma.project.findMany({ where: { deletedAt: null, archivedAt: null, pmId: { in: pms.map((p) => p.id) } }, include: projectInclude });
     const map = new Map<string, any>();
     for (const pm of pms) {
       map.set(pm.id, { pmName: pm.name, draft: 0, observation: 0, active: 0, pause: 0, complete: 0, totalContract: 0, marginSum: 0, marginCnt: 0 });
@@ -524,7 +524,7 @@ const billingAging: ReportDefinition = {
     { key: "invoiceNumber", label: "Invoice #", type: "string", width: 110 },
   ],
   query: async (ctx) => {
-    const projectWhere: any = { deletedAt: null, kind: "CLIENT" };
+    const projectWhere: any = { deletedAt: null, archivedAt: null, kind: "CLIENT" };
     if (ctx.user.role === "PROJECT_MANAGER") projectWhere.pmId = ctx.user.sub;
     const projects = await prisma.project.findMany({ where: projectWhere, select: { id: true, code: true, name: true, contractValue: true, vatPercent: true, contractValueIncludesVat: true, client: { select: { name: true } } } });
     const projectMap = new Map(projects.map((p) => [p.id, p]));
@@ -594,7 +594,7 @@ const cashInflowForecast: ReportDefinition = {
   chart: { type: "bar", xKey: "month", yKey: "expectedTotal", yLabel: "Expected Cash Inflow", stacked: false },
   query: async (ctx) => {
     const year = yearOrCurrent(ctx.filters.year);
-    const projectWhere: any = { deletedAt: null, kind: "CLIENT" };
+    const projectWhere: any = { deletedAt: null, archivedAt: null, kind: "CLIENT" };
     if (ctx.filters.clientId) projectWhere.clientId = ctx.filters.clientId;
     const projects = await prisma.project.findMany({ where: projectWhere, select: { id: true, contractValue: true, vatPercent: true, contractValueIncludesVat: true } });
     const projectMap = new Map(projects.map((p) => [p.id, p]));
@@ -751,7 +751,7 @@ const ppnDetail: ReportDefinition = {
     const clientFilter = ctx.filters.clientId;
     const yearStart = new Date(year, 0, 1);
     const yearEnd = new Date(year, 11, 31, 23, 59, 59);
-    const projectWhere: any = { deletedAt: null, kind: "CLIENT" };
+    const projectWhere: any = { deletedAt: null, archivedAt: null, kind: "CLIENT" };
     if (clientFilter) projectWhere.clientId = clientFilter;
     const projects = await prisma.project.findMany({ where: projectWhere, select: { id: true, code: true, name: true, contractValue: true, vatPercent: true, contractValueIncludesVat: true, client: { select: { name: true } } } });
     const projectMap = new Map(projects.map((p) => [p.id, p]));
@@ -823,7 +823,7 @@ const internalInitiativeCost: ReportDefinition = {
   ],
   chart: { type: "bar", xKey: "name", yKey: "actualCost", yLabel: "Actual Cost" },
   query: async (ctx) => {
-    const where: any = { deletedAt: null, kind: { in: ["INTERNAL", "PRESALES", "TRAINING"] } };
+    const where: any = { deletedAt: null, archivedAt: null, kind: { in: ["INTERNAL", "PRESALES", "TRAINING"] } };
     if (ctx.filters.kind && ["INTERNAL", "PRESALES", "TRAINING"].includes(ctx.filters.kind)) {
       where.kind = ctx.filters.kind;
     }

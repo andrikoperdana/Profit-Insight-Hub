@@ -26,7 +26,7 @@ router.get("/principal/projects-needing-resource", async (req, res) => {
     // Projects in OBSERVATION/ACTIVE without any KONSULTAN resource
     projects = await prisma.project.findMany({
       where: {
-        deletedAt: null,
+        deletedAt: null, archivedAt: null,
         status: { in: ["OBSERVATION", "ACTIVE"] },
         NOT: { resources: { some: { user: { role: "KONSULTAN" } } } },
       },
@@ -39,7 +39,7 @@ router.get("/principal/projects-needing-resource", async (req, res) => {
     // field is no longer used to determine staffing gaps.
     projects = await prisma.project.findMany({
       where: {
-        deletedAt: null,
+        deletedAt: null, archivedAt: null,
         status: { in: ["OBSERVATION", "ACTIVE"] },
         NOT: { resources: { some: { user: { role: "TECHNICAL_WRITER" } } } },
       },
@@ -50,7 +50,7 @@ router.get("/principal/projects-needing-resource", async (req, res) => {
     // ADMIN_PROJECT
     projects = await prisma.project.findMany({
       where: {
-        deletedAt: null,
+        deletedAt: null, archivedAt: null,
         status: { in: ["OBSERVATION", "ACTIVE", "COMPLETE"] },
         adminProjectId: null,
       },
@@ -100,7 +100,7 @@ router.get("/principal/team-projects", async (req, res) => {
   const resources = await prisma.projectResource.findMany({
     where: {
       userId: { in: userIds },
-      project: { deletedAt: null, status: { in: [...activeStatuses] } },
+      project: { deletedAt: null, archivedAt: null, status: { in: [...activeStatuses] } },
     },
     select: {
       userId: true,
@@ -129,7 +129,7 @@ router.get("/principal/team-projects", async (req, res) => {
   if (reportRole === "ADMIN_PROJECT") {
     const adminProjects = await prisma.project.findMany({
       where: {
-        deletedAt: null,
+        deletedAt: null, archivedAt: null,
         status: { in: [...activeStatuses] },
         adminProjectId: { in: userIds },
       },
@@ -225,7 +225,7 @@ router.get("/principal/pending-resource-approvals", async (req, res) => {
     where: {
       pendingPrincipalApproval: true,
       user: { principalId: callerId },
-      project: { deletedAt: null },
+      project: { deletedAt: null, archivedAt: null },
     },
     orderBy: { proposedAt: "desc" },
     select: {

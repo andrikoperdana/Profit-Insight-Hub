@@ -121,7 +121,7 @@ router.get("/dashboard/pm-pending-timesheets", async (req, res) => {
     return;
   }
   const submitted = await prisma.timesheet.findMany({
-    where: { status: "SUBMITTED", project: { deletedAt: null } },
+    where: { status: "SUBMITTED", project: { deletedAt: null, archivedAt: null } },
     select: { project: { select: { pmId: true, pm: { select: { name: true } } } } },
   });
   const byPm = new Map<string, { pmId: string; pmName: string; pendingCount: number }>();
@@ -225,7 +225,7 @@ router.get("/dashboard/utilization", async (req, res) => {
   });
   const tsAgg = await prisma.timesheet.groupBy({
     by: ["userId"],
-    where: { status: "APPROVED" },
+    where: { status: "APPROVED", project: { deletedAt: null, archivedAt: null } },
     _sum: { hours: true },
   });
   const actualMap = new Map<string, number>();

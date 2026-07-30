@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
-import { userCanAccessProject } from "../lib/projectAccess.js";
+import { userCanAccessProject, assertProjectWritable } from "../lib/projectAccess.js";
 
 // Change Requests drive formal change control: a documented request to alter a
 // project's scope, schedule, or cost. Reads and writes are scoped to the
@@ -135,6 +135,7 @@ router.post("/projects/:id/change-requests", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project or Management can create change requests" });
     return;
   }
+  if (!(await assertProjectWritable(projectId, res))) return;
   const body = req.body || {};
   const type = String(body.type ?? "");
   if (!CR_TYPES.has(type)) {
@@ -196,6 +197,7 @@ router.patch("/change-requests/:crId", async (req, res) => {
     res.status(409).json({ error: "Only DRAFT change requests can be edited" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   const body = req.body || {};
   const data: Record<string, unknown> = {};
   if (body.type !== undefined) {
@@ -261,6 +263,7 @@ router.delete("/change-requests/:crId", async (req, res) => {
     res.status(409).json({ error: "Only DRAFT change requests can be deleted" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   await prisma.changeRequest.delete({ where: { id } });
   await recordAudit(req, {
     action: "change_request.deleted",
@@ -293,6 +296,7 @@ router.post("/change-requests/:crId/approve", async (req, res) => {
     res.status(409).json({ error: "Only DRAFT change requests can be approved" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   const note = req.body?.decisionNote ? String(req.body.decisionNote).trim() || null : null;
   const updated = await prisma.changeRequest.update({
     where: { id },
@@ -321,6 +325,7 @@ router.post("/change-requests/:crId/reject", async (req, res) => {
     res.status(409).json({ error: "Only DRAFT or APPROVED change requests can be rejected" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   const note = req.body?.decisionNote ? String(req.body.decisionNote).trim() || null : null;
   const updated = await prisma.changeRequest.update({
     where: { id },
@@ -349,6 +354,7 @@ router.post("/change-requests/:crId/apply", async (req, res) => {
     res.status(409).json({ error: "Only APPROVED change requests can be applied" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
 
   // Apply any proposed values onto the project, then (for SCHEDULE/COST CRs)
   // snapshot the resulting committed plan as a new current baseline version so

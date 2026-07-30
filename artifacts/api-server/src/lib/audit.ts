@@ -14,6 +14,8 @@ export type AuditAction =
   | "project.status_changed"
   | "project.pm_replaced"
   | "project.deleted"
+  | "project.archived"
+  | "project.unarchived"
   | "project.restored"
   | "project.auto_closed"
   | "timesheet.created"

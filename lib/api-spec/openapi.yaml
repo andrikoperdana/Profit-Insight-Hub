@@ -663,6 +663,7 @@ paths:
       tags: [projects]
       parameters:
         - { name: status, in: query, required: false, schema: { type: string } }
+        - { name: includeArchived, in: query, required: false, schema: { type: string }, description: "MGMT/SUPER_ADMIN only — 'true' includes archived projects in the list" }
       responses:
         "200":
           description: OK
@@ -725,6 +726,32 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/SuccessMessage" }
+
+  /projects/{id}/archive:
+    post:
+      operationId: archiveProject
+      tags: [projects]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Project" }
+
+  /projects/{id}/unarchive:
+    post:
+      operationId: unarchiveProject
+      tags: [projects]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Project" }
 
   /projects/{id}/financials:
     get:
@@ -3983,6 +4010,7 @@ components:
         reportCoverUrl: { type: string, nullable: true }
         reportLink: { type: string, nullable: true }
         reportSubmittedAt: { type: string, nullable: true }
+        archivedAt: { type: string, nullable: true, description: "Set when the project is archived — excluded from reports/dashboards and read-only until unarchived" }
         lastStatusReason: { type: string, nullable: true }
         healthScore:
           type: integer

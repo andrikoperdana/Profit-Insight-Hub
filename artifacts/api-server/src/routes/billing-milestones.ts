@@ -9,6 +9,7 @@ import { validateWorkstreamId } from "../lib/workstreams.js";
 import { buildInvoicePdf } from "../lib/invoice-pdf.js";
 import { getInvoiceIssuer } from "../lib/invoice-config.js";
 import { splitVat, nextInvoiceNumber } from "../lib/invoicing.js";
+import { assertProjectWritable } from "../lib/projectAccess.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -258,6 +259,7 @@ router.post("/projects/:id/billing-milestones", validateBody(CreateBillingMilest
     res.status(403).json({ error: "Only Management or assigned PM can create billing milestones" });
     return;
   }
+  if (!(await assertProjectWritable(projectId, res))) return;
   const { name, description, percentage, amount, dueDate, invoiceNumber, sortOrder, workstreamId } = req.body || {};
   const wsCheck = await validateWorkstreamId(projectId, workstreamId);
   if (!wsCheck.ok) {
@@ -338,6 +340,7 @@ router.patch("/billing-milestones/:milestoneId", validateBody(UpdateBillingMiles
     res.status(403).json({ error: "Only Management or assigned PM can edit billing milestones" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   const { name, description, percentage, amount, dueDate, status, invoiceNumber, invoicedAt, paidAt, reportUrl, sortOrder, workstreamId } =
     req.body || {};
   const data: Record<string, unknown> = {};
@@ -491,6 +494,7 @@ router.delete("/billing-milestones/:milestoneId", async (req, res) => {
     res.status(403).json({ error: "Only Management or assigned PM can delete billing milestones" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   await prisma.billingMilestone.delete({ where: { id: before.id } });
   await recordAudit(req, {
     action: "billing_milestone.deleted",
@@ -541,6 +545,7 @@ router.post("/billing-milestones/:milestoneId/generate-invoice", async (req, res
     res.status(403).json({ error: "Only Management or assigned PM can generate invoices" });
     return;
   }
+  if (!(await assertProjectWritable(milestone.projectId, res))) return;
   if (milestone.status === "CANCELLED") {
     res.status(409).json({ error: "Cannot generate an invoice for a cancelled milestone" });
     return;

@@ -183,10 +183,26 @@ describe("userCanAccessProject", () => {
 // ─── userCanWriteProject (FINANCE no longer short-circuits) ─────────────────
 
 describe("userCanWriteProject", () => {
-  it("MANAGEMENT short-circuits to true without hitting Prisma", async () => {
+  it("MANAGEMENT can write a live project (archived check now hits Prisma)", async () => {
+    findUniqueMock.mockResolvedValueOnce({
+      pmId: "pm-1",
+      adminProjectId: "ap-1",
+      deletedAt: null,
+      archivedAt: null,
+    });
     const ok = await userCanWriteProject("p1", { sub: "u1", role: "MANAGEMENT" });
     expect(ok).toBe(true);
-    expect(findUniqueMock).not.toHaveBeenCalled();
+  });
+
+  it("MANAGEMENT cannot write an archived project", async () => {
+    findUniqueMock.mockResolvedValueOnce({
+      pmId: "pm-1",
+      adminProjectId: "ap-1",
+      deletedAt: null,
+      archivedAt: new Date(),
+    });
+    const ok = await userCanWriteProject("p1", { sub: "u1", role: "MANAGEMENT" });
+    expect(ok).toBe(false);
   });
 
   it("FINANCE is NOT a project owner — must fall through and be denied", async () => {

@@ -86,13 +86,40 @@ export async function userCanWriteProject(
   user: { sub: string; role: string },
 ): Promise<boolean> {
   const role = user.role;
-  if (canWriteAnyProject(role)) return true;
   const project = await prisma.project.findUnique({
     where: { id: projectId },
-    select: { pmId: true, adminProjectId: true, deletedAt: true },
+    select: { pmId: true, adminProjectId: true, deletedAt: true, archivedAt: true },
   });
-  if (!project || project.deletedAt) return false;
+  // Archived projects are read-only for EVERYONE (including MGMT); the only
+  // allowed mutations are unarchive/delete, which live in routes/projects.ts
+  // and do not go through this helper.
+  if (!project || project.deletedAt || project.archivedAt) return false;
+  if (canWriteAnyProject(role)) return true;
   if (role === "PROJECT_MANAGER") return project.pmId === user.sub;
   if (role === "ADMIN_PROJECT") return project.adminProjectId === user.sub;
   return false;
+}
+
+// Central read-only guard for archived projects. Every mutating endpoint on a
+// project or its children (resources, tasks, expenses, reports, RAID, billing
+// milestones, change requests, documents, workstreams, timesheets, ...) must
+// call this before writing. Sends the error response itself and returns false
+// when the write must be blocked.
+export async function assertProjectWritable(
+  projectId: string,
+  res: { status: (code: number) => { json: (body: unknown) => unknown } },
+): Promise<boolean> {
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    select: { deletedAt: true, archivedAt: true },
+  });
+  if (!project || project.deletedAt) {
+    res.status(404).json({ error: "Project not found" });
+    return false;
+  }
+  if (project.archivedAt) {
+    res.status(400).json({ error: "Project is archived and read-only. Unarchive it first." });
+    return false;
+  }
+  return true;
 }

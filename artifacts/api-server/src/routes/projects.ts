@@ -17,7 +17,7 @@ import { getAppSettings } from "../lib/app-settings.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
 import { notifyUser, notifyUsers } from "../lib/notifications.js";
 import { createFeedback360PairsIfMissing, checkCloseRequirements } from "../lib/feedback360.js";
-import { userCanAccessProject } from "../lib/projectAccess.js";
+import { assertProjectWritable, userCanAccessProject } from "../lib/projectAccess.js";
 import { nextProjectId } from "../lib/projectIds.js";
 import {
   writeRoles,
@@ -36,7 +36,9 @@ router.get("/projects", async (req, res) => {
   const role = req.user!.role;
   const userId = req.user!.sub;
   const includeDeleted = req.query.includeDeleted === "true" && (role === "MANAGEMENT" || role === "SUPER_ADMIN");
+  const includeArchived = req.query.includeArchived === "true" && (role === "MANAGEMENT" || role === "SUPER_ADMIN");
   const where: any = includeDeleted ? {} : { deletedAt: null };
+  if (!includeDeleted && !includeArchived) where.archivedAt = null;
   if (status) where.status = status;
   // Role-based scoping: PM sees own projects; Sales sees own projects.
   // Consultant/TW see projects they are assigned to OR have logged time on.
@@ -343,6 +345,10 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
   });
   if (!beforeProj) {
     res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (beforeProj.archivedAt) {
+    res.status(400).json({ error: "This project is archived and read-only. Unarchive it first to make changes." });
     return;
   }
 
@@ -902,12 +908,16 @@ router.post("/projects/:id/replace-pm", async (req, res) => {
   const project = await prisma.project.findUnique({
     where: { id },
     select: {
-      id: true, code: true, name: true, status: true, deletedAt: true,
+      id: true, code: true, name: true, status: true, deletedAt: true, archivedAt: true,
       pmId: true, pm: { select: { id: true, name: true } },
     },
   });
   if (!project || project.deletedAt) {
     res.status(404).json({ error: "Project not found" });
+    return;
+  }
+  if ((project as any).archivedAt) {
+    res.status(400).json({ error: "This project is archived and read-only. Unarchive it first to make changes." });
     return;
   }
   if (project.status === "DRAFT") {
@@ -1013,6 +1023,8 @@ router.patch("/projects/:id/report", async (req, res) => {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
+  // Archived projects are read-only, including report metadata.
+  if (!(await assertProjectWritable(project.id, res))) return;
   const b = req.body || {};
   const data: Record<string, unknown> = {};
   if (b.reportCoverUrl !== undefined) data.reportCoverUrl = b.reportCoverUrl || null;
@@ -1120,6 +1132,64 @@ router.get("/projects/:id/whatif", async (req, res) => {
   });
 });
 
+// Archive / unarchive — MANAGEMENT only (SUPER_ADMIN bypasses via requireRole).
+// Archiving takes the project out of dashboards, reports, and financial
+// calculations and makes it read-only. It is reversible via /unarchive.
+// Delete is only allowed for archived projects (see DELETE below).
+router.post("/projects/:id/archive", requireRole("MANAGEMENT"), async (req, res) => {
+  const id = String(req.params.id);
+  const project = await prisma.project.findUnique({ where: { id }, include: projectInclude });
+  if (!project || project.deletedAt) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (project.archivedAt) {
+    res.status(400).json({ error: "Project is already archived" });
+    return;
+  }
+  const updated = await prisma.project.update({
+    where: { id },
+    data: { archivedAt: new Date() },
+    include: projectInclude,
+  });
+  await recordAudit(req, {
+    action: "project.archived",
+    entityType: "Project",
+    entityId: id,
+    description: `Archived project ${project.projectId ?? project.code ?? id} — ${project.name}`,
+    before: { archivedAt: null },
+    after: { archivedAt: updated.archivedAt },
+  });
+  res.json(serializeProject(updated, req.user?.role));
+});
+
+router.post("/projects/:id/unarchive", requireRole("MANAGEMENT"), async (req, res) => {
+  const id = String(req.params.id);
+  const project = await prisma.project.findUnique({ where: { id }, include: projectInclude });
+  if (!project || project.deletedAt) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (!project.archivedAt) {
+    res.status(400).json({ error: "Project is not archived" });
+    return;
+  }
+  const updated = await prisma.project.update({
+    where: { id },
+    data: { archivedAt: null },
+    include: projectInclude,
+  });
+  await recordAudit(req, {
+    action: "project.unarchived",
+    entityType: "Project",
+    entityId: id,
+    description: `Unarchived project ${project.projectId ?? project.code ?? id} — ${project.name}`,
+    before: { archivedAt: project.archivedAt },
+    after: { archivedAt: null },
+  });
+  res.json(serializeProject(updated, req.user?.role));
+});
+
 router.delete(
   "/projects/:id",
   requireRole("MANAGEMENT"),
@@ -1130,6 +1200,12 @@ router.delete(
     });
     if (!before) {
       res.status(404).json({ error: "Not found" });
+      return;
+    }
+    if (!before.archivedAt) {
+      res.status(400).json({
+        error: "Only archived projects can be deleted. Archive the project first.",
+      });
       return;
     }
     // Soft delete — keep historical timesheets, documents, financials intact.

@@ -42,7 +42,7 @@ router.get("/bi/overview", requireAuth, requireRole("MANAGEMENT"), async (req, r
   const projectTypeFilter = req.query.projectType ? String(req.query.projectType) : null;
 
   const allProjects = await prisma.project.findMany({
-    where: { deletedAt: null, kind: "CLIENT" },
+    where: { deletedAt: null, archivedAt: null, kind: "CLIENT" },
     include: projectInclude,
   });
 
@@ -227,6 +227,7 @@ router.get("/bi/overview", requireAuth, requireRole("MANAGEMENT"), async (req, r
         status: "APPROVED",
         workDate: { gte: from, lte: to },
         userId: { in: Array.from(allTeamUserIds) },
+        project: { deletedAt: null, archivedAt: null },
       },
       _sum: { hours: true },
     });
@@ -454,7 +455,11 @@ router.get("/bi/overview", requireAuth, requireRole("MANAGEMENT"), async (req, r
     const end = new Date(today.getFullYear(), today.getMonth() - i + 1, 0, 23, 59, 59, 999);
     const cap = workdaysIn(start, end) * headcountAll * 8;
     const tsRows = await prisma.timesheet.aggregate({
-      where: { status: "APPROVED", workDate: { gte: start, lte: end } },
+      where: {
+        status: "APPROVED",
+        workDate: { gte: start, lte: end },
+        project: { deletedAt: null, archivedAt: null },
+      },
       _sum: { hours: true },
     });
     const hrs = tsRows._sum.hours ?? 0;

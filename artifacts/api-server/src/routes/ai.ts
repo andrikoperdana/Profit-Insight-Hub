@@ -68,7 +68,7 @@ router.post("/ai/report-draft", validateBody(GenerateAiReportDraftBody), async (
   }
   const language = req.body.language === "en" ? ("en" as const) : ("id" as const);
   const project = await prisma.project.findFirst({
-    where: { id: String(req.body.projectId), deletedAt: null },
+    where: { id: String(req.body.projectId), deletedAt: null, archivedAt: null },
     select: reportDraftProjectSelect,
   });
   if (!project) {

@@ -20,6 +20,7 @@ import {
 } from "../lib/taskHelpers.js";
 import { parsePagination, setTotalCount } from "../lib/pagination.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
+import { assertProjectWritable } from "../lib/projectAccess.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -77,6 +78,7 @@ router.post("/projects/:id/tasks", validateBody(CreateProjectTaskBody), async (r
       .json({ error: "Only Management or the assigned PM can create tasks" });
     return;
   }
+  if (!(await assertProjectWritable(projectId, res))) return;
   const {
     title,
     description,
@@ -290,6 +292,7 @@ router.patch("/tasks/:taskId", validateBody(UpdateTaskBody), async (req, res) =>
     res.status(403).json({ error: "Not allowed to update this task" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
 
   const {
     title,
@@ -586,6 +589,7 @@ router.delete("/tasks/:taskId", async (req, res) => {
       .json({ error: "Only Management or assigned PM can delete tasks" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   await prisma.task.delete({ where: { id: before.id } });
   await recordAudit(req, {
     action: "task.deleted",
@@ -651,6 +655,7 @@ router.post("/tasks/:taskId/time-logs", async (req, res) => {
     select: {
       id: true,
       title: true,
+      projectId: true,
       assigneeId: true,
       assignees: { select: { userId: true } },
     },
@@ -667,6 +672,7 @@ router.post("/tasks/:taskId/time-logs", async (req, res) => {
       .json({ error: "Only an assignee can log hours on this task" });
     return;
   }
+  if (!(await assertProjectWritable(task.projectId, res))) return;
   const { hours, note, loggedAt } = req.body || {};
   const h = Number(hours);
   if (!isFinite(h) || h <= 0 || h > 24) {

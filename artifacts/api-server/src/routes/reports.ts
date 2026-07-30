@@ -27,7 +27,7 @@ async function loadOptions(source: OptionsSource, viewer: { sub: string; role: s
     }
     case "clients": {
       if (isPm) {
-        const myProjects = await prisma.project.findMany({ where: { pmId: viewer.sub, deletedAt: null }, select: { clientId: true } });
+        const myProjects = await prisma.project.findMany({ where: { pmId: viewer.sub, deletedAt: null, archivedAt: null }, select: { clientId: true } });
         const ids = Array.from(new Set(myProjects.map((p) => p.clientId).filter((x): x is string => !!x)));
         const clients = await prisma.client.findMany({ where: { id: { in: ids } }, orderBy: { name: "asc" } });
         return clients.map((c) => ({ value: c.id, label: c.name }));
@@ -36,7 +36,7 @@ async function loadOptions(source: OptionsSource, viewer: { sub: string; role: s
       return clients.map((c) => ({ value: c.id, label: c.name }));
     }
     case "projects": {
-      const where: any = { deletedAt: null };
+      const where: any = { deletedAt: null, archivedAt: null };
       if (isPm) where.pmId = viewer.sub;
       const projects = await prisma.project.findMany({ where, orderBy: { code: "asc" }, select: { id: true, code: true, name: true } });
       return projects.map((p) => ({ value: p.id, label: `${p.code} — ${p.name}` }));
@@ -77,7 +77,7 @@ async function loadOptions(source: OptionsSource, viewer: { sub: string; role: s
     }
     case "users": {
       if (isPm) {
-        const myProjects = await prisma.project.findMany({ where: { pmId: viewer.sub, deletedAt: null }, select: { id: true } });
+        const myProjects = await prisma.project.findMany({ where: { pmId: viewer.sub, deletedAt: null, archivedAt: null }, select: { id: true } });
         const projectIds = myProjects.map((p) => p.id);
         const resources = await prisma.projectResource.findMany({ where: { projectId: { in: projectIds } }, select: { userId: true } });
         const ids = Array.from(new Set(resources.map((r) => r.userId)));

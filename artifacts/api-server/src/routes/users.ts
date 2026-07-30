@@ -185,16 +185,16 @@ router.get("/users/available", async (req, res) => {
         activeProjectCount = await prisma.projectResource.count({
           where: {
             userId: u.id,
-            project: { status: { in: ["OBSERVATION", "ACTIVE"] }, deletedAt: null },
+            project: { status: { in: ["OBSERVATION", "ACTIVE"] }, deletedAt: null, archivedAt: null },
           },
         });
       } else if (role === "TECHNICAL_WRITER") {
         activeProjectCount = await prisma.project.count({
-          where: { technicalWriterId: u.id, status: { in: ["OBSERVATION", "ACTIVE"] }, deletedAt: null },
+          where: { technicalWriterId: u.id, status: { in: ["OBSERVATION", "ACTIVE"] }, deletedAt: null, archivedAt: null },
         });
       } else if (role === "ADMIN_PROJECT") {
         activeProjectCount = await prisma.project.count({
-          where: { adminProjectId: u.id, status: { in: ["OBSERVATION", "ACTIVE", "NO_NEED_CONSULTANT"] }, deletedAt: null },
+          where: { adminProjectId: u.id, status: { in: ["OBSERVATION", "ACTIVE", "NO_NEED_CONSULTANT"] }, deletedAt: null, archivedAt: null },
         });
       }
       const atCapacity = role === "KONSULTAN" ? activeProjectCount >= 4 : false;
@@ -299,7 +299,7 @@ router.get("/users/:id/project-assignments", async (req, res) => {
   const scopeToPmOwned = isPmCaller && !isSelf && !isAlwaysAllowed;
   const projects = await prisma.project.findMany({
     where: {
-      deletedAt: null,
+      deletedAt: null, archivedAt: null,
       ...(scopeToPmOwned ? { pmId: callerId } : {}),
       OR: [
         { pmId: targetId },

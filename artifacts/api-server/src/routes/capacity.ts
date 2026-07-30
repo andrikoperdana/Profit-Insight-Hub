@@ -27,7 +27,7 @@ router.get("/capacity/calendar", async (req, res) => {
   let pmIds: string[] | null = null;
   if (role === "PROJECT_MANAGER") {
     const own = await prisma.project.findMany({
-      where: { pmId: req.user!.sub, deletedAt: null },
+      where: { pmId: req.user!.sub, deletedAt: null, archivedAt: null },
       select: { id: true },
     });
     pmIds = own.map((p) => p.id);

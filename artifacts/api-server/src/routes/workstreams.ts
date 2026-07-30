@@ -10,7 +10,7 @@ function isUniqueConstraintError(e: unknown): boolean {
 }
 import { requireAuth } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
-import { userCanAccessProject } from "../lib/projectAccess.js";
+import { userCanAccessProject, assertProjectWritable } from "../lib/projectAccess.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -98,6 +98,7 @@ router.post("/projects/:id/workstreams", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project or Management can add workstreams" });
     return;
   }
+  if (!(await assertProjectWritable(projectId, res))) return;
   const body = req.body || {};
   const code = typeof body.code === "string" ? body.code.trim() : "";
   const name = typeof body.name === "string" ? body.name.trim() : "";
@@ -219,6 +220,7 @@ router.patch("/workstreams/:wsId", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project or Management can edit workstreams" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   const body = req.body || {};
   const data: Record<string, unknown> = {};
   if (body.code !== undefined) {
@@ -373,6 +375,7 @@ router.delete("/workstreams/:wsId", async (req, res) => {
     res.status(403).json({ error: "Only PM-of-project or Management can delete workstreams" });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   // Atomically delete and flip the project flag if this was the last workstream.
   await prisma.$transaction(async (tx) => {
     await tx.projectWorkstream.delete({ where: { id } });

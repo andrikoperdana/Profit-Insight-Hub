@@ -70,7 +70,7 @@ router.get(
           where: {
             project: {
               status: { in: ["ACTIVE", "OBSERVATION"] },
-              deletedAt: null,
+              deletedAt: null, archivedAt: null,
               startDate: { lte: weekEnd },
               endDate: { gte: weekStart },
             },

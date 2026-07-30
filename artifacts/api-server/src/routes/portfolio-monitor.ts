@@ -159,7 +159,7 @@ router.get(
 
     const projects = await prisma.project.findMany({
       where: {
-        deletedAt: null,
+        deletedAt: null, archivedAt: null,
         kind: "CLIENT",
         status: { in: ["OBSERVATION", "ACTIVE", "PAUSE", "COMPLETE"] },
       },

@@ -13,7 +13,10 @@ import type { ProjectStatus } from "./projectStatus";
 
 export interface Project {
   id: string;
-  code: string;
+  /** Auto-assigned read-only Project ID (PRJ/YYYY/NNN) */
+  projectId?: string | null;
+  /** SPK / PO Number — optional, user-supplied */
+  code?: string | null;
   name: string;
   description?: string | null;
   status: ProjectStatus;
@@ -58,6 +61,8 @@ export interface Project {
   reportCoverUrl?: string | null;
   reportLink?: string | null;
   reportSubmittedAt?: string | null;
+  /** Set when the project is archived — excluded from reports/dashboards and read-only until unarchived */
+  archivedAt?: string | null;
   lastStatusReason?: string | null;
   /** 0-100 composite health score. Null for DRAFT/CLOSED projects or callers without financial visibility. */
   healthScore?: number | null;

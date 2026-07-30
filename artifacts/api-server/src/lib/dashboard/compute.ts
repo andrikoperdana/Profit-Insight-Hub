@@ -19,7 +19,7 @@ import { classifyProject, type ProjectType } from "@workspace/shared";
 export async function computeSummary() {
   // Executive KPIs are commercial; exclude non-billable INTERNAL/PRESALES/TRAINING.
   const projects = (await prisma.project.findMany({
-    where: { deletedAt: null, kind: "CLIENT" },
+    where: { deletedAt: null, archivedAt: null, kind: "CLIENT" },
     select: projectMetricsSelect,
   })) as unknown as ProjectWithRelations[];
   const totalProjects = projects.length;
@@ -52,7 +52,7 @@ export async function computeSummary() {
     }
   }
   const pendingTimesheets = await prisma.timesheet.count({
-    where: { status: "SUBMITTED" },
+    where: { status: "SUBMITTED", project: { deletedAt: null, archivedAt: null } },
   });
   const weightedMarginPct =
     totalContractValue > 0 ? (totalActualProfit / totalContractValue) * 100 : 0;
@@ -81,7 +81,7 @@ export async function computeProfitTrend() {
   // Group approved timesheets by month for cost; spread project contract value.
   // Only CLIENT projects contribute to commercial profit trend.
   const projects = (await prisma.project.findMany({
-    where: { deletedAt: null, kind: "CLIENT" },
+    where: { deletedAt: null, archivedAt: null, kind: "CLIENT" },
     select: projectMetricsSelect,
   })) as unknown as ProjectWithRelations[];
   const monthly = new Map<string, { revenue: number; cost: number }>();
@@ -121,7 +121,7 @@ export async function computeProfitTrend() {
 export async function computeStatusBreakdown() {
   const grouped = await prisma.project.groupBy({
     by: ["status"],
-    where: { deletedAt: null },
+    where: { deletedAt: null, archivedAt: null },
     _count: { _all: true },
     _sum: { contractValue: true },
   });
@@ -150,8 +150,8 @@ export async function computeRecentActivity() {
 
 // pmId null => whole portfolio; otherwise scope to a single PM's projects.
 export async function computePendingAging(pmId: string | null) {
-  const where: any = { status: "SUBMITTED" };
-  if (pmId) where.project = { pmId };
+  const where: any = { status: "SUBMITTED", project: { deletedAt: null, archivedAt: null } };
+  if (pmId) where.project = { ...where.project, pmId };
   const list = await prisma.timesheet.findMany({
     where,
     include: { user: true, project: true },
@@ -206,7 +206,11 @@ export async function computeUtilizationTrend(days: number) {
   });
 
   const ts = await prisma.timesheet.findMany({
-    where: { status: "APPROVED", workDate: { gte: since } },
+    where: {
+      status: "APPROVED",
+      workDate: { gte: since },
+      project: { deletedAt: null, archivedAt: null },
+    },
     select: { workDate: true, hours: true },
   });
 
@@ -239,7 +243,7 @@ export async function computeResourceUtilizationDetail(role: string, sub: string
   let pmProjectIdSet: Set<string> | null = null;
   if (role === "PROJECT_MANAGER") {
     const ownProjects = await prisma.project.findMany({
-      where: { pmId: sub, deletedAt: null },
+      where: { pmId: sub, deletedAt: null, archivedAt: null },
       select: { id: true },
     });
     pmProjectIdSet = new Set(ownProjects.map((p) => p.id));
@@ -318,6 +322,7 @@ export async function computeResourceUtilizationDetail(role: string, sub: string
     where: {
       status: "APPROVED",
       workDate: { gte: monthStart },
+      project: { deletedAt: null, archivedAt: null },
       ...(pmProjectIdSet
         ? { projectId: { in: Array.from(pmProjectIdSet) } }
         : {}),
@@ -531,10 +536,11 @@ export async function computeBillableUtilization(
   const where: Prisma.TimesheetWhereInput = {
     status: "APPROVED",
     workDate: { gte: since },
+    project: { deletedAt: null, archivedAt: null },
   };
   // PMs only see hours logged against their own projects.
   if (role === "PROJECT_MANAGER") {
-    where.project = { pmId: sub };
+    where.project = { deletedAt: null, archivedAt: null, pmId: sub };
   }
   const ts = await prisma.timesheet.findMany({
     where,
@@ -600,7 +606,7 @@ export async function computeBillableUtilization(
 // project-type profitability, PM allocation, and Sales->PM pending-assignment.
 export async function computeProjectInsights(role: string | undefined) {
   const projects = await prisma.project.findMany({
-    where: { deletedAt: null },
+    where: { deletedAt: null, archivedAt: null },
     include: projectInclude,
   });
   const serialized = projects.map((p) => serializeProject(p, role));
@@ -697,7 +703,7 @@ export async function computeCashFlowForecast() {
   const periodEnd = addMonthsUtc(start, periods);
 
   const projects = await prisma.project.findMany({
-    where: { deletedAt: null, status: { in: ["OBSERVATION", "ACTIVE", "PAUSE"] } },
+    where: { deletedAt: null, archivedAt: null, status: { in: ["OBSERVATION", "ACTIVE", "PAUSE"] } },
     select: {
       id: true,
       contractValue: true,

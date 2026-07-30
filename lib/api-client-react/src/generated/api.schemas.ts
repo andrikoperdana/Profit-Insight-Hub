@@ -1147,6 +1147,8 @@ export interface Project {
   reportCoverUrl?: string | null;
   reportLink?: string | null;
   reportSubmittedAt?: string | null;
+  /** Set when the project is archived — excluded from reports/dashboards and read-only until unarchived */
+  archivedAt?: string | null;
   lastStatusReason?: string | null;
   /** 0-100 composite health score. Null for DRAFT/CLOSED projects or callers without financial visibility. */
   healthScore?: number | null;
@@ -3212,6 +3214,10 @@ export type GetLeadsAnalyticsParams = {
 
 export type ListProjectsParams = {
   status?: string;
+  /**
+   * MGMT/SUPER_ADMIN only — 'true' includes archived projects in the list
+   */
+  includeArchived?: string;
 };
 
 export type ListPrincipalTeamProjects200ItemAssignmentsItem = {

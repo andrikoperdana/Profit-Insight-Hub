@@ -223,7 +223,7 @@ export async function buildExecutiveCopilotFacts(): Promise<ExecutiveCopilotFact
   const since90 = nowMs - 90 * DAY_MS;
 
   const projects = (await prisma.project.findMany({
-    where: { deletedAt: null },
+    where: { deletedAt: null, archivedAt: null },
     select: copilotProjectSelect,
   })) as unknown as ProjectWithRelations[];
 

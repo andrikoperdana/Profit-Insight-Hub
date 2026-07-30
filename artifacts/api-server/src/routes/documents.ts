@@ -5,6 +5,7 @@ import { recordAudit } from "../lib/audit.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
 import { checkCloseRequirements } from "../lib/feedback360.js";
 import {
+  assertProjectWritable,
   userCanAccessProject,
   userCanWriteProject,
 } from "../lib/projectAccess.js";
@@ -160,6 +161,9 @@ router.post(
         res.status(403).json({ error: "Finance can only upload INVOICE or CONTRACT documents" });
         return;
       }
+      // FINANCE bypasses userCanWriteProject (which blocks archived), so
+      // enforce the archived read-only contract here explicitly.
+      if (!(await assertProjectWritable(String(req.params.id), res))) return;
     } else if (!(await userCanWriteProject(String(req.params.id), req.user!))) {
       // Tighten role gate: only the assigned PM (or MGMT / project's Admin
       // Project) may upload documents. Without this, any PROJECT_MANAGER
@@ -293,6 +297,9 @@ router.delete(
         res.status(403).json({ error: "Finance can only delete INVOICE or CONTRACT documents" });
         return;
       }
+      // FINANCE bypasses userCanWriteProject (which blocks archived), so
+      // enforce the archived read-only contract here explicitly.
+      if (!(await assertProjectWritable(before.projectId, res))) return;
     } else if (!(await userCanWriteProject(before.projectId, req.user!))) {
       res.status(403).json({ error: "Forbidden" });
       return;

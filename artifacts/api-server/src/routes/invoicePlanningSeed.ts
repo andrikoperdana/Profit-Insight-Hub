@@ -31,7 +31,7 @@ router.post("/invoice-planning/seed-sample", requireRole("MANAGEMENT"), async (r
 
   const projects = await prisma.project.findMany({
     where: {
-      deletedAt: null,
+      deletedAt: null, archivedAt: null,
       status: { in: ["OBSERVATION", "ACTIVE", "PAUSE"] },
     },
     select: { id: true, contractValue: true, name: true },

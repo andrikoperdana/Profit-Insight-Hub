@@ -34,10 +34,21 @@ export default function ProjectsList() {
   const [pmFilter, setPmFilter] = useState<string>("all");
   const [seeding, setSeeding] = useState(false);
 
-  const { data: projects, isLoading } = useListProjects(
-    statusFilter === "all" ? {} : { status: statusFilter },
+  const isMgmt = user?.role === "MANAGEMENT" || user?.role === "SUPER_ADMIN";
+  const isArchivedTab = statusFilter === "archived";
+  const { data: rawProjects, isLoading } = useListProjects(
+    isArchivedTab
+      ? { includeArchived: "true" }
+      : statusFilter === "all"
+        ? {}
+        : { status: statusFilter },
     { query: { queryKey: ["projects", statusFilter] } }
   );
+  // The Archived tab loads everything (incl. archived) and keeps only archived
+  // rows; other tabs already exclude archived server-side.
+  const projects = isArchivedTab
+    ? rawProjects?.filter((p) => !!p.archivedAt)
+    : rawProjects;
 
   const nonClosedCount = (projects ?? []).filter(p => p.status !== "CLOSED" && p.status !== "COMPLETE").length;
   const showSeed = !import.meta.env.PROD && user?.role === "MANAGEMENT" && statusFilter === "all" && nonClosedCount < 3;
@@ -158,6 +169,7 @@ export default function ProjectsList() {
             {!isPrincipal && <TabsTrigger value={ProjectStatus.PAUSE}>Pause</TabsTrigger>}
             {!isPrincipal && <TabsTrigger value={ProjectStatus.COMPLETE}>Complete</TabsTrigger>}
             {!isPrincipal && <TabsTrigger value={ProjectStatus.CLOSED}>Closed</TabsTrigger>}
+            {isMgmt && <TabsTrigger value="archived" data-testid="tab-archived">Archived</TabsTrigger>}
           </TabsList>
         </Tabs>
 

@@ -1,4 +1,4 @@
-import { useParams, Link } from "wouter";
+import { useParams, Link, useLocation } from "wouter";
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import {
   useGetProject,
@@ -8,6 +8,9 @@ import {
   getListProjectTasksQueryKey,
   useGetProjectFinancials,
   useUpdateProject,
+  useArchiveProject,
+  useUnarchiveProject,
+  useDeleteProject,
   useUpdateProjectReport,
   useListProjectDocuments,
   useCreateProjectDocument,
@@ -52,7 +55,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
-  Pencil, AlertTriangle, Paperclip, X, PauseCircle,
+  Pencil, AlertTriangle, Paperclip, X, PauseCircle, Archive, ArchiveRestore,
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -135,6 +138,40 @@ export default function ProjectDetail() {
     },
   });
 
+  const [, navigate] = useLocation();
+
+  const archiveMut = useArchiveProject({
+    mutation: {
+      onSuccess: () => {
+        qc.invalidateQueries({ queryKey: getGetProjectQueryKey(id) });
+        qc.invalidateQueries({ queryKey: ["projects"] });
+        toast({ title: "Project archived", description: "It is now excluded from reports and read-only." });
+      },
+      onError: (e: any) => toast({ title: "Failed to archive", description: e?.message, variant: "destructive" }),
+    },
+  });
+  const unarchiveMut = useUnarchiveProject({
+    mutation: {
+      onSuccess: () => {
+        qc.invalidateQueries({ queryKey: getGetProjectQueryKey(id) });
+        qc.invalidateQueries({ queryKey: ["projects"] });
+        toast({ title: "Project unarchived", description: "It is editable and counted in reports again." });
+      },
+      onError: (e: any) => toast({ title: "Failed to unarchive", description: e?.message, variant: "destructive" }),
+    },
+  });
+  const deleteMut = useDeleteProject({
+    mutation: {
+      onSuccess: () => {
+        qc.invalidateQueries({ queryKey: ["projects"] });
+        toast({ title: "Project deleted" });
+        navigate("/projects");
+      },
+      onError: (e: any) => toast({ title: "Failed to delete", description: e?.message, variant: "destructive" }),
+    },
+  });
+  const [confirmDialog, setConfirmDialog] = useState<null | "archive" | "delete">(null);
+
   const [reasonDialog, setReasonDialog] = useState<{
     open: boolean;
     target: ProjectStatus | null;
@@ -203,7 +240,9 @@ export default function ProjectDetail() {
     );
   }
 
-  const canChangeStatus = (user?.role === "MANAGEMENT" || isSuperAdmin(user?.role)) || user?.role === "PROJECT_MANAGER";
+  const isMgmt = user?.role === "MANAGEMENT" || isSuperAdmin(user?.role);
+  const isArchived = !!project.archivedAt;
+  const canChangeStatus = !isArchived && (isMgmt || user?.role === "PROJECT_MANAGER");
   const isCommercial = project.kind === "CLIENT";
   // While the project is PAUSE or COMPLETE the reason is required context (the
   // pause banner says it is shown below), so allow editing but not clearing it.
@@ -232,6 +271,11 @@ export default function ProjectDetail() {
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">{project.name}</h1>
               <ProjectStatusBadge status={project.status} />
+              {isArchived && (
+                <Badge variant="outline" className="border-muted-foreground/40 text-muted-foreground" data-testid="badge-archived">
+                  <Archive className="h-3 w-3 mr-1" /> Archived
+                </Badge>
+              )}
             </div>
             <div className="flex items-center gap-3 mt-1 flex-wrap">
               {project.projectId && (
@@ -280,7 +324,89 @@ export default function ProjectDetail() {
             )}
           </div>
         )}
+        {isMgmt && (
+          <div className="flex items-center gap-2 flex-wrap">
+            {!isArchived ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setConfirmDialog("archive")}
+                disabled={archiveMut.isPending}
+                data-testid="button-archive-project"
+              >
+                <Archive className="h-4 w-4 mr-1" /> Archive
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => unarchiveMut.mutate({ id })}
+                  disabled={unarchiveMut.isPending}
+                  data-testid="button-unarchive-project"
+                >
+                  <ArchiveRestore className="h-4 w-4 mr-1" /> Unarchive
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setConfirmDialog("delete")}
+                  disabled={deleteMut.isPending}
+                  data-testid="button-delete-project"
+                >
+                  <Trash2 className="h-4 w-4 mr-1" /> Delete
+                </Button>
+              </>
+            )}
+          </div>
+        )}
       </div>
+
+      {isArchived && (
+        <div className="rounded-md border border-muted-foreground/30 bg-muted/30 p-4 text-sm text-muted-foreground" data-testid="banner-archived">
+          <div className="flex items-start gap-3">
+            <Archive className="h-5 w-5 mt-0.5 shrink-0" />
+            <div className="space-y-1">
+              <p className="font-semibold text-foreground">This project is archived</p>
+              <p>
+                It is excluded from dashboards, reports, and financial calculations, and
+                all data is read-only. Management can unarchive it to make changes, or
+                delete it permanently. / Project ini diarsipkan — tidak dihitung dalam
+                laporan dan tidak dapat diubah sampai di-unarchive.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <Dialog open={confirmDialog !== null} onOpenChange={(o) => !o && setConfirmDialog(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {confirmDialog === "archive" ? "Archive this project?" : "Delete this project?"}
+            </DialogTitle>
+            <DialogDescription>
+              {confirmDialog === "archive"
+                ? "Archived projects are removed from dashboards, reports, and financial calculations, and become read-only. You can unarchive it at any time."
+                : "This removes the project from the system. Historical data is kept for audit purposes, but the project will no longer be accessible. This should only be done for archived projects you are sure about."}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmDialog(null)}>Cancel</Button>
+            <Button
+              variant={confirmDialog === "delete" ? "destructive" : "default"}
+              onClick={() => {
+                if (confirmDialog === "archive") archiveMut.mutate({ id });
+                else deleteMut.mutate({ id });
+                setConfirmDialog(null);
+              }}
+              data-testid="button-confirm-archive-delete"
+            >
+              {confirmDialog === "archive" ? "Archive project" : "Delete project"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {project.status === ProjectStatus.PAUSE && (
         <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-4 text-sm text-amber-200">

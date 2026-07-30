@@ -7,6 +7,7 @@ import { recordAudit } from "../lib/audit.js";
 import { canViewProjectFinancials } from "../lib/serializers.js";
 import { notifyUser } from "../lib/notifications.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
+import { assertProjectWritable } from "../lib/projectAccess.js";
 
 // Direct involvement check for Principal roles on a project. Unlike
 // `userCanAccessProject` (which grants principals broad status-based
@@ -23,7 +24,7 @@ async function principalIsInvolvedInProject(
   const hit = await prisma.project.findFirst({
     where: {
       id: projectId,
-      deletedAt: null,
+      deletedAt: null, archivedAt: null,
       OR: [
         { resources: { some: { userId: principalId } } },
         { resources: { some: { user: { principalId } } } },
@@ -269,6 +270,7 @@ router.post(
         return;
       }
     }
+    if (!(await assertProjectWritable(projectId, res))) return;
 
     const { category, description, amount, spentAt, evidenceUrl, evidenceFileName, workstreamId, poNumber } = req.body || {};
     const wsCheck = await validateWorkstreamId(projectId, workstreamId);
@@ -398,6 +400,7 @@ router.delete(
         return;
       }
     }
+    if (!(await assertProjectWritable(before.projectId, res))) return;
     await prisma.projectExpense.delete({ where: { id: before.id } });
     await recordAudit(req, {
       action: "expense.deleted",
@@ -522,6 +525,7 @@ router.post(
       res.status(409).json({ error: `Cannot approve an expense in ${before.status} state` });
       return;
     }
+    if (!(await assertProjectWritable(before.projectId, res))) return;
     const updated = await prisma.projectExpense.update({
       where: { id: before.id },
       data: {
@@ -587,6 +591,7 @@ router.post(
       typeof req.body?.settlementNotes === "string" && req.body.settlementNotes.trim()
         ? req.body.settlementNotes.trim().slice(0, 500)
         : null;
+    if (!(await assertProjectWritable(before.projectId, res))) return;
     const updated = await prisma.projectExpense.update({
       where: { id: before.id },
       data: {
@@ -647,6 +652,7 @@ router.post(
       res.status(409).json({ error: `Cannot reject an expense in ${before.status} state` });
       return;
     }
+    if (!(await assertProjectWritable(before.projectId, res))) return;
     const updated = await prisma.projectExpense.update({
       where: { id: before.id },
       data: {

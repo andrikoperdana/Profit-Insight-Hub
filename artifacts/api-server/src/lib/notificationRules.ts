@@ -170,7 +170,7 @@ async function checkInvoicesDueSoon(): Promise<number> {
 async function checkProjectOverrun(): Promise<number> {
   const { budgetOverrunPct } = await getAppSettings();
   const projects = await prisma.project.findMany({
-    where: { deletedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "PAUSE"] }, contractValue: { gt: 0 } },
+    where: { deletedAt: null, archivedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "PAUSE"] }, contractValue: { gt: 0 } },
     select: {
       id: true, name: true, contractValue: true, pmId: true,
       resources: { select: { id: true, dailyRate: true, userId: true } },
@@ -261,7 +261,7 @@ async function checkLateTimesheets(): Promise<number> {
 async function checkLowMargin(): Promise<number> {
   const { lowMarginPct } = await getAppSettings();
   const projects = await prisma.project.findMany({
-    where: { deletedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "PAUSE"] }, contractValue: { gt: 0 } },
+    where: { deletedAt: null, archivedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "PAUSE"] }, contractValue: { gt: 0 } },
     select: {
       id: true, name: true, contractValue: true, pmId: true,
       resources: { select: { userId: true, dailyRate: true } },

@@ -110,7 +110,7 @@ async function toolListProjects(
       : undefined;
   const rows = await prisma.project.findMany({
     where: {
-      deletedAt: null,
+      deletedAt: null, archivedAt: null,
       ...(statusFilter ? { status: statusFilter as never } : {}),
       ...projectScopeWhere(user),
     },
@@ -205,7 +205,7 @@ async function toolGetProjectDetail(user: AssistantUser, args: { query?: string 
   if (!q) return { error: "query is required (project ID, code, or part of its name)" };
   const candidates = await prisma.project.findMany({
     where: {
-      deletedAt: null,
+      deletedAt: null, archivedAt: null,
       ...projectScopeWhere(user),
       OR: [
         { projectId: { equals: q, mode: "insensitive" } },
@@ -398,7 +398,7 @@ async function toolGetBillingStatus(
   if (statusArg === "PAID") {
     // Display-only list of the most recent payments — no portfolio totals here.
     const paid = await prisma.billingMilestone.findMany({
-      where: { status: "PAID", project: { deletedAt: null, ...projectScope } },
+      where: { status: "PAID", project: { deletedAt: null, archivedAt: null, ...projectScope } },
       select: {
         name: true,
         amount: true,

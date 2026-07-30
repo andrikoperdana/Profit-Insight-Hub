@@ -6,6 +6,7 @@ import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { logger } from "../lib/logger.js";
 import { canInvoiceProjectStatus } from "../lib/roles.js";
+import { assertProjectWritable } from "../lib/projectAccess.js";
 import { splitVat, nextInvoiceNumber } from "../lib/invoicing.js";
 import {
   xeroConfigured,
@@ -267,6 +268,8 @@ router.post(
       res.status(409).json({ error: "Cannot invoice a cancelled milestone" });
       return;
     }
+    // Archived projects are read-only: no invoice pushes.
+    if (!(await assertProjectWritable(milestone.project.id, res))) return;
     if (!canInvoiceProjectStatus(milestone.project.status)) {
       res.status(409).json({
         error: `Cannot invoice this milestone: the project is not active yet (status: ${milestone.project.status}). Set the project to Active before invoicing.`,
@@ -423,6 +426,9 @@ export async function runPaymentSync(): Promise<{ checked: number; updated: numb
   const pending = await prisma.billingMilestone.findMany({
     where: {
       xeroInvoiceId: { not: null },
+      // Archived (or deleted) projects are read-only: their milestones are
+      // excluded from payment-sync mutations until unarchived.
+      project: { deletedAt: null, archivedAt: null },
       OR: [
         { status: { in: ["INVOICED", "PLANNED"] } },
         { status: "PAID", paidAt: { gte: paidLookback } },
@@ -450,6 +456,8 @@ export async function runPaymentSyncFor(
   const rows = await prisma.billingMilestone.findMany({
     where: {
       xeroInvoiceId: { in: xeroInvoiceIds },
+      // Same archived read-only rule as runPaymentSync.
+      project: { deletedAt: null, archivedAt: null },
       OR: [
         { status: { in: ["INVOICED", "PLANNED"] } },
         { status: "PAID", paidAt: { gte: paidLookback } },

@@ -47,7 +47,7 @@ export async function fetchOpenMilestones(
   const rows = await prisma.billingMilestone.findMany({
     where: {
       status: { in: [...OPEN_MILESTONE_STATUSES] },
-      project: { deletedAt: null, ...projectScope },
+      project: { deletedAt: null, archivedAt: null, ...projectScope },
     },
     select: {
       name: true,

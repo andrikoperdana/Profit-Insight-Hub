@@ -8,4 +8,8 @@
 
 export type ListProjectsParams = {
   status?: string;
+  /**
+   * MGMT/SUPER_ADMIN only — 'true' includes archived projects in the list
+   */
+  includeArchived?: string;
 };

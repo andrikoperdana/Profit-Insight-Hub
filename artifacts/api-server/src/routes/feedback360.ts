@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { prisma, type Prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
-import { userCanAccessProject } from "../lib/projectAccess.js";
+import { assertProjectWritable, userCanAccessProject } from "../lib/projectAccess.js";
 import { recordAudit } from "../lib/audit.js";
 import { validateBody } from "../middlewares/validate.js";
 import { SubmitFeedback360Body } from "@workspace/api-zod";
@@ -97,6 +97,8 @@ router.patch("/feedback360/:id", validateBody(SubmitFeedback360Body), async (req
     res.status(409).json({ error: "This feedback has already been submitted" });
     return;
   }
+  // Archived projects are read-only: no new/updated 360 feedback.
+  if (!(await assertProjectWritable(fb.projectId, res))) return;
   const { rating, comment } = req.body || {};
   const ratingNum = Number(rating);
   if (!Number.isInteger(ratingNum) || ratingNum < 1 || ratingNum > 5) {

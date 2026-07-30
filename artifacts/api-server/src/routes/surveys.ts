@@ -7,6 +7,7 @@ import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
 import { randomBytes } from "node:crypto";
 import { rateLimitAllow, clientIp } from "../lib/rateLimit.js";
+import { assertProjectWritable } from "../lib/projectAccess.js";
 
 const router: IRouter = Router();
 
@@ -79,11 +80,13 @@ function computeAggregates(
 
 function surveyLinkUnavailable(project: {
   deletedAt: Date | null;
+  archivedAt?: Date | null;
   status: string;
   surveyEnabled: boolean;
   surveyExpiresAt: Date | null;
 }): boolean {
-  if (project.deletedAt || project.status !== "CLOSED") return true;
+  // Archived projects are read-only: their survey links go dark too.
+  if (project.deletedAt || project.archivedAt || project.status !== "CLOSED") return true;
   if (!project.surveyEnabled) return true;
   if (project.surveyExpiresAt && project.surveyExpiresAt.getTime() < Date.now()) return true;
   return false;
@@ -489,6 +492,8 @@ router.put("/projects/:id/survey-share", requireAuth, async (req, res) => {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
+  // Archived projects are read-only.
+  if (!(await assertProjectWritable(project.id, res))) return;
 
   const body = req.body ?? {};
   const data: {

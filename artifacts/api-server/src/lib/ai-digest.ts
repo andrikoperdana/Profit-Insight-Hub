@@ -74,7 +74,7 @@ async function buildWeeklyDigestFacts(): Promise<{ facts: Record<string, unknown
 
   // --- Project health: low margin / over budget / delayed -------------------
   const projects = await prisma.project.findMany({
-    where: { deletedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "PAUSE"] } },
+    where: { deletedAt: null, archivedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "PAUSE"] } },
     select: digestProjectSelect,
   });
 
@@ -202,11 +202,14 @@ async function buildWeeklyDigestFacts(): Promise<{ facts: Record<string, unknown
   // --- Timesheets: pending approvals + late submitters -----------------------
   const [pendingAgg, pendingUsers] = await Promise.all([
     prisma.timesheet.aggregate({
-      where: { status: "SUBMITTED" },
+      where: { status: "SUBMITTED", project: { deletedAt: null, archivedAt: null } },
       _count: { _all: true },
       _min: { workDate: true },
     }),
-    prisma.timesheet.groupBy({ by: ["userId"], where: { status: "SUBMITTED" } }),
+    prisma.timesheet.groupBy({
+      by: ["userId"],
+      where: { status: "SUBMITTED", project: { deletedAt: null, archivedAt: null } },
+    }),
   ]);
   const lateCutoff = new Date(nowMs - settings.lateTimesheetDays * DAY_MS);
   const deliveryUsers = await prisma.user.findMany({
@@ -227,11 +230,19 @@ async function buildWeeklyDigestFacts(): Promise<{ facts: Record<string, unknown
   const prevWeekStart = new Date(monday.getTime() - 14 * DAY_MS);
   const [lastWeekAgg, prevWeekAgg] = await Promise.all([
     prisma.timesheet.aggregate({
-      where: { status: "APPROVED", workDate: { gte: lastWeekStart, lt: monday } },
+      where: {
+        status: "APPROVED",
+        workDate: { gte: lastWeekStart, lt: monday },
+        project: { deletedAt: null, archivedAt: null },
+      },
       _sum: { hours: true },
     }),
     prisma.timesheet.aggregate({
-      where: { status: "APPROVED", workDate: { gte: prevWeekStart, lt: lastWeekStart } },
+      where: {
+        status: "APPROVED",
+        workDate: { gte: prevWeekStart, lt: lastWeekStart },
+        project: { deletedAt: null, archivedAt: null },
+      },
       _sum: { hours: true },
     }),
   ]);

@@ -7,6 +7,7 @@ import { recordAudit } from "../lib/audit.js";
 import { canViewDailyRate } from "../lib/serializers.js";
 import { validateWorkstreamId } from "../lib/workstreams.js";
 import { notifyUser } from "../lib/notifications.js";
+import { assertProjectWritable } from "../lib/projectAccess.js";
 
 const router: IRouter = Router();
 router.use(requireAuth);
@@ -171,6 +172,7 @@ async function upsertResource(req: any, res: any, opts: { propose: boolean }) {
     res.status(authz.status).json({ error: authz.error });
     return;
   }
+  if (!(await assertProjectWritable(projectId, res))) return;
   const existing = await prisma.projectResource.findUnique({
     where: { projectId_userId: { projectId, userId } },
   });
@@ -314,6 +316,7 @@ router.post(
       res.status(403).json({ error: "Only the assigned PM may add resources to this project" });
       return;
     }
+    if (!(await assertProjectWritable(projectId, res))) return;
 
     const IMPLIED_ROLE = new Set<UserRole>(["KONSULTAN", "TECHNICAL_WRITER", "ADMIN_PROJECT"]);
     const created: Array<Record<string, unknown>> = [];
@@ -496,6 +499,7 @@ router.post(
         res.status(403).json({ error: "Only this resource's Principal may approve this assignment" });
         return;
       }
+      if (!(await assertProjectWritable(before.projectId, res))) return;
       await prisma.projectResource.update({
         where: { id: before.id },
         data: { acceptedAt: new Date(), pendingPrincipalApproval: false },
@@ -529,6 +533,7 @@ router.post(
       res.status(403).json({ error: "Only the assigned PM may accept this proposal" });
       return;
     }
+    if (!(await assertProjectWritable(before.projectId, res))) return;
     await prisma.projectResource.update({
       where: { id: before.id },
       data: { acceptedAt: new Date() },
@@ -586,6 +591,7 @@ router.post(
       return;
     }
 
+    if (!(await assertProjectWritable(before.projectId, res))) return;
     await prisma.projectResource.delete({ where: { id: before.id } });
     await recordAudit(req, {
       action: "resource.rejected",
@@ -635,6 +641,7 @@ router.delete("/resources/:resourceId", async (req, res) => {
     res.status(authz.status).json({ error: authz.error });
     return;
   }
+  if (!(await assertProjectWritable(before.projectId, res))) return;
   await prisma.projectResource.delete({ where: { id: req.params.resourceId } });
   await recordAudit(req, {
     action: "resource.removed",
@@ -720,6 +727,7 @@ router.post("/resources/:resourceId/rates", validateBody(CreateResourceRateBody)
     res.status(403).json({ error: "Only the assigned PM may set rates on this project" });
     return;
   }
+  if (!(await assertProjectWritable(resource.projectId, res))) return;
   const { costRate, sellingRate, effectiveFrom } = req.body || {};
   const cost = Number(costRate);
   if (!Number.isFinite(cost) || cost <= 0) {
