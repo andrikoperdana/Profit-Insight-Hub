@@ -196,6 +196,7 @@ async function main() {
   const expCostByProject = new Map<string, number>();
 
   for (const p of projects) {
+    const pCode = p.code ?? `PRJ-${p.id.slice(-6)}`;
     const isComplete = p.status === "COMPLETE";
     const isImpl = /SOC|SIEM|implement|hardening|migrasi|migration|tier/i.test(p.name);
 
@@ -246,13 +247,13 @@ async function main() {
     const usedUserIds = new Set(realResources.map((r) => r.userId));
     const existingRealCost = realResources.reduce((a, r) => a + (r.dailyRate > 0 && r.plannedMandays > 0 ? r.plannedMandays * completion * r.dailyRate : 0), 0);
 
-    const targetMargin = isImpl ? 0.5 + seeded(p.code, 11) * 0.12 : 0.66 + seeded(p.code, 12) * 0.16;
+    const targetMargin = isImpl ? 0.5 + seeded(pCode, 11) * 0.12 : 0.66 + seeded(pCode, 12) * 0.16;
     // Mirror the APPROVED-expense amounts created below so labour only fills the
     // remaining cost budget (impl projects carry a large LICENSE expense).
     const estApprovedExpenses =
-      (8 + Math.round(seeded(p.code, 1) * 17)) * 1_000_000 +
-      (12 + Math.round(seeded(p.code, 2) * 18)) * 1_000_000 +
-      (isImpl ? (140 + Math.round(seeded(p.code, 5) * 180)) * 1_000_000 : 0);
+      (8 + Math.round(seeded(pCode, 1) * 17)) * 1_000_000 +
+      (12 + Math.round(seeded(pCode, 2) * 18)) * 1_000_000 +
+      (isImpl ? (140 + Math.round(seeded(pCode, 5) * 180)) * 1_000_000 : 0);
     const desiredResourceCost = Math.max(p.contractValue * (1 - targetMargin) - estApprovedExpenses, p.contractValue * 0.05);
     const gap = desiredResourceCost - existingRealCost;
 
@@ -363,7 +364,7 @@ async function main() {
       tsPlan.push({
         userId: r.userId,
         projectId: p.id,
-        projectCode: p.code,
+        projectCode: pCode,
         workstreamId: wsFor(r.workstreamId),
         taskId: execSubByResource.get(r.userId) ?? null,
         dailyRate: r.dailyRate,
@@ -376,22 +377,22 @@ async function main() {
     // ---- expenses ----
     const creator = resources.find((r) => r.user.role === "PROJECT_MANAGER") ?? resources[0];
     const expDefs: { category: string; description: string; amount: number; status: "APPROVED" | "PENDING" | "REJECTED" }[] = [
-      { category: "TRAVEL", description: "Client site visits and transportation", amount: 8_000_000 + Math.round(seeded(p.code, 1) * 17) * 1_000_000, status: "APPROVED" },
-      { category: "SOFTWARE", description: "Specialized testing tools subscription", amount: 12_000_000 + Math.round(seeded(p.code, 2) * 18) * 1_000_000, status: "APPROVED" },
-      { category: "OTHER", description: "Miscellaneous operational costs", amount: 4_000_000 + Math.round(seeded(p.code, 3) * 8) * 1_000_000, status: "PENDING" },
-      { category: "HARDWARE", description: "Test devices and peripherals", amount: 6_000_000 + Math.round(seeded(p.code, 4) * 9) * 1_000_000, status: "REJECTED" },
+      { category: "TRAVEL", description: "Client site visits and transportation", amount: 8_000_000 + Math.round(seeded(pCode, 1) * 17) * 1_000_000, status: "APPROVED" },
+      { category: "SOFTWARE", description: "Specialized testing tools subscription", amount: 12_000_000 + Math.round(seeded(pCode, 2) * 18) * 1_000_000, status: "APPROVED" },
+      { category: "OTHER", description: "Miscellaneous operational costs", amount: 4_000_000 + Math.round(seeded(pCode, 3) * 8) * 1_000_000, status: "PENDING" },
+      { category: "HARDWARE", description: "Test devices and peripherals", amount: 6_000_000 + Math.round(seeded(pCode, 4) * 9) * 1_000_000, status: "REJECTED" },
     ];
     if (isImpl) {
       expDefs.push({
         category: "LICENSE",
         description: "Security platform / EDR license (annual)",
-        amount: 140_000_000 + Math.round(seeded(p.code, 5) * 180) * 1_000_000,
+        amount: 140_000_000 + Math.round(seeded(pCode, 5) * 180) * 1_000_000,
         status: "APPROVED",
       });
     }
     let additionalCost = 0;
     for (const e of expDefs) {
-      const spentAt = new Date(wStart.getTime() + (wEnd.getTime() - wStart.getTime()) * (0.2 + seeded(p.code + e.category, 6) * 0.6));
+      const spentAt = new Date(wStart.getTime() + (wEnd.getTime() - wStart.getTime()) * (0.2 + seeded(pCode + e.category, 6) * 0.6));
       const evidence = await brandedPdf({
         kind: "receipt",
         title: e.description,
@@ -422,10 +423,10 @@ async function main() {
       if (e.status === "APPROVED") additionalCost += e.amount;
     }
     expCostByProject.set(p.id, additionalCost);
-    projMeta.push({ id: p.id, code: p.code, status: p.status, contractValue: p.contractValue });
+    projMeta.push({ id: p.id, code: pCode, status: p.status, contractValue: p.contractValue });
 
     // ---- RAID ----
-    const raidCount = 4 + Math.round(seeded(p.code, 8) * 2);
+    const raidCount = 4 + Math.round(seeded(pCode, 8) * 2);
     for (let i = 0; i < raidCount; i++) {
       const item = RAID_POOL[i % RAID_POOL.length];
       const owner = resources[i % Math.max(1, resources.length)];
@@ -461,7 +462,7 @@ async function main() {
         kind: d.type,
         title: `${d.type} — ${p.name}`,
         lines: [
-          ["PROJECT", p.code],
+          ["PROJECT", pCode],
           ["DATE", addDays(wStart, 7 + docIdx * 14).toISOString().slice(0, 10)],
           ["CONTRACT VALUE", "Rp " + p.contractValue.toLocaleString("id-ID")],
         ],
@@ -474,7 +475,7 @@ async function main() {
           fileName: d.fileName,
           fileUrl,
           notes: tag(`${d.type} document`),
-          invoiceNumber: isInvoice ? `INV/${p.code}/01` : null,
+          invoiceNumber: isInvoice ? `INV/${pCode}/01` : null,
           invoiceAmount: isInvoice ? Math.round(p.contractValue * 0.3) : null,
           invoiceStatus: isInvoice ? (isComplete ? "PAID" : "SENT") : null,
           uploadedById: approver.id,
@@ -489,7 +490,7 @@ async function main() {
       data: {
         projectId: p.id,
         title: isComplete ? "Final Engagement Report" : "Interim Status Report",
-        reportNumber: `RPT/${p.code}/01`,
+        reportNumber: `RPT/${pCode}/01`,
         version: "1.0",
         reportType: isComplete ? "FINAL" : "INTERIM",
         periodStart: wStart,
@@ -509,9 +510,9 @@ async function main() {
         const answers: Record<string, { rating?: number; text?: string }> = {};
         for (const q of questions) {
           if (q.type === "TEXT") {
-            answers[q.key] = { text: LESSONS[(Number(seeded(p.code, 9) * 10) + i) % LESSONS.length] };
+            answers[q.key] = { text: LESSONS[(Number(seeded(pCode, 9) * 10) + i) % LESSONS.length] };
           } else {
-            answers[q.key] = { rating: 4 + (seeded(p.code + q.key, i) > 0.5 ? 1 : 0) };
+            answers[q.key] = { rating: 4 + (seeded(pCode + q.key, i) > 0.5 ? 1 : 0) };
           }
         }
         await prisma.surveyResponse.create({
@@ -521,7 +522,7 @@ async function main() {
             submitterEmail: person.email,
             answers,
             questionsSnapshot: questions.map((q) => ({ key: q.key, text: q.text, type: q.type })),
-            lessonLearned: LESSONS[(Number(seeded(p.code, 11) * 10) + i) % LESSONS.length],
+            lessonLearned: LESSONS[(Number(seeded(pCode, 11) * 10) + i) % LESSONS.length],
             createdAt: addDays(wEnd, -2 + i),
           },
         });
@@ -548,7 +549,7 @@ async function main() {
     const acts = [
       `Project "${p.name}" status reviewed`,
       `Weekly timesheets approved`,
-      `Status report submitted for ${p.code}`,
+      `Status report submitted for ${pCode}`,
     ];
     for (const m of acts) {
       await prisma.activity.create({
