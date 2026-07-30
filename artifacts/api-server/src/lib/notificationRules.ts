@@ -337,7 +337,8 @@ function addMonths(d: Date, months: number): Date {
   return out;
 }
 
-async function checkStaleClosedProjects(): Promise<number> {
+// Exported for tests (routes/__tests__/auto-archive.retention.test.ts).
+export async function checkStaleClosedProjects(): Promise<number> {
   const { autoArchiveClosedMonths } = await getAppSettings();
   if (!autoArchiveClosedMonths || autoArchiveClosedMonths <= 0) return 0;
 
