@@ -194,7 +194,7 @@ export default function WeeklyEntryDialog({ isAutoApprove }: { isAutoApprove: bo
                     return (
                       <tr key={p.id} className="border-t border-border/40">
                         <td className="p-2 sticky left-0 bg-background">
-                          <div className="font-medium">{p.code}</div>
+                          <div className="font-medium">{p.projectId ?? p.code ?? "—"}</div>
                           <div className="text-[10px] text-muted-foreground truncate max-w-[200px]">{p.name}</div>
                         </td>
                         <td className="p-1">

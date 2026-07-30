@@ -286,6 +286,7 @@ export async function computeResourceUtilizationDetail(role: string, sub: string
           project: {
             select: {
               name: true,
+              projectId: true,
               status: true,
               endDate: true,
               client: { select: { id: true, name: true } },
@@ -348,6 +349,7 @@ export async function computeResourceUtilizationDetail(role: string, sub: string
     currentClientName: string | null;
     liveProjects: {
       projectId: string;
+      projectDisplayId: string | null;
       projectName: string;
       projectStatus: string;
       clientName: string | null;
@@ -447,6 +449,7 @@ export async function computeResourceUtilizationDetail(role: string, sub: string
         })
         .map((r) => ({
           projectId: r.projectId,
+          projectDisplayId: r.project.projectId ?? null,
           projectName: r.project.name,
           projectStatus: r.project.status,
           clientName: r.project.client?.name ?? null,

@@ -45,6 +45,7 @@ import {
 
 type LiveProject = {
   projectId: string;
+  projectDisplayId: string | null;
   projectName: string;
   projectStatus: string;
   clientName: string | null;
@@ -105,7 +106,11 @@ function toExportRows(rows: Row[]) {
     "Current Project": r.currentProjectName ?? "",
     "All Projects":
       r.liveProjects.length > 0
-        ? r.liveProjects.map((p) => p.projectName).join(" | ")
+        ? r.liveProjects
+            .map((p) =>
+              p.projectDisplayId ? `${p.projectDisplayId} ${p.projectName}` : p.projectName,
+            )
+            .join(" | ")
         : "",
     "Project Status": r.currentProjectStatus ?? "",
     "Assignment End": r.assignmentEndDate
@@ -179,8 +184,10 @@ export default function ResourcesPage() {
         (r) =>
           r.userName.toLowerCase().includes(q) ||
           (r.currentProjectName ?? "").toLowerCase().includes(q) ||
-          r.liveProjects.some((p) =>
-            p.projectName.toLowerCase().includes(q),
+          r.liveProjects.some(
+            (p) =>
+              p.projectName.toLowerCase().includes(q) ||
+              (p.projectDisplayId ?? "").toLowerCase().includes(q),
           ) ||
           (ROLE_LABEL[r.role] ?? r.role).toLowerCase().includes(q),
       );
@@ -451,7 +458,9 @@ export default function ResourcesPage() {
                                     href={`/projects/${r.liveProjects[0].projectId}`}
                                     className="text-primary hover:underline"
                                   >
-                                    {r.liveProjects[0].projectName}
+                                    {r.liveProjects[0].projectDisplayId
+                                      ? `${r.liveProjects[0].projectDisplayId} — ${r.liveProjects[0].projectName}`
+                                      : r.liveProjects[0].projectName}
                                   </Link>
                                   {r.liveProjects.length > 1 && (
                                     <HoverCard openDelay={100}>
@@ -487,7 +496,9 @@ export default function ResourcesPage() {
                                                 href={`/projects/${p.projectId}`}
                                                 className="text-primary hover:underline truncate"
                                               >
-                                                {p.projectName}
+                                                {p.projectDisplayId
+                                                  ? `${p.projectDisplayId} — ${p.projectName}`
+                                                  : p.projectName}
                                               </Link>
                                               <span className="text-xs text-muted-foreground whitespace-nowrap">
                                                 {p.endDate

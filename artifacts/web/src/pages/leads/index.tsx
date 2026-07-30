@@ -144,6 +144,7 @@ export default function LeadsPage() {
   const view = (params.get("view") || "board") as "board" | "list";
   const stageFilter = (params.get("stages") || "").split(",").filter(Boolean) as LeadStage[];
   const ownerFilter = params.get("owner") || "";
+  const qFilter = params.get("q") || "";
   const sourceFilter = params.get("source") || "";
   const regionFilter = params.get("region") || "";
   const fromFilter = params.get("from") || "";
@@ -189,6 +190,17 @@ export default function LeadsPage() {
 
   const filteredLeads = useMemo(() => {
     let out = leads ?? [];
+    if (qFilter.trim()) {
+      const q = qFilter.trim().toLowerCase();
+      out = out.filter(
+        (l) =>
+          l.title.toLowerCase().includes(q) ||
+          (l.contactName ?? "").toLowerCase().includes(q) ||
+          (l.clientName ?? "").toLowerCase().includes(q) ||
+          (l.prospectiveClientName ?? "").toLowerCase().includes(q) ||
+          (l.convertedProjectCode ?? "").toLowerCase().includes(q),
+      );
+    }
     if (stageFilter.length) out = out.filter((l) => stageFilter.includes(l.stage));
     if (ownerFilter) out = out.filter((l) => l.ownerId === ownerFilter);
     if (sourceFilter) out = out.filter((l) => (l.source || "").toLowerCase().includes(sourceFilter.toLowerCase()));
@@ -196,7 +208,7 @@ export default function LeadsPage() {
     if (fromFilter) out = out.filter((l) => l.expectedCloseDate && l.expectedCloseDate >= fromFilter);
     if (toFilter) out = out.filter((l) => l.expectedCloseDate && l.expectedCloseDate <= toFilter);
     return out;
-  }, [leads, stageFilter, ownerFilter, sourceFilter, regionFilter, fromFilter, toFilter]);
+  }, [leads, qFilter, stageFilter, ownerFilter, sourceFilter, regionFilter, fromFilter, toFilter]);
 
   // Region filter options derived from distinct region values present in the
   // loaded leads (auto-handles regions added in Pipedrive; no dead options).
@@ -242,7 +254,7 @@ export default function LeadsPage() {
   );
 
   // Reset paging + clear bulk selection whenever the active filters change.
-  const filterKey = `${params.get("stages") || ""}|${ownerFilter}|${sourceFilter}|${regionFilter}|${fromFilter}|${toFilter}`;
+  const filterKey = `${params.get("stages") || ""}|${qFilter}|${ownerFilter}|${sourceFilter}|${regionFilter}|${fromFilter}|${toFilter}`;
   useEffect(() => {
     setListPage(1);
     setColLimits({});
@@ -505,6 +517,15 @@ export default function LeadsPage() {
       {/* Filters */}
       <Card className="border-border">
         <CardContent className="py-3 px-3 flex flex-wrap items-end gap-3">
+          <div className="min-w-[220px]">
+            <Label className="text-xs text-muted-foreground">Search</Label>
+            <Input
+              value={qFilter}
+              onChange={(e) => setParams({ q: e.target.value || null })}
+              placeholder="Title, client, Project ID…"
+              data-testid="input-lead-search"
+            />
+          </div>
           <div className="flex-1 min-w-[200px]">
             <Label className="text-xs text-muted-foreground">Stage</Label>
             <div className="flex flex-wrap gap-1 mt-1">
@@ -564,8 +585,8 @@ export default function LeadsPage() {
             <Label className="text-xs text-muted-foreground">to</Label>
             <Input type="date" value={toFilter} onChange={(e) => setParams({ to: e.target.value || null })} />
           </div>
-          {(stageFilter.length || ownerFilter || sourceFilter || regionFilter || fromFilter || toFilter) ? (
-            <Button size="sm" variant="ghost" onClick={() => setParams({ stages: null, owner: null, source: null, region: null, from: null, to: null })}>
+          {(stageFilter.length || qFilter || ownerFilter || sourceFilter || regionFilter || fromFilter || toFilter) ? (
+            <Button size="sm" variant="ghost" onClick={() => setParams({ q: null, stages: null, owner: null, source: null, region: null, from: null, to: null })}>
               Clear
             </Button>
           ) : null}

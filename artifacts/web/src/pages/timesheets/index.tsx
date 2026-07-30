@@ -231,7 +231,7 @@ function LogTimeDialog({ isAutoApprove }: { isAutoApprove: boolean }) {
                 <Select onValueChange={(v) => { field.onChange(v); form.setValue("taskId", ""); }} value={field.value}>
                   <FormControl><SelectTrigger><SelectValue placeholder="Select project" /></SelectTrigger></FormControl>
                   <SelectContent>
-                    {projects?.map(p => <SelectItem key={p.id} value={p.id}>{p.code} — {p.name}</SelectItem>)}
+                    {projects?.map(p => <SelectItem key={p.id} value={p.id}>{p.projectId ?? p.code ?? "—"} — {p.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -489,7 +489,7 @@ function TeamTimesheetsTable() {
               <SelectContent>
                 <SelectItem value="__all">All projects</SelectItem>
                 {projects?.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>{p.code} — {p.name}</SelectItem>
+                  <SelectItem key={p.id} value={p.id}>{p.projectId ?? p.code ?? "—"} — {p.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
