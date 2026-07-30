@@ -23,6 +23,7 @@ import { ProjectKind } from "@workspace/api-client-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
@@ -407,7 +408,7 @@ function SalesIntakeForm() {
                 </div>
               </div>
               <div>
-                <FormLabel>Description / Scope (optional)</FormLabel>
+                <Label>Description / Scope (optional)</Label>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
