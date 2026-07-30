@@ -346,7 +346,15 @@ export async function checkStaleClosedProjects(): Promise<number> {
 
   const now = new Date();
   const projects = await prisma.project.findMany({
-    where: { deletedAt: null, archivedAt: null, status: "CLOSED", closedAt: { not: null } },
+    where: {
+      deletedAt: null,
+      archivedAt: null,
+      status: "CLOSED",
+      closedAt: { not: null },
+      // MGMT can pin exceptions (e.g. reference engagements) that must stay
+      // visible indefinitely — exempt projects get no warnings and no archive.
+      autoArchiveExempt: false,
+    },
     select: { id: true, name: true, code: true, projectId: true, closedAt: true },
   });
   if (projects.length === 0) return 0;
@@ -376,7 +384,7 @@ export async function checkStaleClosedProjects(): Promise<number> {
     if (now >= deadline && earliestWarning && earliestWarning.createdAt <= graceCutoff) {
       // Guard against a concurrent manual archive: only archive if still unarchived.
       const res = await prisma.project.updateMany({
-        where: { id: p.id, archivedAt: null, deletedAt: null, status: "CLOSED" },
+        where: { id: p.id, archivedAt: null, deletedAt: null, status: "CLOSED", autoArchiveExempt: false },
         data: { archivedAt: now },
       });
       if (res.count !== 1) continue;

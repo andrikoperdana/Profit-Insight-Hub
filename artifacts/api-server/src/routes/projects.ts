@@ -1199,6 +1199,72 @@ router.post("/projects/:id/unarchive", requireRole("MANAGEMENT"), async (req, re
   res.json(serializeProject(updated, req.user?.role));
 });
 
+// Auto-archive exemption — MANAGEMENT only (SUPER_ADMIN bypasses via requireRole).
+// Marks a CLOSED project as exempt from the auto-archive retention rule so it
+// stays visible indefinitely (e.g. reference engagements). Reversible via
+// /auto-archive-unexempt.
+router.post("/projects/:id/auto-archive-exempt", requireRole("MANAGEMENT"), async (req, res) => {
+  const id = String(req.params.id);
+  const project = await prisma.project.findUnique({ where: { id }, include: projectInclude });
+  if (!project || project.deletedAt) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (project.archivedAt) {
+    res.status(400).json({ error: "Project is already archived. Unarchive it first, then exempt it." });
+    return;
+  }
+  if (project.status !== "CLOSED") {
+    res.status(400).json({ error: "Only CLOSED projects can be exempted from auto-archiving" });
+    return;
+  }
+  if ((project as any).autoArchiveExempt) {
+    res.status(400).json({ error: "Project is already exempt from auto-archiving" });
+    return;
+  }
+  const updated = await prisma.project.update({
+    where: { id },
+    data: { autoArchiveExempt: true },
+    include: projectInclude,
+  });
+  await recordAudit(req, {
+    action: "project.auto_archive_exempted",
+    entityType: "Project",
+    entityId: id,
+    description: `Exempted project ${project.projectId ?? project.code ?? id} — ${project.name} from auto-archiving`,
+    before: { autoArchiveExempt: false },
+    after: { autoArchiveExempt: true },
+  });
+  res.json(serializeProject(updated, req.user?.role));
+});
+
+router.post("/projects/:id/auto-archive-unexempt", requireRole("MANAGEMENT"), async (req, res) => {
+  const id = String(req.params.id);
+  const project = await prisma.project.findUnique({ where: { id }, include: projectInclude });
+  if (!project || project.deletedAt) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (!(project as any).autoArchiveExempt) {
+    res.status(400).json({ error: "Project is not exempt from auto-archiving" });
+    return;
+  }
+  const updated = await prisma.project.update({
+    where: { id },
+    data: { autoArchiveExempt: false },
+    include: projectInclude,
+  });
+  await recordAudit(req, {
+    action: "project.auto_archive_unexempted",
+    entityType: "Project",
+    entityId: id,
+    description: `Removed auto-archive exemption from project ${project.projectId ?? project.code ?? id} — ${project.name}`,
+    before: { autoArchiveExempt: true },
+    after: { autoArchiveExempt: false },
+  });
+  res.json(serializeProject(updated, req.user?.role));
+});
+
 router.delete(
   "/projects/:id",
   requireRole("MANAGEMENT"),

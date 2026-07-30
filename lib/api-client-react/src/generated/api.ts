@@ -4175,6 +4175,162 @@ export const useUnarchiveProject = <
   return useMutation(getUnarchiveProjectMutationOptions(options));
 };
 
+export const getAutoArchiveExemptProjectUrl = (id: string) => {
+  return `/api/projects/${id}/auto-archive-exempt`;
+};
+
+export const autoArchiveExemptProject = async (
+  id: string,
+  options?: RequestInit,
+): Promise<Project> => {
+  return customFetch<Project>(getAutoArchiveExemptProjectUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getAutoArchiveExemptProjectMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof autoArchiveExemptProject>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof autoArchiveExemptProject>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["autoArchiveExemptProject"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof autoArchiveExemptProject>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return autoArchiveExemptProject(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AutoArchiveExemptProjectMutationResult = NonNullable<
+  Awaited<ReturnType<typeof autoArchiveExemptProject>>
+>;
+
+export type AutoArchiveExemptProjectMutationError = ErrorType<unknown>;
+
+export const useAutoArchiveExemptProject = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof autoArchiveExemptProject>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof autoArchiveExemptProject>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getAutoArchiveExemptProjectMutationOptions(options));
+};
+
+export const getAutoArchiveUnexemptProjectUrl = (id: string) => {
+  return `/api/projects/${id}/auto-archive-unexempt`;
+};
+
+export const autoArchiveUnexemptProject = async (
+  id: string,
+  options?: RequestInit,
+): Promise<Project> => {
+  return customFetch<Project>(getAutoArchiveUnexemptProjectUrl(id), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getAutoArchiveUnexemptProjectMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof autoArchiveUnexemptProject>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof autoArchiveUnexemptProject>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ["autoArchiveUnexemptProject"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof autoArchiveUnexemptProject>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return autoArchiveUnexemptProject(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AutoArchiveUnexemptProjectMutationResult = NonNullable<
+  Awaited<ReturnType<typeof autoArchiveUnexemptProject>>
+>;
+
+export type AutoArchiveUnexemptProjectMutationError = ErrorType<unknown>;
+
+export const useAutoArchiveUnexemptProject = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof autoArchiveUnexemptProject>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof autoArchiveUnexemptProject>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  return useMutation(getAutoArchiveUnexemptProjectMutationOptions(options));
+};
+
 export const getGetProjectFinancialsUrl = (id: string) => {
   return `/api/projects/${id}/financials`;
 };

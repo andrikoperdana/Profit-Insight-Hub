@@ -10846,6 +10846,7 @@ export namespace Prisma {
     contractFileName: string | null
     archivedAt: Date | null
     closedAt: Date | null
+    autoArchiveExempt: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10890,6 +10891,7 @@ export namespace Prisma {
     contractFileName: string | null
     archivedAt: Date | null
     closedAt: Date | null
+    autoArchiveExempt: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10934,6 +10936,7 @@ export namespace Prisma {
     contractFileName: number
     archivedAt: number
     closedAt: number
+    autoArchiveExempt: number
     deletedAt: number
     createdAt: number
     updatedAt: number
@@ -10996,6 +10999,7 @@ export namespace Prisma {
     contractFileName?: true
     archivedAt?: true
     closedAt?: true
+    autoArchiveExempt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -11040,6 +11044,7 @@ export namespace Prisma {
     contractFileName?: true
     archivedAt?: true
     closedAt?: true
+    autoArchiveExempt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -11084,6 +11089,7 @@ export namespace Prisma {
     contractFileName?: true
     archivedAt?: true
     closedAt?: true
+    autoArchiveExempt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -11215,6 +11221,7 @@ export namespace Prisma {
     contractFileName: string | null
     archivedAt: Date | null
     closedAt: Date | null
+    autoArchiveExempt: boolean
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -11278,6 +11285,7 @@ export namespace Prisma {
     contractFileName?: boolean
     archivedAt?: boolean
     closedAt?: boolean
+    autoArchiveExempt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -11344,6 +11352,7 @@ export namespace Prisma {
     contractFileName?: boolean
     archivedAt?: boolean
     closedAt?: boolean
+    autoArchiveExempt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -11393,6 +11402,7 @@ export namespace Prisma {
     contractFileName?: boolean
     archivedAt?: boolean
     closedAt?: boolean
+    autoArchiveExempt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -11494,6 +11504,7 @@ export namespace Prisma {
       contractFileName: string | null
       archivedAt: Date | null
       closedAt: Date | null
+      autoArchiveExempt: boolean
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -11949,6 +11960,7 @@ export namespace Prisma {
     readonly contractFileName: FieldRef<"Project", 'String'>
     readonly archivedAt: FieldRef<"Project", 'DateTime'>
     readonly closedAt: FieldRef<"Project", 'DateTime'>
+    readonly autoArchiveExempt: FieldRef<"Project", 'Boolean'>
     readonly deletedAt: FieldRef<"Project", 'DateTime'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
@@ -59139,6 +59151,7 @@ export namespace Prisma {
     contractFileName: 'contractFileName',
     archivedAt: 'archivedAt',
     closedAt: 'closedAt',
+    autoArchiveExempt: 'autoArchiveExempt',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -60859,6 +60872,7 @@ export namespace Prisma {
     contractFileName?: StringNullableFilter<"Project"> | string | null
     archivedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     closedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    autoArchiveExempt?: BoolFilter<"Project"> | boolean
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -60924,6 +60938,7 @@ export namespace Prisma {
     contractFileName?: SortOrderInput | SortOrder
     archivedAt?: SortOrderInput | SortOrder
     closedAt?: SortOrderInput | SortOrder
+    autoArchiveExempt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -60994,6 +61009,7 @@ export namespace Prisma {
     contractFileName?: StringNullableFilter<"Project"> | string | null
     archivedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     closedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    autoArchiveExempt?: BoolFilter<"Project"> | boolean
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -61057,6 +61073,7 @@ export namespace Prisma {
     contractFileName?: SortOrderInput | SortOrder
     archivedAt?: SortOrderInput | SortOrder
     closedAt?: SortOrderInput | SortOrder
+    autoArchiveExempt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -61109,6 +61126,7 @@ export namespace Prisma {
     contractFileName?: StringNullableWithAggregatesFilter<"Project"> | string | null
     archivedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     closedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+    autoArchiveExempt?: BoolWithAggregatesFilter<"Project"> | boolean
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -65680,6 +65698,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65745,6 +65764,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65800,6 +65820,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65865,6 +65886,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65925,6 +65947,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65964,6 +65987,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66008,6 +66032,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71215,6 +71240,7 @@ export namespace Prisma {
     contractFileName?: SortOrder
     archivedAt?: SortOrder
     closedAt?: SortOrder
+    autoArchiveExempt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -71267,6 +71293,7 @@ export namespace Prisma {
     contractFileName?: SortOrder
     archivedAt?: SortOrder
     closedAt?: SortOrder
+    autoArchiveExempt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -71311,6 +71338,7 @@ export namespace Prisma {
     contractFileName?: SortOrder
     archivedAt?: SortOrder
     closedAt?: SortOrder
+    autoArchiveExempt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -81049,6 +81077,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81112,6 +81141,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81177,6 +81207,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81240,6 +81271,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81305,6 +81337,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81368,6 +81401,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81433,6 +81467,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81496,6 +81531,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -83540,6 +83576,7 @@ export namespace Prisma {
     contractFileName?: StringNullableFilter<"Project"> | string | null
     archivedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     closedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    autoArchiveExempt?: BoolFilter<"Project"> | boolean
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -85258,6 +85295,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85321,6 +85359,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -87690,6 +87729,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -87754,6 +87794,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -88008,6 +88049,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88072,6 +88114,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88322,6 +88365,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -88386,6 +88430,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -88766,6 +88811,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88830,6 +88876,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89182,6 +89229,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -89246,6 +89294,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -89502,6 +89551,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89566,6 +89616,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89818,6 +89869,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -89882,6 +89934,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -90287,6 +90340,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90351,6 +90405,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90536,6 +90591,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -90600,6 +90656,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -90670,6 +90727,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90734,6 +90792,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90788,6 +90847,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -90852,6 +90912,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -91192,6 +91253,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91256,6 +91318,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91868,6 +91931,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -91932,6 +91996,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -92351,6 +92416,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92415,6 +92481,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93176,6 +93243,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -93240,6 +93308,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -93684,6 +93753,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93748,6 +93818,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -94200,6 +94271,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -94264,6 +94336,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -94617,6 +94690,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -94681,6 +94755,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95004,6 +95079,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -95068,6 +95144,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -95273,6 +95350,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95337,6 +95415,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95532,6 +95611,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -95596,6 +95676,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -96122,6 +96203,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96186,6 +96268,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98901,6 +98984,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -98965,6 +99049,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -99176,6 +99261,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -99240,6 +99326,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -99294,6 +99381,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -99358,6 +99446,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -99996,6 +100085,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100060,6 +100150,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100842,6 +100933,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -100906,6 +100998,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -101075,6 +101168,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -101139,6 +101233,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -104694,6 +104789,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -104758,6 +104854,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -105098,6 +105195,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -105162,6 +105260,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106143,6 +106242,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -106207,6 +106307,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -106465,6 +106566,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106529,6 +106631,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106819,6 +106922,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -106862,6 +106966,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -106905,6 +107010,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -106948,6 +107054,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -107974,6 +108081,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108037,6 +108145,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108096,6 +108205,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108135,6 +108245,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108198,6 +108309,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108257,6 +108369,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108296,6 +108409,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108359,6 +108473,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108418,6 +108533,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108457,6 +108573,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108520,6 +108637,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108579,6 +108697,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -110260,6 +110379,7 @@ export namespace Prisma {
     contractFileName?: string | null
     archivedAt?: Date | string | null
     closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -110328,6 +110448,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -110391,6 +110512,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -110450,6 +110572,7 @@ export namespace Prisma {
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

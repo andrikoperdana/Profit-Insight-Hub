@@ -10,6 +10,8 @@ import {
   useUpdateProject,
   useArchiveProject,
   useUnarchiveProject,
+  useAutoArchiveExemptProject,
+  useAutoArchiveUnexemptProject,
   useDeleteProject,
   useUpdateProjectReport,
   useListProjectDocuments,
@@ -55,7 +57,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
-  Pencil, AlertTriangle, Paperclip, X, PauseCircle, Archive, ArchiveRestore,
+  Pencil, AlertTriangle, Paperclip, X, PauseCircle, Archive, ArchiveRestore, Pin, PinOff,
 } from "lucide-react";
 import { formatIDR, formatDate, formatPct } from "@/lib/format";
 import { MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -158,6 +160,26 @@ export default function ProjectDetail() {
         toast({ title: "Project unarchived", description: "It is editable and counted in reports again." });
       },
       onError: (e: any) => toast({ title: "Failed to unarchive", description: e?.message, variant: "destructive" }),
+    },
+  });
+  const exemptMut = useAutoArchiveExemptProject({
+    mutation: {
+      onSuccess: () => {
+        qc.invalidateQueries({ queryKey: getGetProjectQueryKey(id) });
+        qc.invalidateQueries({ queryKey: ["projects"] });
+        toast({ title: "Auto-archive exemption enabled", description: "This project will be skipped by the auto-archive retention rule." });
+      },
+      onError: (e: any) => toast({ title: "Failed to exempt", description: e?.message, variant: "destructive" }),
+    },
+  });
+  const unexemptMut = useAutoArchiveUnexemptProject({
+    mutation: {
+      onSuccess: () => {
+        qc.invalidateQueries({ queryKey: getGetProjectQueryKey(id) });
+        qc.invalidateQueries({ queryKey: ["projects"] });
+        toast({ title: "Auto-archive exemption removed", description: "The retention policy applies to this project again." });
+      },
+      onError: (e: any) => toast({ title: "Failed to remove exemption", description: e?.message, variant: "destructive" }),
     },
   });
   const deleteMut = useDeleteProject({
@@ -276,6 +298,11 @@ export default function ProjectDetail() {
                   <Archive className="h-3 w-3 mr-1" /> Archived
                 </Badge>
               )}
+              {(project as any).autoArchiveExempt && (
+                <Badge variant="outline" className="border-sky-500/40 text-sky-400" data-testid="badge-auto-archive-exempt">
+                  <Pin className="h-3 w-3 mr-1" /> Kept active — auto-archive exempt
+                </Badge>
+              )}
             </div>
             <div className="flex items-center gap-3 mt-1 flex-wrap">
               {project.projectId && (
@@ -326,6 +353,29 @@ export default function ProjectDetail() {
         )}
         {isMgmt && (
           <div className="flex items-center gap-2 flex-wrap">
+            {!isArchived && project.status === ProjectStatus.CLOSED && (
+              (project as any).autoArchiveExempt ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => unexemptMut.mutate({ id })}
+                  disabled={unexemptMut.isPending}
+                  data-testid="button-auto-archive-unexempt"
+                >
+                  <PinOff className="h-4 w-4 mr-1" /> Remove auto-archive exemption
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => exemptMut.mutate({ id })}
+                  disabled={exemptMut.isPending}
+                  data-testid="button-auto-archive-exempt"
+                >
+                  <Pin className="h-4 w-4 mr-1" /> Keep active (exempt from auto-archive)
+                </Button>
+              )
+            )}
             {!isArchived ? (
               <Button
                 variant="outline"

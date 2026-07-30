@@ -254,6 +254,9 @@ model Project {
   // When the project last entered CLOSED status (null when not CLOSED).
   // Drives the auto-archive retention policy for stale CLOSED projects.
   closedAt                 DateTime?
+  // MGMT-set flag: when true, the auto-archive retention rule skips this
+  // project entirely (no warnings, no automatic archive).
+  autoArchiveExempt        Boolean       @default(false)
   deletedAt                DateTime?
   createdAt                DateTime      @default(now())
   updatedAt                DateTime      @updatedAt

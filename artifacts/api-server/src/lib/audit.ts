@@ -19,6 +19,8 @@ export type AuditAction =
   | "project.restored"
   | "project.auto_closed"
   | "project.auto_archived"
+  | "project.auto_archive_exempted"
+  | "project.auto_archive_unexempted"
   | "timesheet.created"
   | "timesheet.approved"
   | "timesheet.rejected"

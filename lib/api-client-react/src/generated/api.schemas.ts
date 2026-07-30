@@ -1149,6 +1149,8 @@ export interface Project {
   reportSubmittedAt?: string | null;
   /** Set when the project is archived — excluded from reports/dashboards and read-only until unarchived */
   archivedAt?: string | null;
+  /** MGMT-set flag — when true, the auto-archive retention rule skips this project (no warnings, no automatic archive) */
+  autoArchiveExempt?: boolean;
   lastStatusReason?: string | null;
   /** 0-100 composite health score. Null for DRAFT/CLOSED projects or callers without financial visibility. */
   healthScore?: number | null;

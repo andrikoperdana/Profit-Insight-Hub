@@ -753,6 +753,32 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/Project" }
 
+  /projects/{id}/auto-archive-exempt:
+    post:
+      operationId: autoArchiveExemptProject
+      tags: [projects]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Project" }
+
+  /projects/{id}/auto-archive-unexempt:
+    post:
+      operationId: autoArchiveUnexemptProject
+      tags: [projects]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Project" }
+
   /projects/{id}/financials:
     get:
       operationId: getProjectFinancials
@@ -4011,6 +4037,7 @@ components:
         reportLink: { type: string, nullable: true }
         reportSubmittedAt: { type: string, nullable: true }
         archivedAt: { type: string, nullable: true, description: "Set when the project is archived — excluded from reports/dashboards and read-only until unarchived" }
+        autoArchiveExempt: { type: boolean, description: "MGMT-set flag — when true, the auto-archive retention rule skips this project (no warnings, no automatic archive)" }
         lastStatusReason: { type: string, nullable: true }
         healthScore:
           type: integer

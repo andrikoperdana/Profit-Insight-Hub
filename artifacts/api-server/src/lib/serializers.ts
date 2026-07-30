@@ -299,6 +299,7 @@ export function serializeProject(project: ProjectWithRelations, callerRole?: str
     reportLink: project.reportLink ?? null,
     reportSubmittedAt: project.reportSubmittedAt?.toISOString() ?? null,
     archivedAt: (project as any).archivedAt?.toISOString?.() ?? null,
+    autoArchiveExempt: (project as any).autoArchiveExempt ?? false,
     spkFileUrl: project.spkFileUrl ?? null,
     spkFileName: project.spkFileName ?? null,
     contractFileUrl: project.contractFileUrl ?? null,
