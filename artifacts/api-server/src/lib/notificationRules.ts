@@ -168,7 +168,8 @@ async function checkInvoicesDueSoon(): Promise<number> {
  * Rule 2: Active/Observation projects where actual cost exceeds the
  * configurable budgetOverrunPct of contract value. Notify PM + all MANAGEMENT users.
  */
-async function checkProjectOverrun(): Promise<number> {
+// Exported for tests (routes/__tests__/financial-alerts.test.ts).
+export async function checkProjectOverrun(): Promise<number> {
   const { budgetOverrunPct } = await getAppSettings();
   const projects = await prisma.project.findMany({
     where: { deletedAt: null, archivedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "PAUSE"] }, contractValue: { gt: 0 } },
@@ -259,7 +260,8 @@ async function checkLateTimesheets(): Promise<number> {
  * (contractValue - actualCost) / contractValue below the configurable lowMarginPct.
  * Notify PM + MANAGEMENT.
  */
-async function checkLowMargin(): Promise<number> {
+// Exported for tests (routes/__tests__/financial-alerts.test.ts).
+export async function checkLowMargin(): Promise<number> {
   const { lowMarginPct } = await getAppSettings();
   const projects = await prisma.project.findMany({
     where: { deletedAt: null, archivedAt: null, status: { in: ["ACTIVE", "OBSERVATION", "PAUSE"] }, contractValue: { gt: 0 } },
