@@ -15,6 +15,8 @@ export interface AppSettings {
   budgetOverrunPct: number;
   invoiceDueSoonDays: number;
   lateTimesheetDays: number;
+  /** Months a project may sit in CLOSED before auto-archive. 0 = disabled. */
+  autoArchiveClosedMonths: number;
   xeroAutoSyncEnabled: boolean;
   emailNotificationsEnabled: boolean;
 }
@@ -26,6 +28,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   budgetOverrunPct: 80,
   invoiceDueSoonDays: 7,
   lateTimesheetDays: 3,
+  autoArchiveClosedMonths: 0,
   xeroAutoSyncEnabled: false,
   emailNotificationsEnabled: false,
 };
@@ -66,6 +69,10 @@ export async function getAppSettings(): Promise<AppSettings> {
       typeof row?.lateTimesheetDays === "number"
         ? row.lateTimesheetDays
         : DEFAULT_APP_SETTINGS.lateTimesheetDays,
+    autoArchiveClosedMonths:
+      typeof row?.autoArchiveClosedMonths === "number"
+        ? row.autoArchiveClosedMonths
+        : DEFAULT_APP_SETTINGS.autoArchiveClosedMonths,
     xeroAutoSyncEnabled:
       typeof row?.xeroAutoSyncEnabled === "boolean"
         ? row.xeroAutoSyncEnabled

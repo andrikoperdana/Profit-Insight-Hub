@@ -10845,6 +10845,7 @@ export namespace Prisma {
     contractFileUrl: string | null
     contractFileName: string | null
     archivedAt: Date | null
+    closedAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10888,6 +10889,7 @@ export namespace Prisma {
     contractFileUrl: string | null
     contractFileName: string | null
     archivedAt: Date | null
+    closedAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -10931,6 +10933,7 @@ export namespace Prisma {
     contractFileUrl: number
     contractFileName: number
     archivedAt: number
+    closedAt: number
     deletedAt: number
     createdAt: number
     updatedAt: number
@@ -10992,6 +10995,7 @@ export namespace Prisma {
     contractFileUrl?: true
     contractFileName?: true
     archivedAt?: true
+    closedAt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -11035,6 +11039,7 @@ export namespace Prisma {
     contractFileUrl?: true
     contractFileName?: true
     archivedAt?: true
+    closedAt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -11078,6 +11083,7 @@ export namespace Prisma {
     contractFileUrl?: true
     contractFileName?: true
     archivedAt?: true
+    closedAt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -11208,6 +11214,7 @@ export namespace Prisma {
     contractFileUrl: string | null
     contractFileName: string | null
     archivedAt: Date | null
+    closedAt: Date | null
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -11270,6 +11277,7 @@ export namespace Prisma {
     contractFileUrl?: boolean
     contractFileName?: boolean
     archivedAt?: boolean
+    closedAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -11335,6 +11343,7 @@ export namespace Prisma {
     contractFileUrl?: boolean
     contractFileName?: boolean
     archivedAt?: boolean
+    closedAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -11383,6 +11392,7 @@ export namespace Prisma {
     contractFileUrl?: boolean
     contractFileName?: boolean
     archivedAt?: boolean
+    closedAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -11483,6 +11493,7 @@ export namespace Prisma {
       contractFileUrl: string | null
       contractFileName: string | null
       archivedAt: Date | null
+      closedAt: Date | null
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -11937,6 +11948,7 @@ export namespace Prisma {
     readonly contractFileUrl: FieldRef<"Project", 'String'>
     readonly contractFileName: FieldRef<"Project", 'String'>
     readonly archivedAt: FieldRef<"Project", 'DateTime'>
+    readonly closedAt: FieldRef<"Project", 'DateTime'>
     readonly deletedAt: FieldRef<"Project", 'DateTime'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
     readonly updatedAt: FieldRef<"Project", 'DateTime'>
@@ -54295,6 +54307,7 @@ export namespace Prisma {
     budgetOverrunPct: number | null
     invoiceDueSoonDays: number | null
     lateTimesheetDays: number | null
+    autoArchiveClosedMonths: number | null
   }
 
   export type AppSettingSumAggregateOutputType = {
@@ -54304,6 +54317,7 @@ export namespace Prisma {
     budgetOverrunPct: number | null
     invoiceDueSoonDays: number | null
     lateTimesheetDays: number | null
+    autoArchiveClosedMonths: number | null
   }
 
   export type AppSettingMinAggregateOutputType = {
@@ -54315,6 +54329,7 @@ export namespace Prisma {
     invoiceDueSoonDays: number | null
     lateTimesheetDays: number | null
     xeroAutoSyncEnabled: boolean | null
+    autoArchiveClosedMonths: number | null
     emailNotificationsEnabled: boolean | null
     pipedriveAutoSyncEnabled: boolean | null
     pipedriveLastSyncAt: Date | null
@@ -54338,6 +54353,7 @@ export namespace Prisma {
     invoiceDueSoonDays: number | null
     lateTimesheetDays: number | null
     xeroAutoSyncEnabled: boolean | null
+    autoArchiveClosedMonths: number | null
     emailNotificationsEnabled: boolean | null
     pipedriveAutoSyncEnabled: boolean | null
     pipedriveLastSyncAt: Date | null
@@ -54361,6 +54377,7 @@ export namespace Prisma {
     invoiceDueSoonDays: number
     lateTimesheetDays: number
     xeroAutoSyncEnabled: number
+    autoArchiveClosedMonths: number
     emailNotificationsEnabled: number
     pipedriveAutoSyncEnabled: number
     pipedriveLastSyncAt: number
@@ -54385,6 +54402,7 @@ export namespace Prisma {
     budgetOverrunPct?: true
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
+    autoArchiveClosedMonths?: true
   }
 
   export type AppSettingSumAggregateInputType = {
@@ -54394,6 +54412,7 @@ export namespace Prisma {
     budgetOverrunPct?: true
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
+    autoArchiveClosedMonths?: true
   }
 
   export type AppSettingMinAggregateInputType = {
@@ -54405,6 +54424,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
     xeroAutoSyncEnabled?: true
+    autoArchiveClosedMonths?: true
     emailNotificationsEnabled?: true
     pipedriveAutoSyncEnabled?: true
     pipedriveLastSyncAt?: true
@@ -54428,6 +54448,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
     xeroAutoSyncEnabled?: true
+    autoArchiveClosedMonths?: true
     emailNotificationsEnabled?: true
     pipedriveAutoSyncEnabled?: true
     pipedriveLastSyncAt?: true
@@ -54451,6 +54472,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: true
     lateTimesheetDays?: true
     xeroAutoSyncEnabled?: true
+    autoArchiveClosedMonths?: true
     emailNotificationsEnabled?: true
     pipedriveAutoSyncEnabled?: true
     pipedriveLastSyncAt?: true
@@ -54562,6 +54584,7 @@ export namespace Prisma {
     invoiceDueSoonDays: number
     lateTimesheetDays: number
     xeroAutoSyncEnabled: boolean
+    autoArchiveClosedMonths: number
     emailNotificationsEnabled: boolean
     pipedriveAutoSyncEnabled: boolean
     pipedriveLastSyncAt: Date | null
@@ -54605,6 +54628,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
     xeroAutoSyncEnabled?: boolean
+    autoArchiveClosedMonths?: boolean
     emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: boolean
@@ -54629,6 +54653,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
     xeroAutoSyncEnabled?: boolean
+    autoArchiveClosedMonths?: boolean
     emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: boolean
@@ -54653,6 +54678,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: boolean
     lateTimesheetDays?: boolean
     xeroAutoSyncEnabled?: boolean
+    autoArchiveClosedMonths?: boolean
     emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: boolean
@@ -54681,6 +54707,7 @@ export namespace Prisma {
       invoiceDueSoonDays: number
       lateTimesheetDays: number
       xeroAutoSyncEnabled: boolean
+      autoArchiveClosedMonths: number
       emailNotificationsEnabled: boolean
       pipedriveAutoSyncEnabled: boolean
       pipedriveLastSyncAt: Date | null
@@ -55095,6 +55122,7 @@ export namespace Prisma {
     readonly invoiceDueSoonDays: FieldRef<"AppSetting", 'Int'>
     readonly lateTimesheetDays: FieldRef<"AppSetting", 'Int'>
     readonly xeroAutoSyncEnabled: FieldRef<"AppSetting", 'Boolean'>
+    readonly autoArchiveClosedMonths: FieldRef<"AppSetting", 'Int'>
     readonly emailNotificationsEnabled: FieldRef<"AppSetting", 'Boolean'>
     readonly pipedriveAutoSyncEnabled: FieldRef<"AppSetting", 'Boolean'>
     readonly pipedriveLastSyncAt: FieldRef<"AppSetting", 'DateTime'>
@@ -59110,6 +59138,7 @@ export namespace Prisma {
     contractFileUrl: 'contractFileUrl',
     contractFileName: 'contractFileName',
     archivedAt: 'archivedAt',
+    closedAt: 'closedAt',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -59807,6 +59836,7 @@ export namespace Prisma {
     invoiceDueSoonDays: 'invoiceDueSoonDays',
     lateTimesheetDays: 'lateTimesheetDays',
     xeroAutoSyncEnabled: 'xeroAutoSyncEnabled',
+    autoArchiveClosedMonths: 'autoArchiveClosedMonths',
     emailNotificationsEnabled: 'emailNotificationsEnabled',
     pipedriveAutoSyncEnabled: 'pipedriveAutoSyncEnabled',
     pipedriveLastSyncAt: 'pipedriveLastSyncAt',
@@ -60828,6 +60858,7 @@ export namespace Prisma {
     contractFileUrl?: StringNullableFilter<"Project"> | string | null
     contractFileName?: StringNullableFilter<"Project"> | string | null
     archivedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -60892,6 +60923,7 @@ export namespace Prisma {
     contractFileUrl?: SortOrderInput | SortOrder
     contractFileName?: SortOrderInput | SortOrder
     archivedAt?: SortOrderInput | SortOrder
+    closedAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -60961,6 +60993,7 @@ export namespace Prisma {
     contractFileUrl?: StringNullableFilter<"Project"> | string | null
     contractFileName?: StringNullableFilter<"Project"> | string | null
     archivedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -61023,6 +61056,7 @@ export namespace Prisma {
     contractFileUrl?: SortOrderInput | SortOrder
     contractFileName?: SortOrderInput | SortOrder
     archivedAt?: SortOrderInput | SortOrder
+    closedAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -61074,6 +61108,7 @@ export namespace Prisma {
     contractFileUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
     contractFileName?: StringNullableWithAggregatesFilter<"Project"> | string | null
     archivedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+    closedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -64742,6 +64777,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFilter<"AppSetting"> | number
     lateTimesheetDays?: IntFilter<"AppSetting"> | number
     xeroAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
+    autoArchiveClosedMonths?: IntFilter<"AppSetting"> | number
     emailNotificationsEnabled?: BoolFilter<"AppSetting"> | boolean
     pipedriveAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
     pipedriveLastSyncAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
@@ -64766,6 +64802,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    autoArchiveClosedMonths?: SortOrder
     emailNotificationsEnabled?: SortOrder
     pipedriveAutoSyncEnabled?: SortOrder
     pipedriveLastSyncAt?: SortOrderInput | SortOrder
@@ -64793,6 +64830,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFilter<"AppSetting"> | number
     lateTimesheetDays?: IntFilter<"AppSetting"> | number
     xeroAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
+    autoArchiveClosedMonths?: IntFilter<"AppSetting"> | number
     emailNotificationsEnabled?: BoolFilter<"AppSetting"> | boolean
     pipedriveAutoSyncEnabled?: BoolFilter<"AppSetting"> | boolean
     pipedriveLastSyncAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
@@ -64817,6 +64855,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    autoArchiveClosedMonths?: SortOrder
     emailNotificationsEnabled?: SortOrder
     pipedriveAutoSyncEnabled?: SortOrder
     pipedriveLastSyncAt?: SortOrderInput | SortOrder
@@ -64849,6 +64888,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntWithAggregatesFilter<"AppSetting"> | number
     lateTimesheetDays?: IntWithAggregatesFilter<"AppSetting"> | number
     xeroAutoSyncEnabled?: BoolWithAggregatesFilter<"AppSetting"> | boolean
+    autoArchiveClosedMonths?: IntWithAggregatesFilter<"AppSetting"> | number
     emailNotificationsEnabled?: BoolWithAggregatesFilter<"AppSetting"> | boolean
     pipedriveAutoSyncEnabled?: BoolWithAggregatesFilter<"AppSetting"> | boolean
     pipedriveLastSyncAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
@@ -65639,6 +65679,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65703,6 +65744,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65757,6 +65799,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65821,6 +65864,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65880,6 +65924,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65918,6 +65963,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65961,6 +66007,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -69907,6 +69954,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
     xeroAutoSyncEnabled?: boolean
+    autoArchiveClosedMonths?: number
     emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: Date | string | null
@@ -69931,6 +69979,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
     xeroAutoSyncEnabled?: boolean
+    autoArchiveClosedMonths?: number
     emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: Date | string | null
@@ -69955,6 +70004,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoArchiveClosedMonths?: IntFieldUpdateOperationsInput | number
     emailNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69979,6 +70029,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoArchiveClosedMonths?: IntFieldUpdateOperationsInput | number
     emailNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70003,6 +70054,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: number
     lateTimesheetDays?: number
     xeroAutoSyncEnabled?: boolean
+    autoArchiveClosedMonths?: number
     emailNotificationsEnabled?: boolean
     pipedriveAutoSyncEnabled?: boolean
     pipedriveLastSyncAt?: Date | string | null
@@ -70027,6 +70079,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoArchiveClosedMonths?: IntFieldUpdateOperationsInput | number
     emailNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70051,6 +70104,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: IntFieldUpdateOperationsInput | number
     lateTimesheetDays?: IntFieldUpdateOperationsInput | number
     xeroAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoArchiveClosedMonths?: IntFieldUpdateOperationsInput | number
     emailNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveAutoSyncEnabled?: BoolFieldUpdateOperationsInput | boolean
     pipedriveLastSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71160,6 +71214,7 @@ export namespace Prisma {
     contractFileUrl?: SortOrder
     contractFileName?: SortOrder
     archivedAt?: SortOrder
+    closedAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -71211,6 +71266,7 @@ export namespace Prisma {
     contractFileUrl?: SortOrder
     contractFileName?: SortOrder
     archivedAt?: SortOrder
+    closedAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -71254,6 +71310,7 @@ export namespace Prisma {
     contractFileUrl?: SortOrder
     contractFileName?: SortOrder
     archivedAt?: SortOrder
+    closedAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -73872,6 +73929,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    autoArchiveClosedMonths?: SortOrder
     emailNotificationsEnabled?: SortOrder
     pipedriveAutoSyncEnabled?: SortOrder
     pipedriveLastSyncAt?: SortOrder
@@ -73894,6 +73952,7 @@ export namespace Prisma {
     budgetOverrunPct?: SortOrder
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
+    autoArchiveClosedMonths?: SortOrder
   }
 
   export type AppSettingMaxOrderByAggregateInput = {
@@ -73905,6 +73964,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    autoArchiveClosedMonths?: SortOrder
     emailNotificationsEnabled?: SortOrder
     pipedriveAutoSyncEnabled?: SortOrder
     pipedriveLastSyncAt?: SortOrder
@@ -73928,6 +73988,7 @@ export namespace Prisma {
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
     xeroAutoSyncEnabled?: SortOrder
+    autoArchiveClosedMonths?: SortOrder
     emailNotificationsEnabled?: SortOrder
     pipedriveAutoSyncEnabled?: SortOrder
     pipedriveLastSyncAt?: SortOrder
@@ -73949,6 +74010,7 @@ export namespace Prisma {
     budgetOverrunPct?: SortOrder
     invoiceDueSoonDays?: SortOrder
     lateTimesheetDays?: SortOrder
+    autoArchiveClosedMonths?: SortOrder
   }
 
   export type ExecutiveBriefingCountOrderByAggregateInput = {
@@ -80986,6 +81048,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81048,6 +81111,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81112,6 +81176,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81174,6 +81239,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81238,6 +81304,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81300,6 +81367,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81364,6 +81432,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -81426,6 +81495,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -83469,6 +83539,7 @@ export namespace Prisma {
     contractFileUrl?: StringNullableFilter<"Project"> | string | null
     contractFileName?: StringNullableFilter<"Project"> | string | null
     archivedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    closedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -85186,6 +85257,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -85248,6 +85320,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -87616,6 +87689,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -87679,6 +87753,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -87932,6 +88007,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -87995,6 +88071,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88244,6 +88321,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -88307,6 +88385,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -88686,6 +88765,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -88749,6 +88829,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89100,6 +89181,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -89163,6 +89245,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -89418,6 +89501,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89481,6 +89565,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -89732,6 +89817,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -89795,6 +89881,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -90199,6 +90286,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90262,6 +90350,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90446,6 +90535,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -90509,6 +90599,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -90578,6 +90669,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90641,6 +90733,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -90694,6 +90787,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -90757,6 +90851,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -91096,6 +91191,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91159,6 +91255,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -91770,6 +91867,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -91833,6 +91931,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -92251,6 +92350,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92314,6 +92414,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93074,6 +93175,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -93137,6 +93239,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -93580,6 +93683,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -93643,6 +93747,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -94094,6 +94199,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -94157,6 +94263,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -94509,6 +94616,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -94572,6 +94680,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -94894,6 +95003,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -94957,6 +95067,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -95161,6 +95272,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95224,6 +95336,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -95418,6 +95531,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -95481,6 +95595,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -96006,6 +96121,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -96069,6 +96185,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98783,6 +98900,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -98846,6 +98964,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -99056,6 +99175,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -99119,6 +99239,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -99172,6 +99293,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -99235,6 +99357,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -99872,6 +99995,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -99935,6 +100059,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -100716,6 +100841,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -100779,6 +100905,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -100947,6 +101074,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -101010,6 +101138,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -104564,6 +104693,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -104627,6 +104757,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -104966,6 +105097,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -105029,6 +105161,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106009,6 +106142,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -106072,6 +106206,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -106329,6 +106464,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106392,6 +106528,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106681,6 +106818,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -106723,6 +106861,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -106765,6 +106904,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -106807,6 +106947,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -107832,6 +107973,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107894,6 +108036,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107952,6 +108095,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107990,6 +108134,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108052,6 +108197,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108110,6 +108256,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108148,6 +108295,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108210,6 +108358,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108268,6 +108417,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108306,6 +108456,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108368,6 +108519,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108426,6 +108578,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -110106,6 +110259,7 @@ export namespace Prisma {
     contractFileUrl?: string | null
     contractFileName?: string | null
     archivedAt?: Date | string | null
+    closedAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -110173,6 +110327,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -110235,6 +110390,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -110293,6 +110449,7 @@ export namespace Prisma {
     contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

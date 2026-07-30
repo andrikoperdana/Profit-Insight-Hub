@@ -1,6 +1,7 @@
 import { prisma } from "@workspace/db";
 import { notifyUser } from "./notifications.js";
 import { getAppSettings } from "./app-settings.js";
+import { recordAuditAnon } from "./audit.js";
 
 /**
  * Notification rules engine.
@@ -309,24 +310,138 @@ async function checkLowMargin(): Promise<number> {
   return created;
 }
 
+/**
+ * Rule 5: Auto-archive retention policy for stale CLOSED projects.
+ *
+ * When autoArchiveClosedMonths > 0 (0 = disabled), projects that have been
+ * CLOSED longer than the retention period are archived automatically —
+ * exactly what /projects/:id/archive does (sets archivedAt; reversible via
+ * /unarchive).
+ *
+ * MGMT is always warned BEFORE the archive happens:
+ * - Inside the last AUTO_ARCHIVE_WARNING_DAYS before the deadline (or once
+ *   the deadline has passed), MGMT gets a daily PROJECT_AUTO_ARCHIVE_WARNING.
+ * - The archive itself only proceeds once a warning for that project has
+ *   existed for at least AUTO_ARCHIVE_GRACE_AFTER_WARNING_DAYS. This also
+ *   covers the case where the policy is enabled while projects are already
+ *   past the deadline: they get warned first, then archived after the grace.
+ * - On archive, MGMT is notified (PROJECT_AUTO_ARCHIVED) and an audit log
+ *   entry (project.auto_archived) is written.
+ */
+const AUTO_ARCHIVE_WARNING_DAYS = 7;
+const AUTO_ARCHIVE_GRACE_AFTER_WARNING_DAYS = 3;
+
+function addMonths(d: Date, months: number): Date {
+  const out = new Date(d.getTime());
+  out.setMonth(out.getMonth() + months);
+  return out;
+}
+
+async function checkStaleClosedProjects(): Promise<number> {
+  const { autoArchiveClosedMonths } = await getAppSettings();
+  if (!autoArchiveClosedMonths || autoArchiveClosedMonths <= 0) return 0;
+
+  const now = new Date();
+  const projects = await prisma.project.findMany({
+    where: { deletedAt: null, archivedAt: null, status: "CLOSED", closedAt: { not: null } },
+    select: { id: true, name: true, code: true, projectId: true, closedAt: true },
+  });
+  if (projects.length === 0) return 0;
+
+  const mgmt = await prisma.user.findMany({
+    where: { role: "MANAGEMENT", deletedAt: null },
+    select: { id: true },
+  });
+
+  let created = 0;
+  for (const p of projects) {
+    const deadline = addMonths(p.closedAt!, autoArchiveClosedMonths);
+    const warnFrom = new Date(deadline.getTime() - AUTO_ARCHIVE_WARNING_DAYS * ONE_DAY_MS);
+    if (now < warnFrom) continue;
+
+    const label = p.projectId ?? p.code ?? p.id;
+    const link = `/projects/${p.id}`;
+
+    // Archive only if MGMT has had a warning on the books long enough.
+    const graceCutoff = new Date(now.getTime() - AUTO_ARCHIVE_GRACE_AFTER_WARNING_DAYS * ONE_DAY_MS);
+    const earliestWarning = await prisma.notification.findFirst({
+      where: { type: "PROJECT_AUTO_ARCHIVE_WARNING", link },
+      orderBy: { createdAt: "asc" },
+      select: { createdAt: true },
+    });
+
+    if (now >= deadline && earliestWarning && earliestWarning.createdAt <= graceCutoff) {
+      // Guard against a concurrent manual archive: only archive if still unarchived.
+      const res = await prisma.project.updateMany({
+        where: { id: p.id, archivedAt: null, deletedAt: null, status: "CLOSED" },
+        data: { archivedAt: now },
+      });
+      if (res.count !== 1) continue;
+      await recordAuditAnon({
+        action: "project.auto_archived",
+        entityType: "Project",
+        entityId: p.id,
+        description: `Auto-archived project ${label} — ${p.name} (CLOSED for over ${autoArchiveClosedMonths} months)`,
+        userName: "System",
+        userRole: "SYSTEM",
+        before: { archivedAt: null },
+        after: { archivedAt: now.toISOString() },
+      });
+      for (const m of mgmt) {
+        if (
+          await notifyOnceDaily({
+            userId: m.id,
+            type: "PROJECT_AUTO_ARCHIVED",
+            title: `Project auto-archived: ${p.name}`,
+            message: `${label} — ${p.name} was archived automatically after being closed for over ${autoArchiveClosedMonths} month${autoArchiveClosedMonths === 1 ? "" : "s"}. You can unarchive it from the project page.`,
+            link,
+          })
+        )
+          created++;
+      }
+      continue;
+    }
+
+    // Warning phase (pre-deadline window, or past deadline waiting out the grace).
+    const days = Math.max(1, Math.ceil((Math.max(deadline.getTime(), earliestWarning && now >= deadline ? earliestWarning.createdAt.getTime() + (AUTO_ARCHIVE_WARNING_DAYS + AUTO_ARCHIVE_GRACE_AFTER_WARNING_DAYS) * ONE_DAY_MS : 0) - now.getTime()) / ONE_DAY_MS));
+    for (const m of mgmt) {
+      if (
+        await notifyOnceDaily({
+          userId: m.id,
+          type: "PROJECT_AUTO_ARCHIVE_WARNING",
+          title: `Auto-archive scheduled: ${p.name}`,
+          message: `${label} — ${p.name} has been closed since ${p.closedAt!.toISOString().slice(0, 10)} and will be archived automatically in about ${days} day${days === 1 ? "" : "s"} (retention: ${autoArchiveClosedMonths} month${autoArchiveClosedMonths === 1 ? "" : "s"}). Unarchive is always possible afterwards; reopen or adjust the policy in Settings to prevent this.`,
+          link,
+        })
+      )
+        created++;
+    }
+  }
+  return created;
+}
+
 export async function runAllNotificationChecks(): Promise<{
   invoicesDueSoon: number;
   projectOverrun: number;
   lateTimesheets: number;
   lowMargin: number;
+  staleClosedProjects: number;
   total: number;
 }> {
-  const [invoicesDueSoon, projectOverrun, lateTimesheets, lowMargin] = await Promise.all([
-    checkInvoicesDueSoon(),
-    checkProjectOverrun(),
-    checkLateTimesheets(),
-    checkLowMargin(),
-  ]);
+  const [invoicesDueSoon, projectOverrun, lateTimesheets, lowMargin, staleClosedProjects] =
+    await Promise.all([
+      checkInvoicesDueSoon(),
+      checkProjectOverrun(),
+      checkLateTimesheets(),
+      checkLowMargin(),
+      checkStaleClosedProjects(),
+    ]);
   return {
     invoicesDueSoon,
     projectOverrun,
     lateTimesheets,
     lowMargin,
-    total: invoicesDueSoon + projectOverrun + lateTimesheets + lowMargin,
+    staleClosedProjects,
+    total: invoicesDueSoon + projectOverrun + lateTimesheets + lowMargin + staleClosedProjects,
   };
 }

@@ -684,7 +684,16 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
   if (b.pmId !== undefined) data.pmId = b.pmId || null;
   if (b.technicalWriterId !== undefined) data.technicalWriterId = b.technicalWriterId || null;
   if (b.adminProjectId !== undefined) data.adminProjectId = b.adminProjectId || null;
-  if (b.status !== undefined) data.status = b.status as ProjectStatus;
+  if (b.status !== undefined) {
+    data.status = b.status as ProjectStatus;
+    // Track when the project enters/leaves CLOSED — drives the auto-archive
+    // retention policy for stale CLOSED projects.
+    if (b.status === "CLOSED" && beforeProj.status !== "CLOSED") {
+      data.closedAt = new Date();
+    } else if (b.status !== "CLOSED" && beforeProj.status === "CLOSED") {
+      data.closedAt = null;
+    }
+  }
   if (b.kind !== undefined && (role === "MANAGEMENT" || role === "SUPER_ADMIN")) {
     if (b.kind !== "CLIENT" && b.kind !== "INTERNAL" && b.kind !== "PRESALES" && b.kind !== "TRAINING") {
       res.status(400).json({ error: "kind must be CLIENT, INTERNAL, PRESALES, or TRAINING" });

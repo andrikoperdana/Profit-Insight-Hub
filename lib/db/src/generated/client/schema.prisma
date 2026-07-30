@@ -251,6 +251,9 @@ model Project {
   contractFileUrl          String?       @db.Text
   contractFileName         String?
   archivedAt               DateTime?
+  // When the project last entered CLOSED status (null when not CLOSED).
+  // Drives the auto-archive retention policy for stale CLOSED projects.
+  closedAt                 DateTime?
   deletedAt                DateTime?
   createdAt                DateTime      @default(now())
   updatedAt                DateTime      @updatedAt
@@ -1197,6 +1200,9 @@ model AppSetting {
   invoiceDueSoonDays          Int       @default(7)
   lateTimesheetDays           Int       @default(3)
   xeroAutoSyncEnabled         Boolean   @default(false)
+  // Auto-archive projects that have been CLOSED for this many months.
+  // 0 = policy disabled (default).
+  autoArchiveClosedMonths     Int       @default(0)
   emailNotificationsEnabled   Boolean   @default(false)
   pipedriveAutoSyncEnabled    Boolean   @default(false)
   pipedriveLastSyncAt         DateTime?

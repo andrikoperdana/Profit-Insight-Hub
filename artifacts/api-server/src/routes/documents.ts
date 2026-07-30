@@ -252,7 +252,7 @@ router.post(
       if (hasBast && hasInvoice && closeMissing.length === 0) {
         await prisma.project.update({
           where: { id: project.id },
-          data: { status: "CLOSED" },
+          data: { status: "CLOSED", closedAt: new Date() },
         });
         await issueSurveyTokenIfMissing(project.id);
         await prisma.activity.create({

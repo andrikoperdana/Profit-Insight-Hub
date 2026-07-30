@@ -60,6 +60,22 @@ router.put("/app-settings", requireRole(...MANAGE_ROLES), async (req, res) => {
     return;
   }
 
+  // Optional field: older clients may not send it — preserve the stored value.
+  let autoArchiveClosedMonths: number | undefined;
+  if (body.autoArchiveClosedMonths !== undefined) {
+    autoArchiveClosedMonths = Number(body.autoArchiveClosedMonths);
+    if (
+      !Number.isInteger(autoArchiveClosedMonths) ||
+      autoArchiveClosedMonths < 0 ||
+      autoArchiveClosedMonths > 120
+    ) {
+      res.status(400).json({
+        error: "autoArchiveClosedMonths must be a whole number between 0 (disabled) and 120",
+      });
+      return;
+    }
+  }
+
   if (body.xeroAutoSyncEnabled !== undefined && typeof body.xeroAutoSyncEnabled !== "boolean") {
     res.status(400).json({ error: "xeroAutoSyncEnabled must be true or false" });
     return;
@@ -79,6 +95,10 @@ router.put("/app-settings", requireRole(...MANAGE_ROLES), async (req, res) => {
     budgetOverrunPct,
     invoiceDueSoonDays,
     lateTimesheetDays,
+    autoArchiveClosedMonths:
+      autoArchiveClosedMonths !== undefined
+        ? autoArchiveClosedMonths
+        : (before?.autoArchiveClosedMonths ?? 0),
     xeroAutoSyncEnabled,
     updatedById: req.user?.sub ?? null,
   };
@@ -93,7 +113,7 @@ router.put("/app-settings", requireRole(...MANAGE_ROLES), async (req, res) => {
     action: "app_settings.updated",
     entityType: "AppSetting",
     entityId: saved.id,
-    description: `Updated business rules (default VAT ${saved.defaultVatPercent}%, timesheet backdate ${saved.timesheetBackdateDays} working days, low-margin alert <${saved.lowMarginPct}%, budget overrun >${saved.budgetOverrunPct}%, invoice due-soon ${saved.invoiceDueSoonDays}d, late timesheet ${saved.lateTimesheetDays}d, Xero auto-sync ${saved.xeroAutoSyncEnabled ? "enabled" : "disabled"})`,
+    description: `Updated business rules (default VAT ${saved.defaultVatPercent}%, timesheet backdate ${saved.timesheetBackdateDays} working days, low-margin alert <${saved.lowMarginPct}%, budget overrun >${saved.budgetOverrunPct}%, invoice due-soon ${saved.invoiceDueSoonDays}d, late timesheet ${saved.lateTimesheetDays}d, auto-archive CLOSED after ${saved.autoArchiveClosedMonths === 0 ? "disabled" : `${saved.autoArchiveClosedMonths} months`}, Xero auto-sync ${saved.xeroAutoSyncEnabled ? "enabled" : "disabled"})`,
     before,
     after: saved,
   });

@@ -477,6 +477,7 @@ interface AppSettingsShape {
   budgetOverrunPct: number;
   invoiceDueSoonDays: number;
   lateTimesheetDays: number;
+  autoArchiveClosedMonths: number;
   xeroAutoSyncEnabled: boolean;
   emailNotificationsEnabled: boolean;
 }
@@ -576,6 +577,7 @@ function BusinessRulesCard() {
   const [budgetOverrun, setBudgetOverrun] = useState("");
   const [invoiceDueSoon, setInvoiceDueSoon] = useState("");
   const [lateTimesheet, setLateTimesheet] = useState("");
+  const [autoArchiveMonths, setAutoArchiveMonths] = useState("");
   const [xeroAutoSync, setXeroAutoSync] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -592,6 +594,7 @@ function BusinessRulesCard() {
         setBudgetOverrun(String(s.budgetOverrunPct));
         setInvoiceDueSoon(String(s.invoiceDueSoonDays));
         setLateTimesheet(String(s.lateTimesheetDays));
+        setAutoArchiveMonths(String(s.autoArchiveClosedMonths ?? 0));
         setXeroAutoSync(Boolean(s.xeroAutoSyncEnabled));
       } catch (e: any) {
         if (active) toast({ title: "Failed to load business rules", description: e?.message, variant: "destructive" });
@@ -613,6 +616,7 @@ function BusinessRulesCard() {
     const budgetOverrunNum = Number(budgetOverrun);
     const invoiceDueSoonNum = Number(invoiceDueSoon);
     const lateTimesheetNum = Number(lateTimesheet);
+    const autoArchiveMonthsNum = Number(autoArchiveMonths === "" ? 0 : autoArchiveMonths);
     if (!Number.isFinite(vatNum) || vatNum < 0 || vatNum > 100) {
       toast({ title: "Invalid VAT", description: "Default VAT must be between 0 and 100.", variant: "destructive" });
       return;
@@ -637,6 +641,10 @@ function BusinessRulesCard() {
       toast({ title: "Invalid window", description: "Late timesheet window must be a whole number between 1 and 30.", variant: "destructive" });
       return;
     }
+    if (!Number.isInteger(autoArchiveMonthsNum) || autoArchiveMonthsNum < 0 || autoArchiveMonthsNum > 120) {
+      toast({ title: "Invalid retention", description: "Auto-archive retention must be a whole number of months between 0 (off) and 120.", variant: "destructive" });
+      return;
+    }
     setSaving(true);
     try {
       await customFetch("/api/app-settings", {
@@ -649,6 +657,7 @@ function BusinessRulesCard() {
           budgetOverrunPct: budgetOverrunNum,
           invoiceDueSoonDays: invoiceDueSoonNum,
           lateTimesheetDays: lateTimesheetNum,
+          autoArchiveClosedMonths: autoArchiveMonthsNum,
           xeroAutoSyncEnabled: xeroAutoSync,
         }),
       });
@@ -759,6 +768,28 @@ function BusinessRulesCard() {
                   onChange={(e) => setLateTimesheet(e.target.value)}
                   data-testid="input-late-timesheet"
                 />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Housekeeping</p>
+              <div className="space-y-1.5">
+                <Label htmlFor="auto-archive-months">Auto-archive closed projects after (months)</Label>
+                <Input
+                  id="auto-archive-months"
+                  type="number"
+                  min={0}
+                  max={120}
+                  step="1"
+                  value={autoArchiveMonths}
+                  onChange={(e) => setAutoArchiveMonths(e.target.value)}
+                  data-testid="input-auto-archive-months"
+                />
+                <p className="text-xs text-muted-foreground">
+                  0 disables the policy. When set, projects closed longer than this are archived
+                  automatically; Management is notified about a week before, and archiving is always
+                  reversible from the project page.
+                </p>
               </div>
             </div>
 
