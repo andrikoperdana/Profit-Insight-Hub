@@ -1111,15 +1111,39 @@ router.delete(
       return;
     }
     // Soft delete — keep historical timesheets, documents, financials intact.
-    const updated = await prisma.project.update({
-      where: { id: String(req.params.id) },
-      data: { deletedAt: new Date() },
+    // If this project came from a lead conversion, unlock the lead so it can be
+    // converted again: clear convertedProjectId/wonAt and move it back from WON
+    // to NEGOTIATION. (There is no project-restore endpoint; if one is ever
+    // added, it must not re-attach the lead automatically since it may have
+    // been re-converted to a different project in the meantime.)
+    const { updated, unlockedLead } = await prisma.$transaction(async (tx) => {
+      const updated = await tx.project.update({
+        where: { id: String(req.params.id) },
+        data: { deletedAt: new Date() },
+      });
+      const linkedLead = await tx.lead.findUnique({
+        where: { convertedProjectId: updated.id },
+      });
+      let unlockedLead = null;
+      if (linkedLead) {
+        unlockedLead = await tx.lead.update({
+          where: { id: linkedLead.id },
+          data: {
+            convertedProjectId: null,
+            wonAt: null,
+            ...(linkedLead.stage === "WON" ? { stage: "NEGOTIATION" } : {}),
+          },
+        });
+      }
+      return { updated, unlockedLead };
     });
     await recordAudit(req, {
       action: "project.deleted",
       entityType: "Project",
       entityId: updated.id,
-      description: `Soft-deleted project ${before.code} — ${before.name}`,
+      description: `Soft-deleted project ${before.code} — ${before.name}${
+        unlockedLead ? ` (unlocked lead "${unlockedLead.title}" for re-conversion)` : ""
+      }`,
       before: serializeProject(before),
     });
     res.json({ success: true });
