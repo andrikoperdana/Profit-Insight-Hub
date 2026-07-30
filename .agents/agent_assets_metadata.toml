@@ -491,3 +491,9 @@ id = "Nc7vmUZLWwEDHX-876WF4"
 uri = "file://docs/SecureProfit-Hub-AI-Features-Manual.docx"
 type = "word_document"
 title = "AI Features Manual (EN + ID)"
+
+[[outputs]]
+id = "jcAmfAJ20x25xM5DOdLGz"
+uri = "file://docs/Ringkasan-Pekerjaan-2026-07-30.docx"
+type = "word_document"
+title = "Ringkasan Pekerjaan — 30 Juli 2026"
