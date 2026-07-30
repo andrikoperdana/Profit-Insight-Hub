@@ -29,14 +29,40 @@ function statusColor(status: string, colors: ReturnType<typeof useColors>) {
   }
 }
 
+const STATUS_FILTERS = [
+  { key: "ALL", label: "All" },
+  { key: "ACTIVE", label: "Active" },
+  { key: "DRAFT", label: "Draft" },
+  { key: "COMPLETE", label: "Completed" },
+] as const;
+
+type StatusFilter = (typeof STATUS_FILTERS)[number]["key"];
+
+function recencyMs(p: Project): number {
+  const d = p.startDate ?? p.createdAt;
+  const t = d ? Date.parse(d) : NaN;
+  return Number.isNaN(t) ? 0 : t;
+}
+
 export default function ProjectsScreen() {
   const colors = useColors();
   const router = useRouter();
   const q = useListProjects();
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
 
   const rows = useMemo(() => {
-    const all = q.data ?? [];
+    let all = (q.data ?? []).slice();
+    // Active first, then newest (start date, falling back to created date).
+    all.sort((a: Project, b: Project) => {
+      const aActive = a.status === "ACTIVE" ? 0 : 1;
+      const bActive = b.status === "ACTIVE" ? 0 : 1;
+      if (aActive !== bActive) return aActive - bActive;
+      return recencyMs(b) - recencyMs(a);
+    });
+    if (statusFilter !== "ALL") {
+      all = all.filter((p: Project) => p.status === statusFilter);
+    }
     const term = search.trim().toLowerCase();
     if (!term) return all;
     return all.filter((p: Project) => {
@@ -47,7 +73,7 @@ export default function ProjectsScreen() {
         (p.clientName ?? "").toLowerCase().includes(term)
       );
     });
-  }, [q.data, search]);
+  }, [q.data, search, statusFilter]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -71,6 +97,38 @@ export default function ProjectsScreen() {
             },
           ]}
         />
+      </View>
+      <View style={styles.chipRow}>
+        {STATUS_FILTERS.map((f) => {
+          const active = statusFilter === f.key;
+          return (
+            <Pressable
+              key={f.key}
+              onPress={() => setStatusFilter(f.key)}
+              testID={`project-filter-${f.key.toLowerCase()}`}
+              style={[
+                styles.chip,
+                {
+                  backgroundColor: active ? colors.primary : colors.card,
+                  borderColor: active ? colors.primary : colors.input,
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.chipText,
+                  {
+                    color: active
+                      ? colors.primaryForeground
+                      : colors.mutedForeground,
+                  },
+                ]}
+              >
+                {f.label}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
       <FlatList
         data={rows}
@@ -135,11 +193,17 @@ export default function ProjectsScreen() {
           q.isLoading ? null : (
             <EmptyState
               icon="briefcase"
-              title={search ? "No matching projects" : "No projects"}
+              title={
+                search || statusFilter !== "ALL"
+                  ? "No matching projects"
+                  : "No projects"
+              }
               message={
                 search
                   ? "Try a different name, Project ID or SPK/PO."
-                  : "Projects you can access will appear here."
+                  : statusFilter !== "ALL"
+                    ? "No projects with this status. Try another filter."
+                    : "Projects you can access will appear here."
               }
             />
           )
@@ -158,6 +222,19 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: "Inter_400Regular",
   },
+  chipRow: {
+    flexDirection: "row",
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+  },
+  chip: {
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+  },
+  chipText: { fontSize: 13, fontFamily: "Inter_500Medium" },
   content: { padding: 16, gap: 12, paddingBottom: 120 },
   rowTop: { flexDirection: "row", alignItems: "center", gap: 10 },
   name: { flex: 1, fontSize: 16, fontFamily: "Inter_600SemiBold" },
