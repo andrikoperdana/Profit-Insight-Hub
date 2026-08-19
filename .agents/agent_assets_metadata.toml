@@ -497,3 +497,10 @@ id = "jcAmfAJ20x25xM5DOdLGz"
 uri = "file://docs/Ringkasan-Pekerjaan-2026-07-30.docx"
 type = "word_document"
 title = "Ringkasan Pekerjaan — 30 Juli 2026"
+
+[[outputs]]
+id = "xlAn60Hil4WqQ7tvk0bHc"
+uri = "file://exports/SecureProfit-Hub-Source-dan-Database-2026-08-19.zip"
+type = "unspecified"
+title = "SecureProfit Hub — Source Code & Database Terbaru"
+description = "Paket ZIP berisi source code versi terbaru, backup lengkap database produksi PostgreSQL, dan petunjuk restore. Simpan secara aman karena database memuat data aplikasi."
