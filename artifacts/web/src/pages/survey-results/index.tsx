@@ -410,7 +410,7 @@ export default function SurveyResultsPage() {
               ) : (byProject.data?.items ?? []).length === 0 ? (
                 <EmptyState
                   title="No survey results per project yet"
-                  description={`No survey responses in ${year} yet. Surveys become available once a project is CLOSED and the survey link is shared with the client.`}
+                  description={`No survey responses in ${year} yet. Surveys become available once a project is COMPLETE and the survey link is shared with the client.`}
                 />
               ) : (
                 <Table>
@@ -545,7 +545,7 @@ export default function SurveyResultsPage() {
           {items.length === 0 ? (
             <EmptyState
               title="No survey responses"
-              description={`No client surveys have been submitted in ${year} yet. Surveys become available once a project is moved to status CLOSED and the link is shared with the client.`}
+              description={`No client surveys have been submitted in ${year} yet. Surveys become available once a project is moved to status COMPLETE and the link is shared with the client.`}
             />
           ) : (
             <>

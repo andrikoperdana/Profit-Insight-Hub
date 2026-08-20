@@ -149,6 +149,7 @@ model User {
   projectTemplatesCreated ProjectTemplate[] @relation("ProjectTemplateCreator")
   projectReportsCreated   ProjectReport[]   @relation("ProjectReportCreator")
   closingChecklistsCompleted ProjectClosingChecklistItem[] @relation("ClosingChecklistCompleter")
+  csatWaiversGranted          Project[]                     @relation("ProjectCsatWaiverGrantor")
   skillGoalsAsSubject       SkillDevelopmentGoal[]  @relation("SkillGoalSubject")
   skillGoalsCreated         SkillDevelopmentGoal[]  @relation("SkillGoalCreator")
   skillProgressionsAsSubject SkillProgressionLog[]  @relation("SkillProgressionSubject")
@@ -266,6 +267,10 @@ model Project {
   surveyToken    String?   @unique
   surveyEnabled  Boolean   @default(true)
   surveyExpiresAt DateTime?
+  csatWaivedAt     DateTime?
+  csatWaivedById   String?
+  csatWaivedBy     User?     @relation("ProjectCsatWaiverGrantor", fields: [csatWaivedById], references: [id], onDelete: SetNull)
+  csatWaiverReason String?   @db.Text
 
   clientShareToken     String?   @unique
   clientShareEnabled   Boolean   @default(false)
@@ -294,6 +299,7 @@ model Project {
   @@index([status])
   @@index([deletedAt])
   @@index([archivedAt])
+  @@index([csatWaivedById])
 }
 
 // A point-in-time snapshot of a project's scope/schedule/cost commitment.

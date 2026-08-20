@@ -110,7 +110,7 @@ export default function PublicSurveyPage() {
           <CardHeader>
             <CardTitle>Survey unavailable</CardTitle>
             <CardDescription>
-              This survey link is invalid, expired, or the project is not yet closed.
+              This survey link is invalid, expired, disabled, or the project is not yet complete.
             </CardDescription>
           </CardHeader>
         </Card>

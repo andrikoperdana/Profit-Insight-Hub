@@ -8,8 +8,9 @@ import {
   useSubmitFeedback360,
   getListProjectFeedback360QueryKey,
   ProjectStatus,
+  customFetch,
 } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,15 +22,39 @@ import { useAuth } from "@/lib/auth";
 import { isSuperAdmin } from "@/lib/roles";
 import { CheckCircle2, Circle, MinusCircle, Lock, Star } from "lucide-react";
 
+type ClosingSurveyData = {
+  closeReadiness: {
+    csatRequired: boolean;
+    csatResponseCount: number;
+    csatSatisfied: boolean;
+    csatWaived: boolean;
+    feedback360Total: number;
+    feedback360Submitted: number;
+    feedback360Pending: number;
+    feedback360Satisfied: boolean;
+  };
+};
+
 export default function ClosingTab({ projectId, project }: { projectId: string; project: any }) {
   const { user } = useAuth();
   const qc = useQueryClient();
   const { toast } = useToast();
-  const { data: items, isLoading } = useGetProjectClosingChecklist(projectId);
   const canWrite =
     isSuperAdmin(user?.role) ||
     user?.role === "MANAGEMENT" ||
     (user?.role === "PROJECT_MANAGER" && project?.pmId === user?.id);
+  const { data: items, isLoading } = useGetProjectClosingChecklist(projectId);
+  const {
+    data: surveyData,
+    isLoading: isReadinessLoading,
+    error: readinessError,
+  } = useQuery<ClosingSurveyData>({
+    queryKey: ["/projects", projectId, "survey"],
+    queryFn: () =>
+      customFetch<ClosingSurveyData>(`/api/projects/${projectId}/survey`),
+    enabled: !!projectId && canWrite,
+    refetchInterval: project?.status === "COMPLETE" ? 30_000 : false,
+  });
 
   const updateItem = useUpdateProjectClosingChecklistItem({
     mutation: {
@@ -52,10 +77,79 @@ export default function ClosingTab({ projectId, project }: { projectId: string; 
   const done = list.filter((i) => i.status !== "PENDING").length;
   const pct = list.length ? Math.round((done / list.length) * 100) : 0;
   const allComplete = list.length > 0 && done === list.length;
-  const canClose = canWrite && allComplete && project?.status !== "CLOSED" && project?.status === "COMPLETE";
+  const readiness = surveyData?.closeReadiness;
+  const csatReady = !!readiness?.csatSatisfied;
+  const feedbackReady = !!readiness?.feedback360Satisfied;
+  const canClose =
+    canWrite &&
+    allComplete &&
+    csatReady &&
+    feedbackReady &&
+    project?.status === "COMPLETE";
+  const closeBlocker =
+    project?.status !== "COMPLETE"
+      ? "Project must be in COMPLETE status before it can be closed."
+      : !allComplete
+        ? "Complete all checklist items to unlock the Close Project button."
+        : isReadinessLoading
+          ? "Checking CSAT and 360 feedback requirements…"
+          : readinessError || !readiness
+            ? "Closing requirements could not be verified. Refresh the page and try again."
+            : !csatReady
+              ? "A client CSAT response or Management waiver is still required."
+              : !feedbackReady
+                ? `${readiness.feedback360Pending} pending 360 feedback entr${readiness.feedback360Pending === 1 ? "y" : "ies"} must be submitted.`
+                : "All requirements are complete. The project is ready to close.";
 
   return (
     <div className="space-y-4">
+      {canWrite && (project?.status === "COMPLETE" || project?.status === "CLOSED") && (
+        <Card className="border-border" data-testid="card-closing-readiness">
+          <CardHeader>
+            <CardTitle className="text-base">Close Readiness</CardTitle>
+            <CardDescription>
+              Checklist, client CSAT, and 360 feedback must all be complete before closing.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <ReadinessRow
+              label="Closing checklist"
+              detail={`${done}/${list.length} items complete`}
+              ready={allComplete}
+              loading={isLoading}
+            />
+            <ReadinessRow
+              label="Client CSAT"
+              detail={
+                readiness
+                  ? !readiness.csatRequired
+                    ? "Not required for this project type"
+                    : readiness.csatResponseCount > 0
+                      ? `${readiness.csatResponseCount} response${readiness.csatResponseCount === 1 ? "" : "s"} received`
+                      : readiness.csatWaived
+                        ? "Waived by Management"
+                        : "Waiting for client response or Management waiver"
+                  : "Checking requirement…"
+              }
+              ready={csatReady}
+              loading={isReadinessLoading}
+            />
+            <ReadinessRow
+              label="360 feedback"
+              detail={
+                readiness
+                  ? readiness.feedback360Total === 0
+                    ? "No feedback entries required"
+                    : `${readiness.feedback360Submitted}/${readiness.feedback360Total} submitted`
+                  : "Checking requirement…"
+              }
+              ready={feedbackReady}
+              loading={isReadinessLoading}
+            />
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="border-border">
         <CardHeader>
           <div className="flex items-start justify-between gap-3">
@@ -94,11 +188,7 @@ export default function ClosingTab({ projectId, project }: { projectId: string; 
           {canWrite && project?.status !== "CLOSED" && (
             <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4">
               <p className="text-xs text-muted-foreground">
-                {project?.status !== "COMPLETE"
-                  ? "Project must be in COMPLETE status before it can be closed."
-                  : allComplete
-                    ? "All items completed. Project is ready to be closed."
-                    : "Complete all items to unlock the Close Project button."}
+                {closeBlocker}
               </p>
               <Button
                 disabled={!canClose || updateProject.isPending}
@@ -172,7 +262,14 @@ function Feedback360Card({
               isMine={fb.reviewerId === userId}
               canSubmit={fb.reviewerId === userId && fb.status === "PENDING" && projectStatus !== "CLOSED"}
               onSubmitted={() =>
-                qc.invalidateQueries({ queryKey: getListProjectFeedback360QueryKey(projectId) })
+                Promise.all([
+                  qc.invalidateQueries({
+                    queryKey: getListProjectFeedback360QueryKey(projectId),
+                  }),
+                  qc.invalidateQueries({
+                    queryKey: ["/projects", projectId, "survey"],
+                  }),
+                ]).then(() => undefined)
               }
               toast={toast}
             />
@@ -180,6 +277,44 @@ function Feedback360Card({
         </ul>
       </CardContent>
     </Card>
+  );
+}
+
+function ReadinessRow({
+  label,
+  detail,
+  ready,
+  loading,
+}: {
+  label: string;
+  detail: string;
+  ready: boolean;
+  loading: boolean;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-3 rounded-md border border-border p-3">
+      <div className="flex items-start gap-2">
+        {ready && !loading ? (
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+        ) : (
+          <Circle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+        )}
+        <div>
+          <div className="text-sm font-medium">{label}</div>
+          <div className="text-xs text-muted-foreground">{detail}</div>
+        </div>
+      </div>
+      <Badge
+        variant="outline"
+        className={
+          ready && !loading
+            ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-500"
+            : ""
+        }
+      >
+        {loading ? "Checking" : ready ? "Ready" : "Pending"}
+      </Badge>
+    </div>
   );
 }
 

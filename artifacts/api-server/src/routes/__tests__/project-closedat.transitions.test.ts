@@ -24,6 +24,9 @@ vi.mock("../../middlewares/auth.js", () => ({
 
 const projectFindUniqueMock = vi.fn((_a: unknown) => Promise.resolve<unknown>(null));
 const projectUpdateMock = vi.fn((_a: unknown) => Promise.resolve<unknown>({}));
+const projectUpdateManyMock = vi.fn((_a: unknown) =>
+  Promise.resolve<unknown>({ count: 1 }),
+);
 const checklistCountMock = vi.fn((_a: unknown) => Promise.resolve(0));
 const activityCreateMock = vi.fn((_a: unknown) => Promise.resolve<unknown>({}));
 const documentCreateMock = vi.fn((_a: unknown) => Promise.resolve<unknown>(null));
@@ -43,6 +46,7 @@ vi.mock("@workspace/db", () => {
       project: {
         findUnique: (a: unknown) => projectFindUniqueMock(a),
         update: (a: unknown) => projectUpdateMock(a),
+        updateMany: (a: unknown) => projectUpdateManyMock(a),
       },
       projectClosingChecklistItem: { count: (a: unknown) => checklistCountMock(a) },
       activity: { create: (a: unknown) => activityCreateMock(a) },
@@ -70,6 +74,7 @@ vi.mock("../../lib/surveyDefaults.js", () => ({
 vi.mock("../../lib/feedback360.js", () => ({
   checkCloseRequirements: vi.fn(async () => []),
   createFeedback360PairsIfMissing: vi.fn(async () => ({ created: 0, reviewerIds: [] })),
+  projectCloseReadinessWhere: vi.fn((projectId: string) => ({ id: projectId })),
 }));
 vi.mock("../../lib/app-settings.js", () => ({
   getAppSettings: vi.fn(async () => ({})),
@@ -121,6 +126,7 @@ const baseProject = {
 beforeEach(() => {
   projectFindUniqueMock.mockReset();
   projectUpdateMock.mockReset();
+  projectUpdateManyMock.mockReset().mockResolvedValue({ count: 1 });
   checklistCountMock.mockReset();
   activityCreateMock.mockClear();
   documentCreateMock.mockReset();
@@ -130,25 +136,62 @@ beforeEach(() => {
 
 describe("PATCH /projects/:id — closedAt bookkeeping", () => {
   it("sets closedAt when the project enters CLOSED", async () => {
-    projectFindUniqueMock.mockResolvedValue({ ...baseProject, status: "COMPLETE" });
+    projectFindUniqueMock
+      .mockResolvedValueOnce({ ...baseProject, status: "COMPLETE" })
+      .mockResolvedValueOnce({
+        ...baseProject,
+        status: "CLOSED",
+        closedAt: new Date("2026-08-20T00:00:00.000Z"),
+      });
     // Closing checklist gate: first count = pending (0), second = total (2).
     checklistCountMock.mockImplementation((a: any) =>
       Promise.resolve(a?.where?.status === "PENDING" ? 0 : 2),
     );
-    projectUpdateMock.mockImplementation((a: any) =>
-      Promise.resolve({ ...baseProject, ...a.data }),
-    );
-
     const res = await request(makeApp(projectsRouter))
       .patch(`/api/projects/${PROJECT_ID}`)
       .set(MGMT)
       .send({ status: "CLOSED" });
 
     expect(res.status).toBe(200);
-    expect(projectUpdateMock).toHaveBeenCalled();
-    const data = (projectUpdateMock.mock.calls[0]![0] as any).data;
+    expect(projectUpdateManyMock).toHaveBeenCalledOnce();
+    const data = (projectUpdateManyMock.mock.calls[0]![0] as any).data;
     expect(data.status).toBe("CLOSED");
     expect(data.closedAt).toBeInstanceOf(Date);
+  });
+
+  it("rejects a direct close transition from a status before COMPLETE", async () => {
+    projectFindUniqueMock.mockResolvedValue({
+      ...baseProject,
+      status: "ACTIVE",
+    });
+    const res = await request(makeApp(projectsRouter))
+      .patch(`/api/projects/${PROJECT_ID}`)
+      .set(MGMT)
+      .send({ status: "CLOSED" });
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe("PROJECT_NOT_COMPLETE");
+    expect(projectUpdateManyMock).not.toHaveBeenCalled();
+  });
+
+  it("returns a conflict if readiness changes before the atomic close update", async () => {
+    projectFindUniqueMock.mockResolvedValue({
+      ...baseProject,
+      status: "COMPLETE",
+    });
+    checklistCountMock.mockImplementation((a: any) =>
+      Promise.resolve(a?.where?.status === "PENDING" ? 0 : 2),
+    );
+    projectUpdateManyMock.mockResolvedValue({ count: 0 });
+
+    const res = await request(makeApp(projectsRouter))
+      .patch(`/api/projects/${PROJECT_ID}`)
+      .set(MGMT)
+      .send({ status: "CLOSED" });
+
+    expect(res.status).toBe(409);
+    expect(res.body.code).toBe("CLOSE_REQUIREMENTS_CHANGED");
+    expect(projectUpdateMock).not.toHaveBeenCalled();
   });
 
   it("clears closedAt when the project leaves CLOSED", async () => {
@@ -245,7 +288,7 @@ describe("documents BAST+INVOICE auto-close stamps closedAt", () => {
       documents: [{ type: "INVOICE" }, { type: "BAST" }],
     });
     documentCreateMock.mockResolvedValue(uploadedDoc);
-    projectUpdateMock.mockResolvedValue({});
+    projectUpdateManyMock.mockResolvedValue({ count: 1 });
 
     const res = await request(makeApp(documentsRouter))
       .post(`/api/projects/${PROJECT_ID}/documents`)
@@ -253,9 +296,8 @@ describe("documents BAST+INVOICE auto-close stamps closedAt", () => {
       .send({ type: "BAST", fileName: "bast.pdf", fileUrl: "https://x/bast.pdf" });
 
     expect(res.status).toBe(201);
-    expect(projectUpdateMock).toHaveBeenCalledOnce();
-    const args = projectUpdateMock.mock.calls[0]![0] as any;
-    expect(args.where).toEqual({ id: PROJECT_ID });
+    expect(projectUpdateManyMock).toHaveBeenCalledOnce();
+    const args = projectUpdateManyMock.mock.calls[0]![0] as any;
     expect(args.data.status).toBe("CLOSED");
     expect(args.data.closedAt).toBeInstanceOf(Date);
   });
@@ -274,7 +316,7 @@ describe("documents BAST+INVOICE auto-close stamps closedAt", () => {
       .send({ type: "BAST", fileName: "bast.pdf", fileUrl: "https://x/bast.pdf" });
 
     expect(res.status).toBe(201);
-    expect(projectUpdateMock).not.toHaveBeenCalled();
+    expect(projectUpdateManyMock).not.toHaveBeenCalled();
   });
 
   it("does not auto-close when close requirements are unmet", async () => {
@@ -293,6 +335,6 @@ describe("documents BAST+INVOICE auto-close stamps closedAt", () => {
       .send({ type: "BAST", fileName: "bast.pdf", fileUrl: "https://x/bast.pdf" });
 
     expect(res.status).toBe(201);
-    expect(projectUpdateMock).not.toHaveBeenCalled();
+    expect(projectUpdateManyMock).not.toHaveBeenCalled();
   });
 });

@@ -3,7 +3,10 @@ import { prisma, type DocumentType, type Prisma } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
-import { checkCloseRequirements } from "../lib/feedback360.js";
+import {
+  checkCloseRequirements,
+  projectCloseReadinessWhere,
+} from "../lib/feedback360.js";
 import {
   assertProjectWritable,
   userCanAccessProject,
@@ -250,27 +253,31 @@ router.post(
           ? await checkCloseRequirements(project.id, project.kind)
           : [];
       if (hasBast && hasInvoice && closeMissing.length === 0) {
-        await prisma.project.update({
-          where: { id: project.id },
+        const closeResult = await prisma.project.updateMany({
+          where: projectCloseReadinessWhere(project.id, project.kind, {
+            requireChecklist: false,
+          }),
           data: { status: "CLOSED", closedAt: new Date() },
         });
-        await issueSurveyTokenIfMissing(project.id);
-        await prisma.activity.create({
-          data: {
-            type: "project.status_changed",
-            message: `Project ${project.code} auto-closed (BAST + Invoice received)`,
-            userId: req.user!.sub,
-            projectId: project.id,
-          },
-        });
-        await recordAudit(req, {
-          action: "project.auto_closed",
-          entityType: "Project",
-          entityId: project.id,
-          description: `Project ${project.code} auto-closed (BAST + Invoice received)`,
-          before: { status: "COMPLETE" },
-          after: { status: "CLOSED" },
-        });
+        if (closeResult.count === 1) {
+          await issueSurveyTokenIfMissing(project.id);
+          await prisma.activity.create({
+            data: {
+              type: "project.status_changed",
+              message: `Project ${project.code} auto-closed (BAST + Invoice received)`,
+              userId: req.user!.sub,
+              projectId: project.id,
+            },
+          });
+          await recordAudit(req, {
+            action: "project.auto_closed",
+            entityType: "Project",
+            entityId: project.id,
+            description: `Project ${project.code} auto-closed (BAST + Invoice received)`,
+            before: { status: "COMPLETE" },
+            after: { status: "CLOSED" },
+          });
+        }
       }
     }
 

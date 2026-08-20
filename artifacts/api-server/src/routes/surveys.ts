@@ -8,6 +8,11 @@ import PDFDocument from "pdfkit";
 import { randomBytes } from "node:crypto";
 import { rateLimitAllow, clientIp } from "../lib/rateLimit.js";
 import { assertProjectWritable } from "../lib/projectAccess.js";
+import {
+  isSurveyAvailableStatus,
+  isSurveyLinkUnavailable,
+} from "../lib/surveyEligibility.js";
+import { getCloseReadiness } from "../lib/feedback360.js";
 
 const router: IRouter = Router();
 
@@ -78,20 +83,6 @@ function computeAggregates(
 // PUBLIC ROUTES (no authentication)
 // =====================================================================
 
-function surveyLinkUnavailable(project: {
-  deletedAt: Date | null;
-  archivedAt?: Date | null;
-  status: string;
-  surveyEnabled: boolean;
-  surveyExpiresAt: Date | null;
-}): boolean {
-  // Archived projects are read-only: their survey links go dark too.
-  if (project.deletedAt || project.archivedAt || project.status !== "CLOSED") return true;
-  if (!project.surveyEnabled) return true;
-  if (project.surveyExpiresAt && project.surveyExpiresAt.getTime() < Date.now()) return true;
-  return false;
-}
-
 router.get("/public/surveys/:token", async (req, res) => {
   // Per-IP abuse deterrent, mirroring the public client portal. The token is
   // the primary gate; the DB-backed counter survives restarts and is shared
@@ -106,7 +97,7 @@ router.get("/public/surveys/:token", async (req, res) => {
     where: { surveyToken: req.params.token },
     include: { client: true },
   });
-  if (!project || surveyLinkUnavailable(project)) {
+  if (!project || isSurveyLinkUnavailable(project)) {
     res.status(404).json({ error: "Survey not available" });
     return;
   }
@@ -151,7 +142,7 @@ router.post("/public/surveys/:token", async (req, res) => {
   const project = await prisma.project.findUnique({
     where: { surveyToken: req.params.token },
   });
-  if (!project || surveyLinkUnavailable(project)) {
+  if (!project || isSurveyLinkUnavailable(project)) {
     res.status(404).json({ error: "Survey not available" });
     return;
   }
@@ -406,7 +397,19 @@ router.put("/survey/template", requireAuth, requireRole("MANAGEMENT"), async (re
 router.get("/projects/:id/survey", requireAuth, async (req, res) => {
   const project = await prisma.project.findUnique({
     where: { id: String(req.params.id) },
-    select: { id: true, code: true, name: true, status: true, pmId: true, deletedAt: true, surveyToken: true, surveyEnabled: true, surveyExpiresAt: true },
+    select: {
+      id: true,
+      code: true,
+      name: true,
+      status: true,
+      kind: true,
+      pmId: true,
+      deletedAt: true,
+      archivedAt: true,
+      surveyToken: true,
+      surveyEnabled: true,
+      surveyExpiresAt: true,
+    },
   });
   if (!project || project.deletedAt) {
     res.status(404).json({ error: "Not found" });
@@ -418,17 +421,26 @@ router.get("/projects/:id/survey", requireAuth, async (req, res) => {
     return;
   }
 
-  // Atomically issue token if project is closed and missing one
+  // Atomically issue the token as soon as the project enters the closing-work
+  // stage (COMPLETE). It remains valid after the project becomes CLOSED.
   let token = project.surveyToken;
-  if (project.status === "CLOSED" && !token) {
+  const surveyAvailable =
+    project.kind === "CLIENT" &&
+    !project.deletedAt &&
+    !project.archivedAt &&
+    isSurveyAvailableStatus(project.status);
+  if (surveyAvailable && !token) {
     token = await issueSurveyTokenIfMissing(project.id);
   }
 
-  const activeQuestions = await getActiveQuestions();
-  const responses = await prisma.surveyResponse.findMany({
-    where: { projectId: project.id },
-    orderBy: { createdAt: "desc" },
-  });
+  const [activeQuestions, responses, readiness] = await Promise.all([
+    getActiveQuestions(),
+    prisma.surveyResponse.findMany({
+      where: { projectId: project.id },
+      orderBy: { createdAt: "desc" },
+    }),
+    getCloseReadiness(project.id, project.kind),
+  ]);
   // Use the union of currently-active questions plus any historical questions
   // captured in response snapshots so historical responses remain readable
   // even after Management edits the template.
@@ -438,21 +450,38 @@ router.get("/projects/:id/survey", requireAuth, async (req, res) => {
   // Build public URL — best-effort using request host
   const host = req.get("x-forwarded-host") || req.get("host") || "";
   const proto = (req.get("x-forwarded-proto") || (req.secure ? "https" : "http")).split(",")[0];
-  const publicUrl = token ? `${proto}://${host}/survey/${token}` : null;
+  const publicUrl =
+    surveyAvailable && token ? `${proto}://${host}/survey/${token}` : null;
 
   const now = Date.now();
   const expired = !!project.surveyExpiresAt && project.surveyExpiresAt.getTime() < now;
-  const linkActive = project.status === "CLOSED" && project.surveyEnabled && !expired && !!token;
+  const linkActive =
+    surveyAvailable && project.surveyEnabled && !expired && !!token;
 
   res.json({
-    project: { id: project.id, code: project.code, name: project.name, status: project.status },
-    surveyAvailable: project.status === "CLOSED",
+    project: {
+      id: project.id,
+      code: project.code,
+      name: project.name,
+      status: project.status,
+      kind: project.kind,
+    },
+    surveyAvailable,
     surveyEnabled: project.surveyEnabled,
     surveyExpiresAt: project.surveyExpiresAt ? project.surveyExpiresAt.toISOString() : null,
     surveyExpired: expired,
     linkActive,
-    surveyToken: token,
+    surveyToken: surveyAvailable ? token : null,
     publicUrl,
+    closeReadiness: {
+      ...readiness,
+      csatWaiver: readiness.csatWaiver
+        ? {
+            ...readiness.csatWaiver,
+            waivedAt: readiness.csatWaiver.waivedAt.toISOString(),
+          }
+        : null,
+    },
     questions: allQuestions.map((q) => ({
       key: q.key,
       text: q.text,
@@ -470,6 +499,140 @@ router.get("/projects/:id/survey", requireAuth, async (req, res) => {
       questionsSnapshot: r.questionsSnapshot,
       createdAt: r.createdAt.toISOString(),
     })),
+  });
+});
+
+// Management-only CSAT waiver for a CLIENT project whose client does not
+// respond. Waivers are deliberately restricted to COMPLETE so they are a
+// closing exception, not a way to pre-authorize future projects.
+router.put("/projects/:id/survey-waiver", requireAuth, async (req, res) => {
+  const project = await prisma.project.findUnique({
+    where: { id: String(req.params.id) },
+    select: {
+      id: true,
+      projectId: true,
+      code: true,
+      name: true,
+      kind: true,
+      status: true,
+      deletedAt: true,
+      archivedAt: true,
+      csatWaivedAt: true,
+      csatWaivedById: true,
+      csatWaiverReason: true,
+    },
+  });
+  if (!project || project.deletedAt) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (
+    req.user!.role !== "MANAGEMENT" &&
+    req.user!.role !== "SUPER_ADMIN"
+  ) {
+    res.status(403).json({ error: "Only Management can manage a CSAT waiver" });
+    return;
+  }
+  if (project.archivedAt) {
+    res.status(400).json({ error: "Archived projects are read-only" });
+    return;
+  }
+  if (!(await assertProjectWritable(project.id, res))) return;
+  if (project.kind !== "CLIENT") {
+    res.status(400).json({ error: "CSAT waivers only apply to client projects" });
+    return;
+  }
+  if (project.status !== "COMPLETE") {
+    res.status(400).json({
+      error: "A CSAT waiver can only be managed while the project is COMPLETE",
+    });
+    return;
+  }
+
+  const waived = req.body?.waived;
+  if (typeof waived !== "boolean") {
+    res.status(400).json({ error: "waived must be true or false" });
+    return;
+  }
+
+  const reason = String(req.body?.reason ?? "").trim();
+  if (waived && (reason.length < 10 || reason.length > 500)) {
+    res.status(400).json({
+      error: "Waiver reason must be between 10 and 500 characters",
+    });
+    return;
+  }
+
+  const before = {
+    waivedAt: project.csatWaivedAt,
+    waivedById: project.csatWaivedById,
+    reason: project.csatWaiverReason,
+  };
+  const updateResult = await prisma.project.updateMany({
+    where: {
+      id: project.id,
+      status: "COMPLETE",
+      kind: "CLIENT",
+      deletedAt: null,
+      archivedAt: null,
+    },
+    data: waived
+      ? {
+          csatWaivedAt: new Date(),
+          csatWaivedById: req.user!.sub,
+          csatWaiverReason: reason,
+        }
+      : {
+          csatWaivedAt: null,
+          csatWaivedById: null,
+          csatWaiverReason: null,
+        },
+  });
+  if (updateResult.count !== 1) {
+    res.status(409).json({
+      error:
+        "The project state changed while this request was being processed. Refresh and try again.",
+    });
+    return;
+  }
+
+  const updated = await prisma.project.findUnique({
+    where: { id: project.id },
+    select: {
+      csatWaivedAt: true,
+      csatWaiverReason: true,
+      csatWaivedBy: { select: { id: true, name: true } },
+    },
+  });
+  if (!updated) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+
+  await recordAudit(req, {
+    action: waived ? "project.csat_waived" : "project.csat_waiver_removed",
+    entityType: "Project",
+    entityId: project.id,
+    description: waived
+      ? `CSAT requirement waived for ${project.projectId ?? project.code ?? project.name}`
+      : `CSAT waiver removed for ${project.projectId ?? project.code ?? project.name}`,
+    before,
+    after: {
+      waivedAt: updated.csatWaivedAt,
+      waivedById: updated.csatWaivedBy?.id ?? null,
+      reason: updated.csatWaiverReason,
+    },
+  });
+
+  res.json({
+    csatWaived: !!updated.csatWaivedAt,
+    csatWaiver: updated.csatWaivedAt
+      ? {
+          waivedAt: updated.csatWaivedAt.toISOString(),
+          reason: updated.csatWaiverReason,
+          waivedBy: updated.csatWaivedBy,
+        }
+      : null,
   });
 });
 

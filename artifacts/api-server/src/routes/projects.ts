@@ -16,7 +16,11 @@ import { recordAudit } from "../lib/audit.js";
 import { getAppSettings } from "../lib/app-settings.js";
 import { issueSurveyTokenIfMissing } from "../lib/surveyDefaults.js";
 import { notifyUser, notifyUsers } from "../lib/notifications.js";
-import { createFeedback360PairsIfMissing, checkCloseRequirements } from "../lib/feedback360.js";
+import {
+  createFeedback360PairsIfMissing,
+  checkCloseRequirements,
+  projectCloseReadinessWhere,
+} from "../lib/feedback360.js";
 import { assertProjectWritable, userCanAccessProject } from "../lib/projectAccess.js";
 import { nextProjectId } from "../lib/projectIds.js";
 import {
@@ -506,11 +510,25 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     }
   }
 
+  const effectiveKindForStatusGate =
+    b.kind !== undefined &&
+    (role === "MANAGEMENT" || role === "SUPER_ADMIN") &&
+    ["CLIENT", "INTERNAL", "PRESALES", "TRAINING"].includes(String(b.kind))
+      ? String(b.kind)
+      : beforeProj.kind;
+
   // CLOSED transition gate: enforce closing checklist completion. All checklist
   // items must be DONE or NA (no PENDING) before a project can be closed manually.
   // This does NOT apply when status is already CLOSED, and is bypassed for the
   // BAST+INVOICE auto-close flow in routes/documents.ts (which writes directly).
   if (b.status === "CLOSED" && beforeProj.status !== "CLOSED") {
+    if (beforeProj.status !== "COMPLETE") {
+      res.status(400).json({
+        error: "Project must be COMPLETE before it can be closed.",
+        code: "PROJECT_NOT_COMPLETE",
+      });
+      return;
+    }
     const pendingItems = await prisma.projectClosingChecklistItem.count({
       where: { projectId: String(req.params.id), status: "PENDING" },
     });
@@ -530,7 +548,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     // survey response, and every 360 feedback entry must be submitted.
     const closeMissing = await checkCloseRequirements(
       String(req.params.id),
-      beforeProj.kind,
+      effectiveKindForStatusGate,
     );
     if (closeMissing.length > 0) {
       res.status(400).json({
@@ -546,12 +564,7 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
   // with no client invoice, so they are exempt from the billing- and
   // BAST-related lifecycle requirements. Use the EFFECTIVE kind so a PATCH
   // that flips kind (MGMT/SUPER_ADMIN only) and status in one call is honoured.
-  const effKindForGate =
-    b.kind !== undefined &&
-    (role === "MANAGEMENT" || role === "SUPER_ADMIN") &&
-    ["CLIENT", "INTERNAL", "PRESALES", "TRAINING"].includes(String(b.kind))
-      ? String(b.kind)
-      : beforeProj.kind;
+  const effKindForGate = effectiveKindForStatusGate;
   const isNonCommercialProject = effKindForGate !== "CLIENT";
 
   // ACTIVE transition gate: a project may only be activated once it is fully
@@ -773,11 +786,38 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     }
   }
   if (b.contractFileName !== undefined) data.contractFileName = sanitizeFileName(b.contractFileName) ?? null;
-  let updated = await prisma.project.update({
-    where: { id: String(req.params.id) },
-    data,
-    include: projectInclude,
-  });
+  let updated;
+  if (b.status === "CLOSED" && beforeProj.status !== "CLOSED") {
+    const closeResult = await prisma.project.updateMany({
+      where: projectCloseReadinessWhere(
+        String(req.params.id),
+        effectiveKindForStatusGate,
+      ),
+      data,
+    });
+    if (closeResult.count !== 1) {
+      res.status(409).json({
+        error:
+          "Project closing requirements changed while this request was being processed. Refresh and try again.",
+        code: "CLOSE_REQUIREMENTS_CHANGED",
+      });
+      return;
+    }
+    updated = await prisma.project.findUnique({
+      where: { id: String(req.params.id) },
+      include: projectInclude,
+    });
+    if (!updated) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+  } else {
+    updated = await prisma.project.update({
+      where: { id: String(req.params.id) },
+      data,
+      include: projectInclude,
+    });
+  }
   // Capture the initial project baseline the first time it is activated. The
   // baseline is the scope/schedule/cost commitment that EVM's Planned Value and
   // the variance panel measure against. We auto-create the ACTIVATION baseline

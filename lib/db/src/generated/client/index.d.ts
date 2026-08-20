@@ -5291,6 +5291,7 @@ export namespace Prisma {
     projectTemplatesCreated: number
     projectReportsCreated: number
     closingChecklistsCompleted: number
+    csatWaiversGranted: number
     skillGoalsAsSubject: number
     skillGoalsCreated: number
     skillProgressionsAsSubject: number
@@ -5339,6 +5340,7 @@ export namespace Prisma {
     projectTemplatesCreated?: boolean | UserCountOutputTypeCountProjectTemplatesCreatedArgs
     projectReportsCreated?: boolean | UserCountOutputTypeCountProjectReportsCreatedArgs
     closingChecklistsCompleted?: boolean | UserCountOutputTypeCountClosingChecklistsCompletedArgs
+    csatWaiversGranted?: boolean | UserCountOutputTypeCountCsatWaiversGrantedArgs
     skillGoalsAsSubject?: boolean | UserCountOutputTypeCountSkillGoalsAsSubjectArgs
     skillGoalsCreated?: boolean | UserCountOutputTypeCountSkillGoalsCreatedArgs
     skillProgressionsAsSubject?: boolean | UserCountOutputTypeCountSkillProgressionsAsSubjectArgs
@@ -5575,6 +5577,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountClosingChecklistsCompletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectClosingChecklistItemWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCsatWaiversGrantedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectWhereInput
   }
 
   /**
@@ -6749,6 +6758,7 @@ export namespace Prisma {
     projectTemplatesCreated?: boolean | User$projectTemplatesCreatedArgs<ExtArgs>
     projectReportsCreated?: boolean | User$projectReportsCreatedArgs<ExtArgs>
     closingChecklistsCompleted?: boolean | User$closingChecklistsCompletedArgs<ExtArgs>
+    csatWaiversGranted?: boolean | User$csatWaiversGrantedArgs<ExtArgs>
     skillGoalsAsSubject?: boolean | User$skillGoalsAsSubjectArgs<ExtArgs>
     skillGoalsCreated?: boolean | User$skillGoalsCreatedArgs<ExtArgs>
     skillProgressionsAsSubject?: boolean | User$skillProgressionsAsSubjectArgs<ExtArgs>
@@ -6845,6 +6855,7 @@ export namespace Prisma {
     projectTemplatesCreated?: boolean | User$projectTemplatesCreatedArgs<ExtArgs>
     projectReportsCreated?: boolean | User$projectReportsCreatedArgs<ExtArgs>
     closingChecklistsCompleted?: boolean | User$closingChecklistsCompletedArgs<ExtArgs>
+    csatWaiversGranted?: boolean | User$csatWaiversGrantedArgs<ExtArgs>
     skillGoalsAsSubject?: boolean | User$skillGoalsAsSubjectArgs<ExtArgs>
     skillGoalsCreated?: boolean | User$skillGoalsCreatedArgs<ExtArgs>
     skillProgressionsAsSubject?: boolean | User$skillProgressionsAsSubjectArgs<ExtArgs>
@@ -6905,6 +6916,7 @@ export namespace Prisma {
       projectTemplatesCreated: Prisma.$ProjectTemplatePayload<ExtArgs>[]
       projectReportsCreated: Prisma.$ProjectReportPayload<ExtArgs>[]
       closingChecklistsCompleted: Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>[]
+      csatWaiversGranted: Prisma.$ProjectPayload<ExtArgs>[]
       skillGoalsAsSubject: Prisma.$SkillDevelopmentGoalPayload<ExtArgs>[]
       skillGoalsCreated: Prisma.$SkillDevelopmentGoalPayload<ExtArgs>[]
       skillProgressionsAsSubject: Prisma.$SkillProgressionLogPayload<ExtArgs>[]
@@ -7337,6 +7349,7 @@ export namespace Prisma {
     projectTemplatesCreated<T extends User$projectTemplatesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$projectTemplatesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectTemplatePayload<ExtArgs>, T, "findMany"> | Null>
     projectReportsCreated<T extends User$projectReportsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$projectReportsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectReportPayload<ExtArgs>, T, "findMany"> | Null>
     closingChecklistsCompleted<T extends User$closingChecklistsCompletedArgs<ExtArgs> = {}>(args?: Subset<T, User$closingChecklistsCompletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectClosingChecklistItemPayload<ExtArgs>, T, "findMany"> | Null>
+    csatWaiversGranted<T extends User$csatWaiversGrantedArgs<ExtArgs> = {}>(args?: Subset<T, User$csatWaiversGrantedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany"> | Null>
     skillGoalsAsSubject<T extends User$skillGoalsAsSubjectArgs<ExtArgs> = {}>(args?: Subset<T, User$skillGoalsAsSubjectArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillDevelopmentGoalPayload<ExtArgs>, T, "findMany"> | Null>
     skillGoalsCreated<T extends User$skillGoalsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$skillGoalsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillDevelopmentGoalPayload<ExtArgs>, T, "findMany"> | Null>
     skillProgressionsAsSubject<T extends User$skillProgressionsAsSubjectArgs<ExtArgs> = {}>(args?: Subset<T, User$skillProgressionsAsSubjectArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SkillProgressionLogPayload<ExtArgs>, T, "findMany"> | Null>
@@ -8359,6 +8372,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectClosingChecklistItemScalarFieldEnum | ProjectClosingChecklistItemScalarFieldEnum[]
+  }
+
+  /**
+   * User.csatWaiversGranted
+   */
+  export type User$csatWaiversGrantedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Project
+     */
+    select?: ProjectSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectInclude<ExtArgs> | null
+    where?: ProjectWhereInput
+    orderBy?: ProjectOrderByWithRelationInput | ProjectOrderByWithRelationInput[]
+    cursor?: ProjectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
   }
 
   /**
@@ -10854,6 +10887,9 @@ export namespace Prisma {
     surveyToken: string | null
     surveyEnabled: boolean | null
     surveyExpiresAt: Date | null
+    csatWaivedAt: Date | null
+    csatWaivedById: string | null
+    csatWaiverReason: string | null
     clientShareToken: string | null
     clientShareEnabled: boolean | null
     clientShareExpiresAt: Date | null
@@ -10899,6 +10935,9 @@ export namespace Prisma {
     surveyToken: string | null
     surveyEnabled: boolean | null
     surveyExpiresAt: Date | null
+    csatWaivedAt: Date | null
+    csatWaivedById: string | null
+    csatWaiverReason: string | null
     clientShareToken: string | null
     clientShareEnabled: boolean | null
     clientShareExpiresAt: Date | null
@@ -10944,6 +10983,9 @@ export namespace Prisma {
     surveyToken: number
     surveyEnabled: number
     surveyExpiresAt: number
+    csatWaivedAt: number
+    csatWaivedById: number
+    csatWaiverReason: number
     clientShareToken: number
     clientShareEnabled: number
     clientShareExpiresAt: number
@@ -11007,6 +11049,9 @@ export namespace Prisma {
     surveyToken?: true
     surveyEnabled?: true
     surveyExpiresAt?: true
+    csatWaivedAt?: true
+    csatWaivedById?: true
+    csatWaiverReason?: true
     clientShareToken?: true
     clientShareEnabled?: true
     clientShareExpiresAt?: true
@@ -11052,6 +11097,9 @@ export namespace Prisma {
     surveyToken?: true
     surveyEnabled?: true
     surveyExpiresAt?: true
+    csatWaivedAt?: true
+    csatWaivedById?: true
+    csatWaiverReason?: true
     clientShareToken?: true
     clientShareEnabled?: true
     clientShareExpiresAt?: true
@@ -11097,6 +11145,9 @@ export namespace Prisma {
     surveyToken?: true
     surveyEnabled?: true
     surveyExpiresAt?: true
+    csatWaivedAt?: true
+    csatWaivedById?: true
+    csatWaiverReason?: true
     clientShareToken?: true
     clientShareEnabled?: true
     clientShareExpiresAt?: true
@@ -11229,6 +11280,9 @@ export namespace Prisma {
     surveyToken: string | null
     surveyEnabled: boolean
     surveyExpiresAt: Date | null
+    csatWaivedAt: Date | null
+    csatWaivedById: string | null
+    csatWaiverReason: string | null
     clientShareToken: string | null
     clientShareEnabled: boolean
     clientShareExpiresAt: Date | null
@@ -11293,6 +11347,9 @@ export namespace Prisma {
     surveyToken?: boolean
     surveyEnabled?: boolean
     surveyExpiresAt?: boolean
+    csatWaivedAt?: boolean
+    csatWaivedById?: boolean
+    csatWaiverReason?: boolean
     clientShareToken?: boolean
     clientShareEnabled?: boolean
     clientShareExpiresAt?: boolean
@@ -11301,6 +11358,7 @@ export namespace Prisma {
     pm?: boolean | Project$pmArgs<ExtArgs>
     technicalWriter?: boolean | Project$technicalWriterArgs<ExtArgs>
     adminProject?: boolean | Project$adminProjectArgs<ExtArgs>
+    csatWaivedBy?: boolean | Project$csatWaivedByArgs<ExtArgs>
     resources?: boolean | Project$resourcesArgs<ExtArgs>
     timesheets?: boolean | Project$timesheetsArgs<ExtArgs>
     documents?: boolean | Project$documentsArgs<ExtArgs>
@@ -11360,6 +11418,9 @@ export namespace Prisma {
     surveyToken?: boolean
     surveyEnabled?: boolean
     surveyExpiresAt?: boolean
+    csatWaivedAt?: boolean
+    csatWaivedById?: boolean
+    csatWaiverReason?: boolean
     clientShareToken?: boolean
     clientShareEnabled?: boolean
     clientShareExpiresAt?: boolean
@@ -11368,6 +11429,7 @@ export namespace Prisma {
     pm?: boolean | Project$pmArgs<ExtArgs>
     technicalWriter?: boolean | Project$technicalWriterArgs<ExtArgs>
     adminProject?: boolean | Project$adminProjectArgs<ExtArgs>
+    csatWaivedBy?: boolean | Project$csatWaivedByArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
   export type ProjectSelectScalar = {
@@ -11410,6 +11472,9 @@ export namespace Prisma {
     surveyToken?: boolean
     surveyEnabled?: boolean
     surveyExpiresAt?: boolean
+    csatWaivedAt?: boolean
+    csatWaivedById?: boolean
+    csatWaiverReason?: boolean
     clientShareToken?: boolean
     clientShareEnabled?: boolean
     clientShareExpiresAt?: boolean
@@ -11421,6 +11486,7 @@ export namespace Prisma {
     pm?: boolean | Project$pmArgs<ExtArgs>
     technicalWriter?: boolean | Project$technicalWriterArgs<ExtArgs>
     adminProject?: boolean | Project$adminProjectArgs<ExtArgs>
+    csatWaivedBy?: boolean | Project$csatWaivedByArgs<ExtArgs>
     resources?: boolean | Project$resourcesArgs<ExtArgs>
     timesheets?: boolean | Project$timesheetsArgs<ExtArgs>
     documents?: boolean | Project$documentsArgs<ExtArgs>
@@ -11445,6 +11511,7 @@ export namespace Prisma {
     pm?: boolean | Project$pmArgs<ExtArgs>
     technicalWriter?: boolean | Project$technicalWriterArgs<ExtArgs>
     adminProject?: boolean | Project$adminProjectArgs<ExtArgs>
+    csatWaivedBy?: boolean | Project$csatWaivedByArgs<ExtArgs>
   }
 
   export type $ProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11455,6 +11522,7 @@ export namespace Prisma {
       pm: Prisma.$UserPayload<ExtArgs> | null
       technicalWriter: Prisma.$UserPayload<ExtArgs> | null
       adminProject: Prisma.$UserPayload<ExtArgs> | null
+      csatWaivedBy: Prisma.$UserPayload<ExtArgs> | null
       resources: Prisma.$ProjectResourcePayload<ExtArgs>[]
       timesheets: Prisma.$TimesheetPayload<ExtArgs>[]
       documents: Prisma.$DocumentPayload<ExtArgs>[]
@@ -11512,6 +11580,9 @@ export namespace Prisma {
       surveyToken: string | null
       surveyEnabled: boolean
       surveyExpiresAt: Date | null
+      csatWaivedAt: Date | null
+      csatWaivedById: string | null
+      csatWaiverReason: string | null
       clientShareToken: string | null
       clientShareEnabled: boolean
       clientShareExpiresAt: Date | null
@@ -11884,6 +11955,7 @@ export namespace Prisma {
     pm<T extends Project$pmArgs<ExtArgs> = {}>(args?: Subset<T, Project$pmArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     technicalWriter<T extends Project$technicalWriterArgs<ExtArgs> = {}>(args?: Subset<T, Project$technicalWriterArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     adminProject<T extends Project$adminProjectArgs<ExtArgs> = {}>(args?: Subset<T, Project$adminProjectArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    csatWaivedBy<T extends Project$csatWaivedByArgs<ExtArgs> = {}>(args?: Subset<T, Project$csatWaivedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     resources<T extends Project$resourcesArgs<ExtArgs> = {}>(args?: Subset<T, Project$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectResourcePayload<ExtArgs>, T, "findMany"> | Null>
     timesheets<T extends Project$timesheetsArgs<ExtArgs> = {}>(args?: Subset<T, Project$timesheetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimesheetPayload<ExtArgs>, T, "findMany"> | Null>
     documents<T extends Project$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Project$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany"> | Null>
@@ -11968,6 +12040,9 @@ export namespace Prisma {
     readonly surveyToken: FieldRef<"Project", 'String'>
     readonly surveyEnabled: FieldRef<"Project", 'Boolean'>
     readonly surveyExpiresAt: FieldRef<"Project", 'DateTime'>
+    readonly csatWaivedAt: FieldRef<"Project", 'DateTime'>
+    readonly csatWaivedById: FieldRef<"Project", 'String'>
+    readonly csatWaiverReason: FieldRef<"Project", 'String'>
     readonly clientShareToken: FieldRef<"Project", 'String'>
     readonly clientShareEnabled: FieldRef<"Project", 'Boolean'>
     readonly clientShareExpiresAt: FieldRef<"Project", 'DateTime'>
@@ -12337,6 +12412,21 @@ export namespace Prisma {
    * Project.adminProject
    */
   export type Project$adminProjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Project.csatWaivedBy
+   */
+  export type Project$csatWaivedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the User
      */
@@ -59159,6 +59249,9 @@ export namespace Prisma {
     surveyToken: 'surveyToken',
     surveyEnabled: 'surveyEnabled',
     surveyExpiresAt: 'surveyExpiresAt',
+    csatWaivedAt: 'csatWaivedAt',
+    csatWaivedById: 'csatWaivedById',
+    csatWaiverReason: 'csatWaiverReason',
     clientShareToken: 'clientShareToken',
     clientShareEnabled: 'clientShareEnabled',
     clientShareExpiresAt: 'clientShareExpiresAt'
@@ -60462,6 +60555,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateListRelationFilter
     projectReportsCreated?: ProjectReportListRelationFilter
     closingChecklistsCompleted?: ProjectClosingChecklistItemListRelationFilter
+    csatWaiversGranted?: ProjectListRelationFilter
     skillGoalsAsSubject?: SkillDevelopmentGoalListRelationFilter
     skillGoalsCreated?: SkillDevelopmentGoalListRelationFilter
     skillProgressionsAsSubject?: SkillProgressionLogListRelationFilter
@@ -60531,6 +60625,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateOrderByRelationAggregateInput
     projectReportsCreated?: ProjectReportOrderByRelationAggregateInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemOrderByRelationAggregateInput
+    csatWaiversGranted?: ProjectOrderByRelationAggregateInput
     skillGoalsAsSubject?: SkillDevelopmentGoalOrderByRelationAggregateInput
     skillGoalsCreated?: SkillDevelopmentGoalOrderByRelationAggregateInput
     skillProgressionsAsSubject?: SkillProgressionLogOrderByRelationAggregateInput
@@ -60603,6 +60698,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateListRelationFilter
     projectReportsCreated?: ProjectReportListRelationFilter
     closingChecklistsCompleted?: ProjectClosingChecklistItemListRelationFilter
+    csatWaiversGranted?: ProjectListRelationFilter
     skillGoalsAsSubject?: SkillDevelopmentGoalListRelationFilter
     skillGoalsCreated?: SkillDevelopmentGoalListRelationFilter
     skillProgressionsAsSubject?: SkillProgressionLogListRelationFilter
@@ -60880,6 +60976,9 @@ export namespace Prisma {
     surveyToken?: StringNullableFilter<"Project"> | string | null
     surveyEnabled?: BoolFilter<"Project"> | boolean
     surveyExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    csatWaivedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    csatWaivedById?: StringNullableFilter<"Project"> | string | null
+    csatWaiverReason?: StringNullableFilter<"Project"> | string | null
     clientShareToken?: StringNullableFilter<"Project"> | string | null
     clientShareEnabled?: BoolFilter<"Project"> | boolean
     clientShareExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
@@ -60888,6 +60987,7 @@ export namespace Prisma {
     pm?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     technicalWriter?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     adminProject?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    csatWaivedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     resources?: ProjectResourceListRelationFilter
     timesheets?: TimesheetListRelationFilter
     documents?: DocumentListRelationFilter
@@ -60946,6 +61046,9 @@ export namespace Prisma {
     surveyToken?: SortOrderInput | SortOrder
     surveyEnabled?: SortOrder
     surveyExpiresAt?: SortOrderInput | SortOrder
+    csatWaivedAt?: SortOrderInput | SortOrder
+    csatWaivedById?: SortOrderInput | SortOrder
+    csatWaiverReason?: SortOrderInput | SortOrder
     clientShareToken?: SortOrderInput | SortOrder
     clientShareEnabled?: SortOrder
     clientShareExpiresAt?: SortOrderInput | SortOrder
@@ -60954,6 +61057,7 @@ export namespace Prisma {
     pm?: UserOrderByWithRelationInput
     technicalWriter?: UserOrderByWithRelationInput
     adminProject?: UserOrderByWithRelationInput
+    csatWaivedBy?: UserOrderByWithRelationInput
     resources?: ProjectResourceOrderByRelationAggregateInput
     timesheets?: TimesheetOrderByRelationAggregateInput
     documents?: DocumentOrderByRelationAggregateInput
@@ -61016,6 +61120,9 @@ export namespace Prisma {
     useWorkstreams?: BoolFilter<"Project"> | boolean
     surveyEnabled?: BoolFilter<"Project"> | boolean
     surveyExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    csatWaivedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    csatWaivedById?: StringNullableFilter<"Project"> | string | null
+    csatWaiverReason?: StringNullableFilter<"Project"> | string | null
     clientShareEnabled?: BoolFilter<"Project"> | boolean
     clientShareExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
     client?: XOR<ClientRelationFilter, ClientWhereInput>
@@ -61023,6 +61130,7 @@ export namespace Prisma {
     pm?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     technicalWriter?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     adminProject?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    csatWaivedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     resources?: ProjectResourceListRelationFilter
     timesheets?: TimesheetListRelationFilter
     documents?: DocumentListRelationFilter
@@ -61081,6 +61189,9 @@ export namespace Prisma {
     surveyToken?: SortOrderInput | SortOrder
     surveyEnabled?: SortOrder
     surveyExpiresAt?: SortOrderInput | SortOrder
+    csatWaivedAt?: SortOrderInput | SortOrder
+    csatWaivedById?: SortOrderInput | SortOrder
+    csatWaiverReason?: SortOrderInput | SortOrder
     clientShareToken?: SortOrderInput | SortOrder
     clientShareEnabled?: SortOrder
     clientShareExpiresAt?: SortOrderInput | SortOrder
@@ -61134,6 +61245,9 @@ export namespace Prisma {
     surveyToken?: StringNullableWithAggregatesFilter<"Project"> | string | null
     surveyEnabled?: BoolWithAggregatesFilter<"Project"> | boolean
     surveyExpiresAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+    csatWaivedAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
+    csatWaivedById?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    csatWaiverReason?: StringNullableWithAggregatesFilter<"Project"> | string | null
     clientShareToken?: StringNullableWithAggregatesFilter<"Project"> | string | null
     clientShareEnabled?: BoolWithAggregatesFilter<"Project"> | boolean
     clientShareExpiresAt?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
@@ -65210,6 +65324,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -65276,6 +65391,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -65342,6 +65458,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -65408,6 +65525,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -65706,6 +65824,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -65714,6 +65834,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -65772,6 +65893,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -65828,6 +65952,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -65836,6 +65962,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -65894,6 +66021,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -65955,6 +66085,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -65995,6 +66128,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -66040,6 +66175,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71248,6 +71386,9 @@ export namespace Prisma {
     surveyToken?: SortOrder
     surveyEnabled?: SortOrder
     surveyExpiresAt?: SortOrder
+    csatWaivedAt?: SortOrder
+    csatWaivedById?: SortOrder
+    csatWaiverReason?: SortOrder
     clientShareToken?: SortOrder
     clientShareEnabled?: SortOrder
     clientShareExpiresAt?: SortOrder
@@ -71301,6 +71442,9 @@ export namespace Prisma {
     surveyToken?: SortOrder
     surveyEnabled?: SortOrder
     surveyExpiresAt?: SortOrder
+    csatWaivedAt?: SortOrder
+    csatWaivedById?: SortOrder
+    csatWaiverReason?: SortOrder
     clientShareToken?: SortOrder
     clientShareEnabled?: SortOrder
     clientShareExpiresAt?: SortOrder
@@ -71346,6 +71490,9 @@ export namespace Prisma {
     surveyToken?: SortOrder
     surveyEnabled?: SortOrder
     surveyExpiresAt?: SortOrder
+    csatWaivedAt?: SortOrder
+    csatWaivedById?: SortOrder
+    csatWaiverReason?: SortOrder
     clientShareToken?: SortOrder
     clientShareEnabled?: SortOrder
     clientShareExpiresAt?: SortOrder
@@ -74389,6 +74536,13 @@ export namespace Prisma {
     connect?: ProjectClosingChecklistItemWhereUniqueInput | ProjectClosingChecklistItemWhereUniqueInput[]
   }
 
+  export type ProjectCreateNestedManyWithoutCsatWaivedByInput = {
+    create?: XOR<ProjectCreateWithoutCsatWaivedByInput, ProjectUncheckedCreateWithoutCsatWaivedByInput> | ProjectCreateWithoutCsatWaivedByInput[] | ProjectUncheckedCreateWithoutCsatWaivedByInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCsatWaivedByInput | ProjectCreateOrConnectWithoutCsatWaivedByInput[]
+    createMany?: ProjectCreateManyCsatWaivedByInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+  }
+
   export type SkillDevelopmentGoalCreateNestedManyWithoutUserInput = {
     create?: XOR<SkillDevelopmentGoalCreateWithoutUserInput, SkillDevelopmentGoalUncheckedCreateWithoutUserInput> | SkillDevelopmentGoalCreateWithoutUserInput[] | SkillDevelopmentGoalUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SkillDevelopmentGoalCreateOrConnectWithoutUserInput | SkillDevelopmentGoalCreateOrConnectWithoutUserInput[]
@@ -74708,6 +74862,13 @@ export namespace Prisma {
     connectOrCreate?: ProjectClosingChecklistItemCreateOrConnectWithoutCompletedByInput | ProjectClosingChecklistItemCreateOrConnectWithoutCompletedByInput[]
     createMany?: ProjectClosingChecklistItemCreateManyCompletedByInputEnvelope
     connect?: ProjectClosingChecklistItemWhereUniqueInput | ProjectClosingChecklistItemWhereUniqueInput[]
+  }
+
+  export type ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput = {
+    create?: XOR<ProjectCreateWithoutCsatWaivedByInput, ProjectUncheckedCreateWithoutCsatWaivedByInput> | ProjectCreateWithoutCsatWaivedByInput[] | ProjectUncheckedCreateWithoutCsatWaivedByInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCsatWaivedByInput | ProjectCreateOrConnectWithoutCsatWaivedByInput[]
+    createMany?: ProjectCreateManyCsatWaivedByInputEnvelope
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
   export type SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput = {
@@ -75313,6 +75474,20 @@ export namespace Prisma {
     update?: ProjectClosingChecklistItemUpdateWithWhereUniqueWithoutCompletedByInput | ProjectClosingChecklistItemUpdateWithWhereUniqueWithoutCompletedByInput[]
     updateMany?: ProjectClosingChecklistItemUpdateManyWithWhereWithoutCompletedByInput | ProjectClosingChecklistItemUpdateManyWithWhereWithoutCompletedByInput[]
     deleteMany?: ProjectClosingChecklistItemScalarWhereInput | ProjectClosingChecklistItemScalarWhereInput[]
+  }
+
+  export type ProjectUpdateManyWithoutCsatWaivedByNestedInput = {
+    create?: XOR<ProjectCreateWithoutCsatWaivedByInput, ProjectUncheckedCreateWithoutCsatWaivedByInput> | ProjectCreateWithoutCsatWaivedByInput[] | ProjectUncheckedCreateWithoutCsatWaivedByInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCsatWaivedByInput | ProjectCreateOrConnectWithoutCsatWaivedByInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutCsatWaivedByInput | ProjectUpsertWithWhereUniqueWithoutCsatWaivedByInput[]
+    createMany?: ProjectCreateManyCsatWaivedByInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutCsatWaivedByInput | ProjectUpdateWithWhereUniqueWithoutCsatWaivedByInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutCsatWaivedByInput | ProjectUpdateManyWithWhereWithoutCsatWaivedByInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
   export type SkillDevelopmentGoalUpdateManyWithoutUserNestedInput = {
@@ -75955,6 +76130,20 @@ export namespace Prisma {
     deleteMany?: ProjectClosingChecklistItemScalarWhereInput | ProjectClosingChecklistItemScalarWhereInput[]
   }
 
+  export type ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput = {
+    create?: XOR<ProjectCreateWithoutCsatWaivedByInput, ProjectUncheckedCreateWithoutCsatWaivedByInput> | ProjectCreateWithoutCsatWaivedByInput[] | ProjectUncheckedCreateWithoutCsatWaivedByInput[]
+    connectOrCreate?: ProjectCreateOrConnectWithoutCsatWaivedByInput | ProjectCreateOrConnectWithoutCsatWaivedByInput[]
+    upsert?: ProjectUpsertWithWhereUniqueWithoutCsatWaivedByInput | ProjectUpsertWithWhereUniqueWithoutCsatWaivedByInput[]
+    createMany?: ProjectCreateManyCsatWaivedByInputEnvelope
+    set?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    disconnect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    delete?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
+    update?: ProjectUpdateWithWhereUniqueWithoutCsatWaivedByInput | ProjectUpdateWithWhereUniqueWithoutCsatWaivedByInput[]
+    updateMany?: ProjectUpdateManyWithWhereWithoutCsatWaivedByInput | ProjectUpdateManyWithWhereWithoutCsatWaivedByInput[]
+    deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
+  }
+
   export type SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SkillDevelopmentGoalCreateWithoutUserInput, SkillDevelopmentGoalUncheckedCreateWithoutUserInput> | SkillDevelopmentGoalCreateWithoutUserInput[] | SkillDevelopmentGoalUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SkillDevelopmentGoalCreateOrConnectWithoutUserInput | SkillDevelopmentGoalCreateOrConnectWithoutUserInput[]
@@ -76333,6 +76522,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutCsatWaiversGrantedInput = {
+    create?: XOR<UserCreateWithoutCsatWaiversGrantedInput, UserUncheckedCreateWithoutCsatWaiversGrantedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCsatWaiversGrantedInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type ProjectResourceCreateNestedManyWithoutProjectInput = {
     create?: XOR<ProjectResourceCreateWithoutProjectInput, ProjectResourceUncheckedCreateWithoutProjectInput> | ProjectResourceCreateWithoutProjectInput[] | ProjectResourceUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: ProjectResourceCreateOrConnectWithoutProjectInput | ProjectResourceCreateOrConnectWithoutProjectInput[]
@@ -76619,6 +76814,16 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectsAsAdminInput, UserUpdateWithoutProjectsAsAdminInput>, UserUncheckedUpdateWithoutProjectsAsAdminInput>
+  }
+
+  export type UserUpdateOneWithoutCsatWaiversGrantedNestedInput = {
+    create?: XOR<UserCreateWithoutCsatWaiversGrantedInput, UserUncheckedCreateWithoutCsatWaiversGrantedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCsatWaiversGrantedInput
+    upsert?: UserUpsertWithoutCsatWaiversGrantedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCsatWaiversGrantedInput, UserUpdateWithoutCsatWaiversGrantedInput>, UserUncheckedUpdateWithoutCsatWaiversGrantedInput>
   }
 
   export type ProjectResourceUpdateManyWithoutProjectNestedInput = {
@@ -80411,6 +80616,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -80476,6 +80682,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -80546,6 +80753,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -80611,6 +80819,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -80686,6 +80895,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -80751,6 +80961,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -80821,6 +81032,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -80886,6 +81098,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -81085,6 +81298,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -81092,6 +81307,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -81149,6 +81365,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -81215,6 +81434,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -81222,6 +81443,7 @@ export namespace Prisma {
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -81279,6 +81501,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -81345,6 +81570,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -81352,6 +81579,7 @@ export namespace Prisma {
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -81409,6 +81637,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -81475,6 +81706,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -81482,6 +81715,7 @@ export namespace Prisma {
     sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -81539,6 +81773,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -82426,6 +82663,142 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProjectCreateWithoutCsatWaivedByInput = {
+    id?: string
+    projectId?: string | null
+    code?: string | null
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    archivedAt?: Date | string | null
+    closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
+    client: ClientCreateNestedOneWithoutProjectsInput
+    sales?: UserCreateNestedOneWithoutProjectsAsSalesInput
+    pm?: UserCreateNestedOneWithoutProjectsAsPmInput
+    technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
+    adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    resources?: ProjectResourceCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetCreateNestedManyWithoutProjectInput
+    documents?: DocumentCreateNestedManyWithoutProjectInput
+    activities?: ActivityCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseCreateNestedManyWithoutProjectInput
+    tasks?: TaskCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360CreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutCsatWaivedByInput = {
+    id?: string
+    projectId?: string | null
+    code?: string | null
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    archivedAt?: Date | string | null
+    closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutProjectInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutProjectInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutProjectInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutProjectInput
+    surveyResponses?: SurveyResponseUncheckedCreateNestedManyWithoutProjectInput
+    expenses?: ProjectExpenseUncheckedCreateNestedManyWithoutProjectInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    billingMilestones?: BillingMilestoneUncheckedCreateNestedManyWithoutProjectInput
+    raidItems?: ProjectRaidItemUncheckedCreateNestedManyWithoutProjectInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutProjectInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutProjectInput
+    feedback360?: ProjectFeedback360UncheckedCreateNestedManyWithoutProjectInput
+    workstreams?: ProjectWorkstreamUncheckedCreateNestedManyWithoutProjectInput
+    reports?: ProjectReportUncheckedCreateNestedManyWithoutProjectInput
+    baselines?: ProjectBaselineUncheckedCreateNestedManyWithoutProjectInput
+    changeRequests?: ChangeRequestUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutCsatWaivedByInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutCsatWaivedByInput, ProjectUncheckedCreateWithoutCsatWaivedByInput>
+  }
+
+  export type ProjectCreateManyCsatWaivedByInputEnvelope = {
+    data: ProjectCreateManyCsatWaivedByInput | ProjectCreateManyCsatWaivedByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SkillDevelopmentGoalCreateWithoutUserInput = {
     id?: string
     currentLevel?: number
@@ -83160,6 +83533,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -83225,6 +83599,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -83340,6 +83715,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -83405,6 +83781,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -83584,6 +83961,9 @@ export namespace Prisma {
     surveyToken?: StringNullableFilter<"Project"> | string | null
     surveyEnabled?: BoolFilter<"Project"> | boolean
     surveyExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    csatWaivedAt?: DateTimeNullableFilter<"Project"> | Date | string | null
+    csatWaivedById?: StringNullableFilter<"Project"> | string | null
+    csatWaiverReason?: StringNullableFilter<"Project"> | string | null
     clientShareToken?: StringNullableFilter<"Project"> | string | null
     clientShareEnabled?: BoolFilter<"Project"> | boolean
     clientShareExpiresAt?: DateTimeNullableFilter<"Project"> | Date | string | null
@@ -84273,6 +84653,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ProjectClosingChecklistItem"> | Date | string
   }
 
+  export type ProjectUpsertWithWhereUniqueWithoutCsatWaivedByInput = {
+    where: ProjectWhereUniqueInput
+    update: XOR<ProjectUpdateWithoutCsatWaivedByInput, ProjectUncheckedUpdateWithoutCsatWaivedByInput>
+    create: XOR<ProjectCreateWithoutCsatWaivedByInput, ProjectUncheckedCreateWithoutCsatWaivedByInput>
+  }
+
+  export type ProjectUpdateWithWhereUniqueWithoutCsatWaivedByInput = {
+    where: ProjectWhereUniqueInput
+    data: XOR<ProjectUpdateWithoutCsatWaivedByInput, ProjectUncheckedUpdateWithoutCsatWaivedByInput>
+  }
+
+  export type ProjectUpdateManyWithWhereWithoutCsatWaivedByInput = {
+    where: ProjectScalarWhereInput
+    data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutCsatWaivedByInput>
+  }
+
   export type SkillDevelopmentGoalUpsertWithWhereUniqueWithoutUserInput = {
     where: SkillDevelopmentGoalWhereUniqueInput
     update: XOR<SkillDevelopmentGoalUpdateWithoutUserInput, SkillDevelopmentGoalUncheckedUpdateWithoutUserInput>
@@ -84764,6 +85160,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -84829,6 +85226,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -84899,6 +85297,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -84964,6 +85363,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -85045,6 +85445,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -85110,6 +85511,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -85186,6 +85588,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -85251,6 +85654,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -85303,6 +85707,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -85310,6 +85716,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -85367,6 +85774,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -85580,6 +85990,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -85645,6 +86056,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -85715,6 +86127,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -85780,6 +86193,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -85850,6 +86264,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -85915,6 +86330,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -85985,6 +86401,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -86050,6 +86467,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -86071,6 +86489,143 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutProjectsAsAdminInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutProjectsAsAdminInput, UserUncheckedCreateWithoutProjectsAsAdminInput>
+  }
+
+  export type UserCreateWithoutCsatWaiversGrantedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    calendarTokenVersion?: number
+    businessUnit?: BusinessUnitCreateNestedOneWithoutUsersInput
+    manager?: UserCreateNestedOneWithoutReportsInput
+    reports?: UserCreateNestedManyWithoutManagerInput
+    principal?: UserCreateNestedOneWithoutSuperviseesInput
+    supervisees?: UserCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360CreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360CreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestCreateNestedOneWithoutCreatedUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCsatWaiversGrantedInput = {
+    id?: string
+    email: string
+    passwordHash: string
+    name: string
+    role: $Enums.UserRole
+    title?: string | null
+    dailyRate?: number | null
+    seniority?: $Enums.Seniority | null
+    isActive?: boolean
+    avatarDataUrl?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    businessUnitId?: string | null
+    managerId?: string | null
+    principalId?: string | null
+    calendarTokenVersion?: number
+    reports?: UserUncheckedCreateNestedManyWithoutManagerInput
+    supervisees?: UserUncheckedCreateNestedManyWithoutPrincipalInput
+    skills?: UserSkillUncheckedCreateNestedManyWithoutUserInput
+    approvedExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutApprovedByInput
+    settledExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutSettledByInput
+    projectsAsSales?: ProjectUncheckedCreateNestedManyWithoutSalesInput
+    projectsAsPm?: ProjectUncheckedCreateNestedManyWithoutPmInput
+    projectsAsTw?: ProjectUncheckedCreateNestedManyWithoutTechnicalWriterInput
+    projectsAsAdmin?: ProjectUncheckedCreateNestedManyWithoutAdminProjectInput
+    resources?: ProjectResourceUncheckedCreateNestedManyWithoutUserInput
+    proposedResources?: ProjectResourceUncheckedCreateNestedManyWithoutProposedByInput
+    createdResourceRates?: ProjectResourceRateUncheckedCreateNestedManyWithoutCreatedByInput
+    timesheets?: TimesheetUncheckedCreateNestedManyWithoutUserInput
+    approvedTimesheets?: TimesheetUncheckedCreateNestedManyWithoutApprovedByInput
+    documentsUploaded?: DocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    activities?: ActivityUncheckedCreateNestedManyWithoutUserInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    projectExpenses?: ProjectExpenseUncheckedCreateNestedManyWithoutCreatedByInput
+    tasksAssigned?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
+    tasksCreated?: TaskUncheckedCreateNestedManyWithoutCreatedByInput
+    taskAssignments?: TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
+    taskTimeLogs?: TaskTimeLogUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    leadsOwned?: LeadUncheckedCreateNestedManyWithoutOwnerInput
+    leadActivities?: LeadActivityUncheckedCreateNestedManyWithoutCreatedByInput
+    leaves?: UserLeaveUncheckedCreateNestedManyWithoutUserInput
+    taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedCreateNestedManyWithoutReviewerInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedCreateNestedManyWithoutSubjectInput
+    raidItemsOwned?: ProjectRaidItemUncheckedCreateNestedManyWithoutOwnerInput
+    raidItemsCreated?: ProjectRaidItemUncheckedCreateNestedManyWithoutCreatedByInput
+    baselinesCreated?: ProjectBaselineUncheckedCreateNestedManyWithoutCreatedByInput
+    changeRequestsRequested?: ChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    changeRequestsDecided?: ChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    perfReviewsSubject?: PerformanceReviewUncheckedCreateNestedManyWithoutUserInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedCreateNestedManyWithoutReviewerInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedCreateNestedManyWithoutRatedByInput
+    accessRequestsDecided?: AccessRequestUncheckedCreateNestedManyWithoutDecidedByInput
+    accessRequestOrigin?: AccessRequestUncheckedCreateNestedOneWithoutCreatedUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCsatWaiversGrantedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCsatWaiversGrantedInput, UserUncheckedCreateWithoutCsatWaiversGrantedInput>
   }
 
   export type ProjectResourceCreateWithoutProjectInput = {
@@ -86876,6 +87431,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -86941,6 +87497,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -87017,6 +87574,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -87082,6 +87640,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -87158,6 +87717,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -87223,6 +87783,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -87299,6 +87860,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -87343,6 +87905,150 @@ export namespace Prisma {
     projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
     projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
     projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUncheckedUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUncheckedUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUncheckedUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUncheckedUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUncheckedUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUncheckedUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UncheckedUpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UncheckedUpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUncheckedUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUncheckedUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUncheckedUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUncheckedUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUncheckedUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUncheckedUpdateOneWithoutCreatedUserNestedInput
+  }
+
+  export type UserUpsertWithoutCsatWaiversGrantedInput = {
+    update: XOR<UserUpdateWithoutCsatWaiversGrantedInput, UserUncheckedUpdateWithoutCsatWaiversGrantedInput>
+    create: XOR<UserCreateWithoutCsatWaiversGrantedInput, UserUncheckedCreateWithoutCsatWaiversGrantedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCsatWaiversGrantedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCsatWaiversGrantedInput, UserUncheckedUpdateWithoutCsatWaiversGrantedInput>
+  }
+
+  export type UserUpdateWithoutCsatWaiversGrantedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    businessUnit?: BusinessUnitUpdateOneWithoutUsersNestedInput
+    manager?: UserUpdateOneWithoutReportsNestedInput
+    reports?: UserUpdateManyWithoutManagerNestedInput
+    principal?: UserUpdateOneWithoutSuperviseesNestedInput
+    supervisees?: UserUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUpdateManyWithoutAdminProjectNestedInput
+    resources?: ProjectResourceUpdateManyWithoutUserNestedInput
+    proposedResources?: ProjectResourceUpdateManyWithoutProposedByNestedInput
+    createdResourceRates?: ProjectResourceRateUpdateManyWithoutCreatedByNestedInput
+    timesheets?: TimesheetUpdateManyWithoutUserNestedInput
+    approvedTimesheets?: TimesheetUpdateManyWithoutApprovedByNestedInput
+    documentsUploaded?: DocumentUpdateManyWithoutUploadedByNestedInput
+    activities?: ActivityUpdateManyWithoutUserNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    projectExpenses?: ProjectExpenseUpdateManyWithoutCreatedByNestedInput
+    tasksAssigned?: TaskUpdateManyWithoutAssigneeNestedInput
+    tasksCreated?: TaskUpdateManyWithoutCreatedByNestedInput
+    taskAssignments?: TaskAssigneeUpdateManyWithoutUserNestedInput
+    taskTimeLogs?: TaskTimeLogUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    leadsOwned?: LeadUpdateManyWithoutOwnerNestedInput
+    leadActivities?: LeadActivityUpdateManyWithoutCreatedByNestedInput
+    leaves?: UserLeaveUpdateManyWithoutUserNestedInput
+    taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
+    projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
+    projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
+    skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
+    skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
+    skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
+    feedback360AsReviewer?: ProjectFeedback360UpdateManyWithoutReviewerNestedInput
+    feedback360AsSubject?: ProjectFeedback360UpdateManyWithoutSubjectNestedInput
+    raidItemsOwned?: ProjectRaidItemUpdateManyWithoutOwnerNestedInput
+    raidItemsCreated?: ProjectRaidItemUpdateManyWithoutCreatedByNestedInput
+    baselinesCreated?: ProjectBaselineUpdateManyWithoutCreatedByNestedInput
+    changeRequestsRequested?: ChangeRequestUpdateManyWithoutRequestedByNestedInput
+    changeRequestsDecided?: ChangeRequestUpdateManyWithoutDecidedByNestedInput
+    perfReviewsSubject?: PerformanceReviewUpdateManyWithoutUserNestedInput
+    perfReviewsAuthored?: PerformanceReviewUpdateManyWithoutReviewerNestedInput
+    perfProjectRatingsGiven?: PerformanceReviewProjectRatingUpdateManyWithoutRatedByNestedInput
+    accessRequestsDecided?: AccessRequestUpdateManyWithoutDecidedByNestedInput
+    accessRequestOrigin?: AccessRequestUpdateOneWithoutCreatedUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCsatWaiversGrantedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    dailyRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    seniority?: NullableEnumSeniorityFieldUpdateOperationsInput | $Enums.Seniority | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    avatarDataUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    businessUnitId?: NullableStringFieldUpdateOperationsInput | string | null
+    managerId?: NullableStringFieldUpdateOperationsInput | string | null
+    principalId?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarTokenVersion?: IntFieldUpdateOperationsInput | number
+    reports?: UserUncheckedUpdateManyWithoutManagerNestedInput
+    supervisees?: UserUncheckedUpdateManyWithoutPrincipalNestedInput
+    skills?: UserSkillUncheckedUpdateManyWithoutUserNestedInput
+    approvedExpenses?: ProjectExpenseUncheckedUpdateManyWithoutApprovedByNestedInput
+    settledExpenses?: ProjectExpenseUncheckedUpdateManyWithoutSettledByNestedInput
+    projectsAsSales?: ProjectUncheckedUpdateManyWithoutSalesNestedInput
+    projectsAsPm?: ProjectUncheckedUpdateManyWithoutPmNestedInput
+    projectsAsTw?: ProjectUncheckedUpdateManyWithoutTechnicalWriterNestedInput
+    projectsAsAdmin?: ProjectUncheckedUpdateManyWithoutAdminProjectNestedInput
     resources?: ProjectResourceUncheckedUpdateManyWithoutUserNestedInput
     proposedResources?: ProjectResourceUncheckedUpdateManyWithoutProposedByNestedInput
     createdResourceRates?: ProjectResourceRateUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -87737,6 +88443,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -87745,6 +88453,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -87802,6 +88511,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -87924,6 +88636,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -87989,6 +88702,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -88057,6 +88771,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88065,6 +88781,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -88122,6 +88839,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88256,6 +88976,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -88321,6 +89042,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -88373,6 +89095,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -88381,6 +89105,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -88438,6 +89163,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -88511,6 +89239,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -88576,6 +89305,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -88646,6 +89376,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -88711,6 +89442,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -88819,6 +89551,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88827,6 +89561,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -88884,6 +89619,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88963,6 +89701,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -89028,6 +89767,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -89104,6 +89844,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -89169,6 +89910,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -89237,6 +89979,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -89245,6 +89989,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -89302,6 +90047,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -89425,6 +90173,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -89490,6 +90239,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -89559,6 +90309,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -89567,6 +90319,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -89624,6 +90377,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -89759,6 +90515,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -89824,6 +90581,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -89877,6 +90635,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -89885,6 +90645,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -89942,6 +90703,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -90348,6 +91112,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -90356,6 +91122,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -90413,6 +91180,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -90599,6 +91369,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -90607,6 +91379,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -90664,6 +91437,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -90735,6 +91511,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -90743,6 +91521,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -90800,6 +91579,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -90855,6 +91637,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -90863,6 +91647,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -90920,6 +91705,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -90993,6 +91781,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -91058,6 +91847,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -91128,6 +91918,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -91193,6 +91984,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -91261,6 +92053,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -91269,6 +92063,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -91326,6 +92121,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -91405,6 +92203,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -91470,6 +92269,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -91546,6 +92346,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -91611,6 +92412,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -91675,6 +92477,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -91740,6 +92543,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -91821,6 +92625,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -91886,6 +92691,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -91939,6 +92745,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -91947,6 +92755,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
     activities?: ActivityCreateNestedManyWithoutProjectInput
@@ -92004,6 +92813,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -92127,6 +92939,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -92192,6 +93005,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -92262,6 +93076,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -92327,6 +93142,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -92424,6 +93240,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -92432,6 +93250,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
     activities?: ActivityUpdateManyWithoutProjectNestedInput
@@ -92489,6 +93308,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -92624,6 +93446,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -92689,6 +93512,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -92765,6 +93589,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -92830,6 +93655,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -92946,6 +93772,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -93011,6 +93838,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -93133,6 +93961,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -93198,6 +94027,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -93251,6 +94081,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -93259,6 +94091,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
     activities?: ActivityCreateNestedManyWithoutProjectInput
@@ -93316,6 +94149,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -93439,6 +94275,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -93504,6 +94341,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -93627,6 +94465,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -93692,6 +94531,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -93761,6 +94601,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -93769,6 +94611,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
     activities?: ActivityUpdateManyWithoutProjectNestedInput
@@ -93826,6 +94669,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -93961,6 +94807,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -94026,6 +94873,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -94161,6 +95009,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -94226,6 +95075,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -94279,6 +95129,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -94287,6 +95139,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     activities?: ActivityCreateNestedManyWithoutProjectInput
@@ -94344,6 +95197,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -94416,6 +95272,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -94481,6 +95338,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -94698,6 +95556,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -94706,6 +95566,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     activities?: ActivityUpdateManyWithoutProjectNestedInput
@@ -94763,6 +95624,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -94841,6 +95705,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -94906,6 +95771,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -95087,6 +95953,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -95095,6 +95963,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -95152,6 +96021,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -95224,6 +96096,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -95289,6 +96162,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -95358,6 +96232,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -95366,6 +96242,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -95423,6 +96300,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -95501,6 +96381,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -95566,6 +96447,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -95619,6 +96501,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -95627,6 +96511,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -95684,6 +96569,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -95807,6 +96695,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -95872,6 +96761,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -95942,6 +96832,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -96007,6 +96898,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -96077,6 +96969,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -96142,6 +97035,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -96211,6 +97105,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96219,6 +97115,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -96276,6 +97173,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96411,6 +97311,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -96476,6 +97377,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -96552,6 +97454,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -96617,6 +97520,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -96693,6 +97597,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -96758,6 +97663,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -96823,6 +97729,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -96888,6 +97795,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -97309,6 +98217,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -97374,6 +98283,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -97482,6 +98392,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -97547,6 +98458,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -97646,6 +98558,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
@@ -97711,6 +98624,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
@@ -97808,6 +98722,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
@@ -97873,6 +98788,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
@@ -97954,6 +98870,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
@@ -98019,6 +98936,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
@@ -98128,6 +99046,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
@@ -98193,6 +99112,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
@@ -98258,6 +99178,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsLogged?: SkillProgressionLogCreateNestedManyWithoutChangedByInput
@@ -98323,6 +99244,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedCreateNestedManyWithoutChangedByInput
@@ -98420,6 +99342,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -98485,6 +99408,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -98566,6 +99490,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsLogged?: SkillProgressionLogUpdateManyWithoutChangedByNestedInput
@@ -98631,6 +99556,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsLogged?: SkillProgressionLogUncheckedUpdateManyWithoutChangedByNestedInput
@@ -98740,6 +99666,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -98805,6 +99732,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -98869,6 +99797,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -98934,6 +99863,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -98992,6 +99922,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -99000,6 +99932,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -99057,6 +99990,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -99140,6 +100076,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -99205,6 +100142,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -99269,6 +100207,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -99277,6 +100217,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -99334,6 +100275,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -99389,6 +100333,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -99397,6 +100343,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -99454,6 +100401,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -99577,6 +100527,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -99642,6 +100593,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -99712,6 +100664,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -99777,6 +100730,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -100093,6 +101047,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -100101,6 +101057,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -100158,6 +101115,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -100293,6 +101253,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -100358,6 +101319,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -100434,6 +101396,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -100499,6 +101462,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -100941,6 +101905,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -100949,6 +101915,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -101006,6 +101973,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -101176,6 +102146,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -101184,6 +102156,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -101241,6 +102214,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -101434,6 +102410,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -101499,6 +102476,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -101639,6 +102617,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -101704,6 +102683,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -101822,6 +102802,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -101887,6 +102868,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -102027,6 +103009,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -102092,6 +103075,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -102190,6 +103174,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -102255,6 +103240,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -102407,6 +103393,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -102472,6 +103459,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -102618,6 +103606,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -102683,6 +103672,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -102835,6 +103825,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -102900,6 +103891,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -102965,6 +103957,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -103030,6 +104023,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -103111,6 +104105,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -103176,6 +104171,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -103270,6 +104266,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -103335,6 +104332,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -103503,6 +104501,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -103568,6 +104567,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -103707,6 +104707,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -103772,6 +104773,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -104013,6 +105015,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -104078,6 +105081,7 @@ export namespace Prisma {
     taskTemplatesCreated?: TaskTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -104533,6 +105537,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -104598,6 +105603,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -104679,6 +105685,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -104744,6 +105751,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -104797,6 +105805,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -104805,6 +105815,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -104862,6 +105873,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -104935,6 +105949,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -105000,6 +106015,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -105070,6 +106086,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -105135,6 +106152,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -105203,6 +106221,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -105211,6 +106231,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -105268,6 +106289,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -105347,6 +106371,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -105412,6 +106437,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -105488,6 +106514,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -105553,6 +106580,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -105618,6 +106646,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -105683,6 +106712,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -105753,6 +106783,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -105818,6 +106849,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -105929,6 +106961,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -105994,6 +107027,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -106070,6 +107104,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -106135,6 +107170,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -106250,6 +107286,8 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -106258,6 +107296,7 @@ export namespace Prisma {
     pm?: UserCreateNestedOneWithoutProjectsAsPmInput
     technicalWriter?: UserCreateNestedOneWithoutProjectsAsTwInput
     adminProject?: UserCreateNestedOneWithoutProjectsAsAdminInput
+    csatWaivedBy?: UserCreateNestedOneWithoutCsatWaiversGrantedInput
     resources?: ProjectResourceCreateNestedManyWithoutProjectInput
     timesheets?: TimesheetCreateNestedManyWithoutProjectInput
     documents?: DocumentCreateNestedManyWithoutProjectInput
@@ -106315,6 +107354,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -106388,6 +107430,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogCreateNestedManyWithoutUserInput
@@ -106453,6 +107496,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedCreateNestedManyWithoutCreatedByInput
     projectReportsCreated?: ProjectReportUncheckedCreateNestedManyWithoutCreatedByInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedCreateNestedManyWithoutCompletedByInput
+    csatWaiversGranted?: ProjectUncheckedCreateNestedManyWithoutCsatWaivedByInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutUserInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedCreateNestedManyWithoutCreatedByInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedCreateNestedManyWithoutUserInput
@@ -106574,6 +107618,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -106582,6 +107628,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -106639,6 +107686,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -106718,6 +107768,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -106783,6 +107834,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -106930,6 +107982,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -106974,6 +108029,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -107018,6 +108076,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -107062,6 +108123,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -107370,6 +108434,53 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ProjectCreateManyCsatWaivedByInput = {
+    id?: string
+    projectId?: string | null
+    code?: string | null
+    name: string
+    description?: string | null
+    status?: $Enums.ProjectStatus
+    kind?: $Enums.ProjectKind
+    clientId: string
+    salesId?: string | null
+    pmId?: string | null
+    technicalWriterId?: string | null
+    adminProjectId?: string | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    contractValue?: number
+    currency?: string
+    exchangeRate?: number
+    vatPercent?: number
+    contractValueIncludesVat?: boolean
+    estimatedCost?: number
+    plannedMandays?: number
+    lastStatusReason?: string | null
+    reportCoverUrl?: string | null
+    reportLink?: string | null
+    reportSubmittedAt?: Date | string | null
+    spkFileUrl?: string | null
+    spkFileName?: string | null
+    contractFileUrl?: string | null
+    contractFileName?: string | null
+    archivedAt?: Date | string | null
+    closedAt?: Date | string | null
+    autoArchiveExempt?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    useWorkstreams?: boolean
+    surveyToken?: string | null
+    surveyEnabled?: boolean
+    surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaiverReason?: string | null
+    clientShareToken?: string | null
+    clientShareEnabled?: boolean
+    clientShareExpiresAt?: Date | string | null
+  }
+
   export type SkillDevelopmentGoalCreateManyUserInput = {
     id?: string
     skillId: string
@@ -107644,6 +108755,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -107709,6 +108821,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -107793,6 +108906,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -107858,6 +108972,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput
@@ -108089,6 +109204,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108096,6 +109213,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -108153,6 +109271,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108213,6 +109334,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108253,6 +109377,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108260,6 +109386,7 @@ export namespace Prisma {
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -108317,6 +109444,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108377,6 +109507,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108417,6 +109550,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108424,6 +109559,7 @@ export namespace Prisma {
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -108481,6 +109617,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108541,6 +109680,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108581,6 +109723,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108588,6 +109732,7 @@ export namespace Prisma {
     sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -108645,6 +109790,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -108705,6 +109853,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -109659,6 +110810,179 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProjectUpdateWithoutCsatWaivedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    client?: ClientUpdateOneRequiredWithoutProjectsNestedInput
+    sales?: UserUpdateOneWithoutProjectsAsSalesNestedInput
+    pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
+    technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
+    adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutCsatWaivedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resources?: ProjectResourceUncheckedUpdateManyWithoutProjectNestedInput
+    timesheets?: TimesheetUncheckedUpdateManyWithoutProjectNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutProjectNestedInput
+    activities?: ActivityUncheckedUpdateManyWithoutProjectNestedInput
+    surveyResponses?: SurveyResponseUncheckedUpdateManyWithoutProjectNestedInput
+    expenses?: ProjectExpenseUncheckedUpdateManyWithoutProjectNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    billingMilestones?: BillingMilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    raidItems?: ProjectRaidItemUncheckedUpdateManyWithoutProjectNestedInput
+    perfProjectRatings?: PerformanceReviewProjectRatingUncheckedUpdateManyWithoutProjectNestedInput
+    closingChecklist?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutProjectNestedInput
+    feedback360?: ProjectFeedback360UncheckedUpdateManyWithoutProjectNestedInput
+    workstreams?: ProjectWorkstreamUncheckedUpdateManyWithoutProjectNestedInput
+    reports?: ProjectReportUncheckedUpdateManyWithoutProjectNestedInput
+    baselines?: ProjectBaselineUncheckedUpdateManyWithoutProjectNestedInput
+    changeRequests?: ChangeRequestUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateManyWithoutCsatWaivedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: NullableStringFieldUpdateOperationsInput | string | null
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+    kind?: EnumProjectKindFieldUpdateOperationsInput | $Enums.ProjectKind
+    clientId?: StringFieldUpdateOperationsInput | string
+    salesId?: NullableStringFieldUpdateOperationsInput | string | null
+    pmId?: NullableStringFieldUpdateOperationsInput | string | null
+    technicalWriterId?: NullableStringFieldUpdateOperationsInput | string | null
+    adminProjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    contractValue?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    exchangeRate?: FloatFieldUpdateOperationsInput | number
+    vatPercent?: FloatFieldUpdateOperationsInput | number
+    contractValueIncludesVat?: BoolFieldUpdateOperationsInput | boolean
+    estimatedCost?: FloatFieldUpdateOperationsInput | number
+    plannedMandays?: FloatFieldUpdateOperationsInput | number
+    lastStatusReason?: NullableStringFieldUpdateOperationsInput | string | null
+    reportCoverUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    reportLink?: NullableStringFieldUpdateOperationsInput | string | null
+    reportSubmittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    spkFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    spkFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contractFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    autoArchiveExempt?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    useWorkstreams?: BoolFieldUpdateOperationsInput | boolean
+    surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
+    surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
+    surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
+    clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
+    clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type SkillDevelopmentGoalUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     currentLevel?: IntFieldUpdateOperationsInput | number
@@ -110387,6 +111711,9 @@ export namespace Prisma {
     surveyToken?: string | null
     surveyEnabled?: boolean
     surveyExpiresAt?: Date | string | null
+    csatWaivedAt?: Date | string | null
+    csatWaivedById?: string | null
+    csatWaiverReason?: string | null
     clientShareToken?: string | null
     clientShareEnabled?: boolean
     clientShareExpiresAt?: Date | string | null
@@ -110456,6 +111783,8 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -110463,6 +111792,7 @@ export namespace Prisma {
     pm?: UserUpdateOneWithoutProjectsAsPmNestedInput
     technicalWriter?: UserUpdateOneWithoutProjectsAsTwNestedInput
     adminProject?: UserUpdateOneWithoutProjectsAsAdminNestedInput
+    csatWaivedBy?: UserUpdateOneWithoutCsatWaiversGrantedNestedInput
     resources?: ProjectResourceUpdateManyWithoutProjectNestedInput
     timesheets?: TimesheetUpdateManyWithoutProjectNestedInput
     documents?: DocumentUpdateManyWithoutProjectNestedInput
@@ -110520,6 +111850,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -110580,6 +111913,9 @@ export namespace Prisma {
     surveyToken?: NullableStringFieldUpdateOperationsInput | string | null
     surveyEnabled?: BoolFieldUpdateOperationsInput | boolean
     surveyExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    csatWaivedById?: NullableStringFieldUpdateOperationsInput | string | null
+    csatWaiverReason?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareToken?: NullableStringFieldUpdateOperationsInput | string | null
     clientShareEnabled?: BoolFieldUpdateOperationsInput | boolean
     clientShareExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -112492,6 +113828,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUpdateManyWithoutUserNestedInput
@@ -112557,6 +113894,7 @@ export namespace Prisma {
     projectTemplatesCreated?: ProjectTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
     projectReportsCreated?: ProjectReportUncheckedUpdateManyWithoutCreatedByNestedInput
     closingChecklistsCompleted?: ProjectClosingChecklistItemUncheckedUpdateManyWithoutCompletedByNestedInput
+    csatWaiversGranted?: ProjectUncheckedUpdateManyWithoutCsatWaivedByNestedInput
     skillGoalsAsSubject?: SkillDevelopmentGoalUncheckedUpdateManyWithoutUserNestedInput
     skillGoalsCreated?: SkillDevelopmentGoalUncheckedUpdateManyWithoutCreatedByNestedInput
     skillProgressionsAsSubject?: SkillProgressionLogUncheckedUpdateManyWithoutUserNestedInput

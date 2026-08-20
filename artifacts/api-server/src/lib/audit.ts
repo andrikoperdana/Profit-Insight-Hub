@@ -21,6 +21,8 @@ export type AuditAction =
   | "project.auto_archived"
   | "project.auto_archive_exempted"
   | "project.auto_archive_unexempted"
+  | "project.csat_waived"
+  | "project.csat_waiver_removed"
   | "timesheet.created"
   | "timesheet.approved"
   | "timesheet.rejected"

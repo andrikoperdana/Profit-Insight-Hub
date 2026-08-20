@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { customFetch } from "@workspace/api-client-react";
 import {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
@@ -10,11 +11,23 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
 import { isSuperAdmin } from "@/lib/roles";
 import { downloadAuthed } from "@/lib/exports";
-import { Link2, Copy, ExternalLink, Download, MessageSquare, Star, RefreshCw } from "lucide-react";
+import {
+  CheckCircle2,
+  Circle,
+  Copy,
+  Download,
+  ExternalLink,
+  Link2,
+  MessageSquare,
+  RefreshCw,
+  ShieldCheck,
+  Star,
+} from "lucide-react";
 
 type Question = { key: string; text: string; type: "RATING" | "TEXT"; order: number; required: boolean };
 type Aggregate = { key: string; text: string; order: number; average: number; responseCount: number };
@@ -27,7 +40,7 @@ type Response = {
   createdAt: string;
 };
 type SurveyData = {
-  project: { id: string; code: string; name: string; status: string };
+  project: { id: string; code: string; name: string; status: string; kind: string };
   surveyAvailable: boolean;
   surveyEnabled: boolean;
   surveyExpiresAt: string | null;
@@ -35,6 +48,21 @@ type SurveyData = {
   linkActive: boolean;
   surveyToken: string | null;
   publicUrl: string | null;
+  closeReadiness: {
+    csatRequired: boolean;
+    csatResponseCount: number;
+    csatSatisfied: boolean;
+    csatWaived: boolean;
+    csatWaiver: {
+      waivedAt: string;
+      reason: string | null;
+      waivedBy: { id: string; name: string } | null;
+    } | null;
+    feedback360Total: number;
+    feedback360Submitted: number;
+    feedback360Pending: number;
+    feedback360Satisfied: boolean;
+  };
   questions: Question[];
   aggregates: { perQuestion: Aggregate[]; overallAverage: number };
   responses: Response[];
@@ -50,6 +78,7 @@ function toDateInput(iso: string | null): string {
 export default function SurveyTab({ projectId }: { projectId: string }) {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [waiverReason, setWaiverReason] = useState("");
   const role = user?.role;
   const canView = isSuperAdmin(role) || role === "MANAGEMENT" || role === "PROJECT_MANAGER";
 
@@ -79,6 +108,31 @@ export default function SurveyTab({ projectId }: { projectId: string }) {
     },
   });
 
+  const waiver = useMutation({
+    mutationFn: (payload: { waived: boolean; reason?: string }) =>
+      customFetch(`/api/projects/${projectId}/survey-waiver`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+    onSuccess: (_response, variables) => {
+      qc.invalidateQueries({ queryKey: ["/projects", projectId, "survey"] });
+      setWaiverReason("");
+      toast({
+        title: variables.waived ? "CSAT requirement waived" : "CSAT waiver removed",
+        description: variables.waived
+          ? "The project may close without a client response once all other requirements are complete."
+          : "A client CSAT response is required again before closing.",
+      });
+    },
+    onError: (e: unknown) => {
+      toast({
+        title: "Waiver update failed",
+        description: e instanceof Error ? e.message : "Could not update the CSAT waiver",
+        variant: "destructive",
+      });
+    },
+  });
+
   if (!canView) {
     return (
       <Card>
@@ -96,13 +150,29 @@ export default function SurveyTab({ projectId }: { projectId: string }) {
     return (
       <Card>
         <CardContent className="py-10 text-center text-muted-foreground">
-          The customer satisfaction survey becomes available once this project is{" "}
-          <span className="font-semibold text-foreground">Closed</span>.
+          {data.project.kind !== "CLIENT" ? (
+            "Customer satisfaction surveys only apply to client projects."
+          ) : (
+            <>
+              The customer satisfaction survey becomes available once this project is{" "}
+              <span className="font-semibold text-foreground">Complete</span>.
+            </>
+          )}
         </CardContent>
       </Card>
     );
   }
 
+  const readiness = data.closeReadiness;
+  const canManageWaiver =
+    (role === "MANAGEMENT" || isSuperAdmin(role)) &&
+    data.project.kind === "CLIENT" &&
+    data.project.status === "COMPLETE";
+  const csatStatus = readiness.csatResponseCount > 0
+    ? "Response received"
+    : readiness.csatWaived
+      ? "Waived by Management"
+      : "Waiting for client";
   const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
   const url = data.surveyToken ? `${window.location.origin}${baseUrl}/survey/${data.surveyToken}` : "";
 
@@ -152,6 +222,111 @@ export default function SurveyTab({ projectId }: { projectId: string }) {
 
   return (
     <div className="space-y-6">
+      <Card className="border-border" data-testid="card-csat-closing-status">
+        <CardHeader>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="flex items-center gap-2 text-base">
+                {readiness.csatSatisfied ? (
+                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                ) : (
+                  <Circle className="h-5 w-5 text-muted-foreground" />
+                )}
+                CSAT Closing Requirement
+              </CardTitle>
+              <CardDescription>
+                A client response is required before closing, unless Management records a waiver.
+              </CardDescription>
+            </div>
+            <Badge
+              variant="outline"
+              className={
+                readiness.csatSatisfied
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-500"
+                  : ""
+              }
+              data-testid="badge-csat-readiness"
+            >
+              {csatStatus}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {readiness.csatResponseCount > 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {readiness.csatResponseCount} client response
+              {readiness.csatResponseCount === 1 ? "" : "s"} received. The CSAT requirement is complete.
+            </p>
+          ) : readiness.csatWaiver ? (
+            <div className="rounded-md border border-amber-500/30 bg-amber-500/10 p-3">
+              <div className="flex items-center gap-2 font-medium text-amber-600">
+                <ShieldCheck className="h-4 w-4" />
+                Management waiver recorded
+              </div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {readiness.csatWaiver.reason}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                By {readiness.csatWaiver.waivedBy?.name ?? "Management"} on{" "}
+                {new Date(readiness.csatWaiver.waivedAt).toLocaleString()}
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Send the public survey link below to the client. The project cannot close until a
+              response is received or Management records a waiver.
+            </p>
+          )}
+
+          {canManageWaiver && !readiness.csatWaived && readiness.csatResponseCount === 0 && (
+            <div className="space-y-2 border-t border-border pt-4">
+              <Label htmlFor="csat-waiver-reason">Waiver reason</Label>
+              <Textarea
+                id="csat-waiver-reason"
+                value={waiverReason}
+                onChange={(e) => setWaiverReason(e.target.value)}
+                maxLength={500}
+                placeholder="Explain why the client response cannot be obtained (10–500 characters)."
+                data-testid="input-csat-waiver-reason"
+              />
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-xs text-muted-foreground">
+                  {waiverReason.trim().length}/500 characters
+                </span>
+                <Button
+                  variant="outline"
+                  disabled={
+                    waiverReason.trim().length < 10 ||
+                    waiverReason.trim().length > 500 ||
+                    waiver.isPending
+                  }
+                  onClick={() =>
+                    waiver.mutate({ waived: true, reason: waiverReason.trim() })
+                  }
+                  data-testid="button-waive-csat"
+                >
+                  <ShieldCheck className="mr-2 h-4 w-4" />
+                  Waive CSAT Requirement
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {canManageWaiver && readiness.csatWaived && (
+            <div className="flex justify-end border-t border-border pt-4">
+              <Button
+                variant="outline"
+                disabled={waiver.isPending}
+                onClick={() => waiver.mutate({ waived: false })}
+                data-testid="button-remove-csat-waiver"
+              >
+                Remove Waiver
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       <Card className="border-border">
         <CardHeader>
           <div className="flex items-start justify-between gap-4">
