@@ -48,3 +48,4 @@
 - [Sed filter extension needs runtime check](sed-filter-extension-runtime-check.md) — var-assigned `: any` Prisma wheres skip excess-property checks; bulk filter edits fail only at runtime, smoke-test endpoints.
 - [AI surfaces consistency](ai-surfaces-consistency.md) — AI money answers go through the uncapped shared billing-facts helper (sums over take-capped queries drift); digest notify-once = create-first P2002 winner.
 - [Atomic project closing](atomic-project-closing.md) — close and CSAT-waiver writes must conditionally update the same Project row so stale readiness cannot win races.
+- [Image-size CVE local patch](image-size-cve-local-patch.md) — no upstream release fixes the HEIF/JXL loop; keep the pnpm patch and Metro filename compatibility until one does.
