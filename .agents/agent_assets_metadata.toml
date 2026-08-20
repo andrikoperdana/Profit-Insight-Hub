@@ -504,3 +504,10 @@ uri = "file://exports/SecureProfit-Hub-Source-dan-Database-2026-08-19.zip"
 type = "unspecified"
 title = "SecureProfit Hub — Source Code & Database Terbaru"
 description = "Paket ZIP berisi source code versi terbaru, backup lengkap database produksi PostgreSQL, dan petunjuk restore. Simpan secara aman karena database memuat data aplikasi."
+
+[[outputs]]
+id = "z98bj6ZqHA12MqHFyXqt5"
+uri = "file://downloads/secureprofit-hub-source-2026-08-20.zip"
+type = "unspecified"
+title = "SecureProfit Hub — Source Code"
+description = "Snapshot source code terbaru (commit 9006798), siap diunduh. Berisi kode, konfigurasi, dokumentasi, dan aset proyek tanpa dependensi terpasang, cache, build output, atau file rahasia."
