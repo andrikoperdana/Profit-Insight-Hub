@@ -120,6 +120,12 @@ overrides:
   nanoid@<3.3.16: '>=3.3.16'
   nanoid@<3.3.18: '>=3.3.18'
   nanoid@>=4.0.0 <5.1.16: '>=5.1.16'
+  '@react-navigation/core>nanoid': 5.1.16
+  '@react-navigation/native>nanoid': 5.1.16
+  '@react-navigation/routers>nanoid': 5.1.16
+  docx>nanoid: 6.0.1
+  html-to-docx>nanoid: 5.1.16
+  postcss>nanoid: 6.0.1
   postcss: ^8.5.10
   postcss@<=8.5.17: '>=8.5.18'
   qs: ^6.15.2

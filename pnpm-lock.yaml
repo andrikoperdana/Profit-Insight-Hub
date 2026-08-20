@@ -144,6 +144,12 @@ overrides:
   nanoid@<3.3.16: '>=3.3.16'
   nanoid@<3.3.18: '>=3.3.18'
   nanoid@>=4.0.0 <5.1.16: '>=5.1.16'
+  '@react-navigation/core>nanoid': 5.1.16
+  '@react-navigation/native>nanoid': 5.1.16
+  '@react-navigation/routers>nanoid': 5.1.16
+  docx>nanoid: 6.0.1
+  html-to-docx>nanoid: 5.1.16
+  postcss>nanoid: 6.0.1
   postcss: ^8.5.10
   postcss@<=8.5.17: '>=8.5.18'
   qs: ^6.15.2
@@ -5346,8 +5352,8 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  nanoid@5.1.11:
-    resolution: {integrity: sha512-v+KEsUv2ps74PaSKv0gHTxTCgMXOIfBEbaqa6w6ISIGC7ZsvHN4N9oJ8d4cmf0n5oTzQz2SLmThbQWhjd/8eKg==}
+  nanoid@5.1.16:
+    resolution: {integrity: sha512-kVrnsrJqMR8+oLJnGEmSWw9BivK5mt7H3FZatVRjrc5wGqFYuBxX1yG7+A7Gi5AefkX6t/oCkizcQgpu0cY1dQ==}
     engines: {node: ^18 || >=20}
     hasBin: true
 
@@ -9417,7 +9423,7 @@ snapshots:
       '@react-navigation/routers': 7.5.5
       escape-string-regexp: 4.0.0
       fast-deep-equal: 3.1.3
-      nanoid: 5.1.11
+      nanoid: 5.1.16
       query-string: 7.1.3
       react: 19.1.0
       react-is: 19.2.7
@@ -9453,14 +9459,14 @@ snapshots:
       '@react-navigation/core': 7.17.5(react@19.1.0)
       escape-string-regexp: 4.0.0
       fast-deep-equal: 3.1.3
-      nanoid: 5.1.11
+      nanoid: 5.1.16
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)
       use-latest-callback: 0.2.6(react@19.1.0)
 
   '@react-navigation/routers@7.5.5':
     dependencies:
-      nanoid: 5.1.11
+      nanoid: 5.1.16
 
   '@replit/vite-plugin-cartographer@0.5.1':
     dependencies:
@@ -11020,7 +11026,7 @@ snapshots:
       expo-server: 1.0.7
       fast-deep-equal: 3.1.3
       invariant: 2.2.4
-      nanoid: 5.1.11
+      nanoid: 5.1.16
       query-string: 7.1.3
       react: 19.1.0
       react-fast-compare: 3.2.2
@@ -11524,7 +11530,7 @@ snapshots:
       jszip: 3.10.1
       lodash: 4.18.1
       mime-types: 2.1.35
-      nanoid: 5.1.11
+      nanoid: 5.1.16
       virtual-dom: 2.1.1
       xmlbuilder2: 2.1.2
     transitivePeerDependencies:
@@ -12460,7 +12466,7 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nanoid@5.1.11: {}
+  nanoid@5.1.16: {}
 
   nanoid@6.0.1: {}
 
