@@ -531,8 +531,8 @@ description = "Dokumen Word rekomendasi on-premise untuk Web/Application Server 
 id = "tAOJKH8c0BkrSvHcKaxRl"
 uri = "file://downloads/SecureProfit-Hub-Technical-Documentation-EN-2026-08.docx"
 type = "word_document"
-title = "SecureProfit Hub — Technical Documentation (English)"
-description = "Updated Word documentation based on source commit 5f6bb27. Covers architecture, API, RBAC, database, lifecycle and atomic closing, integrations, AI, security, mobile, deployment, backup, monitoring, and technical source map."
+title = "SecureProfit Hub — Technical Documentation (Latest Word Version)"
+description = "Technical documentation terbaru dalam format Word, edisi Agustus 2026, berdasarkan source commit 5f6bb27."
 
 [[outputs]]
 id = "bxffIvzsfHF46w1mBeCFn"
