@@ -540,3 +540,10 @@ uri = "file://downloads/SecureProfit-Hub-User-Manual-Web-Mobile-EN-2026-08.docx"
 type = "word_document"
 title = "SecureProfit Hub — Web & Mobile User Manual (English)"
 description = "Updated English user manual for web and mobile, with role-based workflows, project delivery, timesheets, expenses, approvals, billing, documents, CSAT/360 closing, reporting, troubleshooting, and 16 selected screenshots."
+
+[[outputs]]
+id = "5RDwlUTzeLGgaYmma4L_c"
+uri = "file://downloads/SecureProfit-Hub-Pipedrive-Xero-Integration-Technical-Guide-EN-2026-08.docx"
+type = "word_document"
+title = "SecureProfit Hub — Pipedrive & Xero Integration Technical Guide"
+description = "Combined English Word guide based on source commit 9a6e0be. Covers Pipedrive import/mapping/webhook/scheduler and Xero OAuth/token encryption/invoice/payment/webhook, plus security, monitoring, troubleshooting, and go-live checklists."
