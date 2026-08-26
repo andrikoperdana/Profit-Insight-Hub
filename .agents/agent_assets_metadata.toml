@@ -547,3 +547,10 @@ uri = "file://downloads/SecureProfit-Hub-Pipedrive-Xero-Integration-Technical-Gu
 type = "word_document"
 title = "SecureProfit Hub — Pipedrive & Xero Integration Technical Guide"
 description = "Combined English Word guide based on source commit 9a6e0be. Covers Pipedrive import/mapping/webhook/scheduler and Xero OAuth/token encryption/invoice/payment/webhook, plus security, monitoring, troubleshooting, and go-live checklists."
+
+[[outputs]]
+id = "A-ywJcv5xAddaDagREVF3"
+uri = "file://downloads/SecureProfit-Hub-Database-Technical-Documentation-EN-2026-08.docx"
+type = "word_document"
+title = "SecureProfit Hub — Database Technical Documentation"
+description = "Updated English Word documentation based on source commit af7b5e4. Covers 48 models, 26 enums, conceptual ERD, domain catalog, relationships, lifecycle data, integrations, security classification, migration, backup/DR, performance, and DBA runbooks."
