@@ -50,3 +50,4 @@
 - [Atomic project closing](atomic-project-closing.md) — close and CSAT-waiver writes must conditionally update the same Project row so stale readiness cannot win races.
 - [Image-size CVE local release](image-size-cve-local-patch.md) — no upstream fix exists; retain the bundled safe release with HEIF/JXL/ICNS guards and Metro filename compatibility.
 - [Scoped pnpm transitive overrides](scoped-pnpm-transitive-overrides.md) — use parent>child selectors for vulnerable transitive packages when broad selectors would alter already-safe consumers.
+- [GitHub SSH deploy and LFS endpoint](github-ssh-lfs-endpoint.md) — SSH deploy-key pushes require removing the stale Replit per-remote LFS URL so GitHub receives LFS objects.
