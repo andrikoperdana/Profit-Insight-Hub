@@ -525,3 +525,17 @@ uri = "file://downloads/Rekomendasi-Spesifikasi-Server-SecureProfit-Hub-On-Premi
 type = "word_document"
 title = "Rekomendasi Spesifikasi Server SecureProfit Hub"
 description = "Dokumen Word rekomendasi on-premise untuk Web/Application Server dan PostgreSQL Database Server, mencakup sizing pilot, production, HA, keamanan, backup/DR, monitoring, parameter awal PostgreSQL, dan acceptance criteria."
+
+[[outputs]]
+id = "tAOJKH8c0BkrSvHcKaxRl"
+uri = "file://downloads/SecureProfit-Hub-Technical-Documentation-EN-2026-08.docx"
+type = "word_document"
+title = "SecureProfit Hub — Technical Documentation (English)"
+description = "Updated Word documentation based on source commit 5f6bb27. Covers architecture, API, RBAC, database, lifecycle and atomic closing, integrations, AI, security, mobile, deployment, backup, monitoring, and technical source map."
+
+[[outputs]]
+id = "bxffIvzsfHF46w1mBeCFn"
+uri = "file://downloads/SecureProfit-Hub-User-Manual-Web-Mobile-EN-2026-08.docx"
+type = "word_document"
+title = "SecureProfit Hub — Web & Mobile User Manual (English)"
+description = "Updated English user manual for web and mobile, with role-based workflows, project delivery, timesheets, expenses, approvals, billing, documents, CSAT/360 closing, reporting, troubleshooting, and 16 selected screenshots."
