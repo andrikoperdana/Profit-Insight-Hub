@@ -58,7 +58,8 @@ title = "User Guide (PDF)"
 id = "O_E99cM5WVOSyYNTCrkyw"
 uri = "file://docs/SecureProfit-Hub-Technical-Documentation.pdf"
 type = "pdf"
-title = "Technical Documentation (PDF)"
+title = "SecureProfit Hub — Technical Documentation (PDF, April 2026)"
+description = "Dokumen technical documentation versi lama dalam format PDF. Untuk referensi terbaru, gunakan versi Word Agustus 2026."
 
 [[outputs]]
 id = "X1sCdu7RVkIJdSqGB6XjY"
