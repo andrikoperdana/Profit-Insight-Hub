@@ -518,3 +518,10 @@ uri = "file://downloads/secureprofit-hub-source-with-db-schema-2026-08-26.zip"
 type = "unspecified"
 title = "SecureProfit Hub — Source + Database Schema"
 description = "Source code lengkap dari commit 2d1a0cd, termasuk Prisma schema, seluruh migration, dan database/schema-only.sql. Tidak berisi data database, kredensial, dependency terpasang, cache, atau build output."
+
+[[outputs]]
+id = "GLC09FhMw2uhh2WDuqnKI"
+uri = "file://downloads/Rekomendasi-Spesifikasi-Server-SecureProfit-Hub-On-Premise.docx"
+type = "word_document"
+title = "Rekomendasi Spesifikasi Server SecureProfit Hub"
+description = "Dokumen Word rekomendasi on-premise untuk Web/Application Server dan PostgreSQL Database Server, mencakup sizing pilot, production, HA, keamanan, backup/DR, monitoring, parameter awal PostgreSQL, dan acceptance criteria."
