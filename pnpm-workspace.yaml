@@ -99,8 +99,7 @@ overrides:
   fast-uri: ^3.1.4
   fast-uri@>=3.0.0 <3.1.5: '>=3.1.5'
   form-data: ^4.0.6
-  image-size: 2.0.2
-  js-yaml: ^4.3.0
+  image-size: file:vendor/image-size-2.0.3.tgz
   js-yaml@>=4.0.0 <4.3.1: '>=4.3.1'
   lightningcss>lightningcss-android-arm64: '-'
   lightningcss>lightningcss-darwin-arm64: '-'
@@ -169,6 +168,3 @@ packageExtensions:
   react-native-worklets:
     dependencies:
       '@babel/generator': ^7.29.6
-
-patchedDependencies:
-  image-size@2.0.2: patches/image-size@2.0.2.patch
