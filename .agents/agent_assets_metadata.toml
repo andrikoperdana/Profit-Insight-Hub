@@ -511,3 +511,10 @@ uri = "file://downloads/secureprofit-hub-source-2026-08-20.zip"
 type = "unspecified"
 title = "SecureProfit Hub — Source Code"
 description = "Snapshot source code terbaru (commit 9006798), siap diunduh. Berisi kode, konfigurasi, dokumentasi, dan aset proyek tanpa dependensi terpasang, cache, build output, atau file rahasia."
+
+[[outputs]]
+id = "vdcrnMmBhwjm5U9A6tgUH"
+uri = "file://downloads/secureprofit-hub-source-with-db-schema-2026-08-26.zip"
+type = "unspecified"
+title = "SecureProfit Hub — Source + Database Schema"
+description = "Source code lengkap dari commit 2d1a0cd, termasuk Prisma schema, seluruh migration, dan database/schema-only.sql. Tidak berisi data database, kredensial, dependency terpasang, cache, atau build output."
