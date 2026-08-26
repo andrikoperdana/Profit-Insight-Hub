@@ -554,3 +554,10 @@ uri = "file://downloads/SecureProfit-Hub-Database-Technical-Documentation-EN-202
 type = "word_document"
 title = "SecureProfit Hub — Database Technical Documentation"
 description = "Updated English Word documentation based on source commit af7b5e4. Covers 48 models, 26 enums, conceptual ERD, domain catalog, relationships, lifecycle data, integrations, security classification, migration, backup/DR, performance, and DBA runbooks."
+
+[[outputs]]
+id = "8DeZvP999xLMdodV3IZuy"
+uri = "file://downloads/SecureProfit-Hub-AI-Features-Technical-Documentation-EN-2026-08.docx"
+type = "word_document"
+title = "SecureProfit Hub — AI Features Technical Documentation"
+description = "English technical documentation for the four implemented AI features: AI Data Assistant, AI Monthly Project Report Draft, Weekly AI Digest, and AI Executive Copilot. Includes architecture, authorization, data flows, endpoints, persistence, security, rate limits, monitoring, testing, operations, and source map."
