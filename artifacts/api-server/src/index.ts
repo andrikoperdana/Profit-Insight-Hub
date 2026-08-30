@@ -73,14 +73,14 @@ const server = app.listen(port, (err?: Error) => {
   logger.info({ port }, "Server listening");
 });
 
-// Keep the database connection warm. Serverless Postgres (Neon) autosuspends
-// its compute after a short idle window; the first request after a suspend then
-// pays a multi-second cold-start. A lightweight periodic ping keeps the compute
-// awake so user-facing requests stay fast. Interval is overridable via
-// DB_KEEPALIVE_MS (set to 0 to disable). Default 4 min stays under the typical
-// 5 min autosuspend window.
+// Optional database keepalive for an operator who explicitly prefers avoiding a
+// serverless cold start over allowing the database to autosuspend. It is OFF by
+// default: production tracing showed this SELECT 1 was the source of the exact
+// four-minute `Prisma PostgreSQL connection: Closed` cadence. Neon/PgBouncer
+// reconnects on demand, and the shared Prisma retry layer protects idempotent
+// request reads if the first checked-out idle connection was reaped.
 const rawKeepalive = process.env["DB_KEEPALIVE_MS"];
-const keepaliveMs = rawKeepalive !== undefined ? Number(rawKeepalive) : 4 * 60_000;
+const keepaliveMs = rawKeepalive !== undefined ? Number(rawKeepalive) : 0;
 if (Number.isFinite(keepaliveMs) && keepaliveMs > 0) {
   const keepalive = setInterval(() => {
     prisma

@@ -13,17 +13,25 @@ Production logs were full of `prisma:error ... terminating connection due to adm
 
 **How to apply:** if you change DB connection setup, preserve these URL params (with env overrides) and the global singleton. Do not pass a raw `DATABASE_URL` straight into `new PrismaClient` without the pool params.
 
-## Retry layer is idempotent-only — never blanket-retry writes
+## Retry layer is reads-only — never blanket-retry writes
 
 The shared client wraps every op in a `$extends({ query: { $allOperations } })` retry that re-runs on transient connection errors (E57P01 / P1001/P1002/P1008/P1017 / "Server has closed the connection" etc.), capped by `DB_MAX_ATTEMPTS` (default 3) with jittered exponential backoff.
 
-**Rule:** auto-retry is gated to **idempotent ops only** — pure reads, plus single-row `update`s whose `data` has no atomic numeric operator (increment/decrement/multiply/divide). create / createMany / upsert / delete / deleteMany / updateMany / atomic-increment updates / raw writes are **never** auto-retried.
+**Rule:** auto-retry is gated to **pure model reads only**. All writes and raw operations are never auto-retried, including apparently absolute-value single-row updates.
 
-**Why:** a connection can die *after* the server committed but *before* Prisma gets the ack; re-running a non-idempotent write would double-apply (duplicate rows, double increments). Architect review FAILed an earlier blanket `$allOperations` write-retry for exactly this. Idempotent-only retry is the most we can do safely at the shared-client layer.
+**Why:** a connection can die *after* the server committed but *before* Prisma gets the ack. Even an apparently simple Prisma `update` can contain nested relation creates or atomic updates, so classifying writes from only their top-level shape can replay a commit and double-apply it.
 
 **Transaction safety:** `$allOperations` also wraps ops *inside* `$transaction(async tx => …)`, but `query` is bound to that tx connection, so a retry just fails out on the doomed connection — it cannot escape the tx or re-acquire an advisory lock. The outer `$transaction` wrapper is not intercepted, so multi-statement / advisory-lock flows (xero.ts, pipedrive.ts) are never auto-replayed.
 
-**How to apply:** if you need to retry a non-idempotent write, do it at the call site with explicit idempotency (e.g. a natural unique key + upsert, or a dedup token), not by widening `isRetriableOperation`.
+**How to apply:** if a write must retry, do it at the call site with explicit idempotency (for example, a natural unique key plus upsert or a dedup token), never by widening the shared operation classifier.
+
+## Filter idle-pool noise narrowly
+
+**Rule:** Prisma engine errors are forwarded through an event listener. Suppress only the exact idle-pool event `Error in PostgreSQL connection: Error { kind: Closed, cause: None }`; retain every other engine error, and attach the original error when connection retries exhaust.
+
+**Why:** PgBouncer can reap idle client connections without causing an application query failure, and Prisma reports that maintenance event at error level. Logging it every few minutes hid real incidents, while disabling all Prisma error logs would also hide useful diagnostics.
+
+**How to apply:** keep the exact-match filter narrow. Do not broaden it to messages such as "Server has closed the connection" because those can be real failed operations that need retry/exhaustion visibility. Keep periodic `SELECT 1` keepalive opt-in rather than enabled by default.
 
 ## Dev vs prod DB topology + opt-in PgBouncer routing
 

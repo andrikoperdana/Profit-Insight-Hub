@@ -1,4 +1,9 @@
 import { PrismaClient } from "./generated/client/index.js";
+import {
+  isBenignIdlePoolClose,
+  isRetriableOperation,
+  withConnectionRetry,
+} from "./connection-retry.js";
 type PrismaClientType = InstanceType<typeof PrismaClient>;
 
 if (!process.env.DATABASE_URL) {
@@ -100,147 +105,42 @@ function buildDatasourceUrl(raw: string): string {
   }
 }
 
-// Serverless Postgres (Neon) terminates idle connections out from under the
-// pool — surfacing as `E57P01 terminating connection due to administrator
-// command` or Prisma connection-level codes. These are NOT application faults:
-// a query that lands exactly when its pooled connection was just killed fails
-// even though the same query succeeds milliseconds later on a fresh connection.
-// Left unhandled this shows up as a random user-facing failure (e.g. a failed
-// Save). The safe response is to reopen a connection and retry the operation a
-// few times before giving up. Tunable via DB_MAX_ATTEMPTS (no redeploy needed).
-//
-// Capped low (default 3) on purpose: a transient drop usually clears on the
-// first reconnect, and a high cap would amplify load during a genuine outage.
+// Serverless Postgres can reap an idle pooled connection between requests. The
+// shared retry policy keeps idempotent operations from surfacing a random 5xx,
+// but remains capped so a real outage fails promptly.
 const DB_MAX_ATTEMPTS = intFromEnv("DB_MAX_ATTEMPTS", 3);
-
-function isTransientConnectionError(err: unknown): boolean {
-  const e = err as { code?: unknown; message?: unknown };
-  const code = typeof e.code === "string" ? e.code : "";
-  // Prisma connection / initialization error codes (server closed connection,
-  // can't reach DB, timed out fetching a connection).
-  if (code === "P1001" || code === "P1002" || code === "P1008" || code === "P1017") {
-    return true;
-  }
-  const msg = typeof e.message === "string" ? e.message : "";
-  return (
-    msg.includes("57P01") ||
-    msg.includes("terminating connection due to administrator command") ||
-    msg.includes("Server has closed the connection") ||
-    msg.includes("Can't reach database server") ||
-    msg.includes("Connection terminated") ||
-    msg.includes("Closed the connection")
-  );
-}
-
-// Pure reads have no side effects, so re-running one on a fresh connection can
-// never double-apply anything — always safe to retry.
-const READ_OPERATIONS = new Set<string>([
-  "findUnique",
-  "findUniqueOrThrow",
-  "findFirst",
-  "findFirstOrThrow",
-  "findMany",
-  "count",
-  "aggregate",
-  "groupBy",
-]);
-
-// Atomic numeric operators make an `update` non-idempotent — retrying would
-// apply the delta twice (e.g. a double increment).
-const ATOMIC_NUMERIC_OPS = ["increment", "decrement", "multiply", "divide"];
-
-function dataHasAtomicNumericOp(data: unknown): boolean {
-  if (!data || typeof data !== "object") return false;
-  for (const value of Object.values(data as Record<string, unknown>)) {
-    if (
-      value &&
-      typeof value === "object" &&
-      !Array.isArray(value) &&
-      Object.keys(value as object).some((k) => ATOMIC_NUMERIC_OPS.includes(k))
-    ) {
-      return true;
-    }
-  }
-  return false;
-}
-
-// Whether an individual operation is safe to auto-retry after a transient
-// connection drop. We retry ONLY operations that are idempotent under
-// at-least-once execution:
-//   - reads (no side effects), and
-//   - single-row `update`s that set absolute values (re-applying the same
-//     write yields the same row).
-// Everything else — create / createMany / upsert / delete / deleteMany /
-// updateMany, atomic-increment updates, and raw writes ($executeRaw*) — is left
-// to fail on the first transient error. A connection can die AFTER the server
-// committed but BEFORE Prisma receives the ack, so re-running a non-idempotent
-// write would risk double-applying it (duplicate rows, double increments, …).
-function isRetriableOperation(operation: string, args: unknown): boolean {
-  if (READ_OPERATIONS.has(operation)) return true;
-  if (operation === "update") {
-    const data = (args as { data?: unknown } | undefined)?.data;
-    return !dataHasAtomicNumericOp(data);
-  }
-  return false;
-}
-
-async function withConnectionRetry<T>(
-  run: () => Promise<T>,
-  opLabel: string,
-  retriable: boolean,
-): Promise<T> {
-  let lastError: unknown;
-  for (let attempt = 1; attempt <= DB_MAX_ATTEMPTS; attempt++) {
-    try {
-      return await run();
-    } catch (err) {
-      lastError = err;
-      if (
-        attempt >= DB_MAX_ATTEMPTS ||
-        !retriable ||
-        !isTransientConnectionError(err)
-      ) {
-        throw err;
-      }
-      const code = (err as { code?: unknown }).code;
-      // Observability: log retries (never args — they may contain PII) so a
-      // retry storm is visible in production logs.
-      console.warn(
-        `[db] transient connection error on ${opLabel} (code=${
-          typeof code === "string" ? code : "57P01"
-        }); retry ${attempt}/${DB_MAX_ATTEMPTS - 1}`,
-      );
-      // Exponential backoff capped at 1s, plus jitter so concurrent callers
-      // don't reconnect in lockstep. The retry forces Prisma to acquire a fresh
-      // connection, which also gives a suspended serverless compute time to wake
-      // (bounded by `connect_timeout`).
-      const backoff = Math.min(1000, 150 * 2 ** (attempt - 1));
-      const delayMs = backoff + Math.floor(Math.random() * 100);
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
-    }
-  }
-  throw lastError;
-}
 
 function createPrismaClient(): PrismaClientType {
   const base = new PrismaClient({
-    log: ["error", "warn"],
+    // Route engine errors through a narrow filter below. Prisma reports an idle
+    // pool connection being reaped as an error even when no operation failed.
+    // Every other engine error is retained with its original diagnostic text.
+    log: [{ emit: "event", level: "error" }, "warn"],
     datasources: { db: { url: buildDatasourceUrl(DATABASE_URL) } },
+  });
+  base.$on("error", (event) => {
+    if (isBenignIdlePoolClose(event.message)) return;
+    console.error(
+      `[db] Prisma engine error (${event.target}): ${event.message}`,
+    );
   });
   // `$allOperations` wraps each individual model/raw operation — including those
   // run inside an interactive `$transaction(async (tx) => …)`, where `query` is
   // bound to that (already-doomed) transaction connection, so a retry just fails
   // out and multi-statement / advisory-lock flows are never silently re-run; the
   // outer `$transaction` call itself is not intercepted. Auto-retry is further
-  // gated by `isRetriableOperation`, so only idempotent standalone ops (reads
-  // and absolute-value `update`s, e.g. `skill.update`) recover on a fresh
-  // connection — non-idempotent writes still surface their first error.
+  // gated by `isRetriableOperation`, so only reads recover on a fresh
+  // connection. Even apparently simple Prisma updates can contain nested
+  // relation writes, so every write surfaces its first error rather than risk
+  // replaying a commit whose acknowledgement was lost.
   const extended = base.$extends({
     query: {
       $allOperations({ model, operation, args, query }) {
         const retriable = isRetriableOperation(operation, args);
         const label = model ? `${model}.${operation}` : operation;
-        return withConnectionRetry(() => query(args), label, retriable);
+        return withConnectionRetry(() => query(args), label, retriable, {
+          maxAttempts: DB_MAX_ATTEMPTS,
+        });
       },
     },
   });
