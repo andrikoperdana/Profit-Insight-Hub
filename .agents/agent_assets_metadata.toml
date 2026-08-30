@@ -589,3 +589,10 @@ uri = "file://downloads/SecureProfit-Hub-Master-Recommendation-All-11-FSD-ID-202
 type = "word_document"
 title = "SecureProfit Hub — Rekomendasi Induk Seluruh 11 FSD"
 description = "Dokumen Word final berbahasa Indonesia yang mencakup seluruh DEMO-02 sampai DEMO-12. Termasuk Lead Type dan deal lineage, rekomendasi restricted opt-in PRESALES workspace untuk cost of sale, immutable Project client attribution dengan correction workflow, unified Lead-to-Project lifecycle, roadmap 118–190 SP, migration, security, acceptance criteria, dan Go/No-Go."
+
+[[outputs]]
+id = "W4Nc50MbNbOpxRMd07iUI"
+uri = "file://downloads/SecureProfit-Hub-Master-Recommendation-All-12-FSD-ID-2026-08.docx"
+type = "word_document"
+title = "SecureProfit Hub — Rekomendasi Induk Seluruh 12 FSD"
+description = "Dokumen Word final berbahasa Indonesia yang mencakup DEMO-01 sampai DEMO-12. DEMO-01 direkomendasikan memakai normalized IndustrySector dengan LeadSector/ClientSector, compatibility untuk industry lama, server-side filtering, Pipedrive/CSV mapping, dan analytics anti-double-counting. Total estimasi program diperbarui menjadi 152–245 SP."
