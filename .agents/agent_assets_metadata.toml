@@ -575,3 +575,10 @@ uri = "file://downloads/SecureProfit-Hub-Commercial-Governance-FSD-Recommendatio
 type = "word_document"
 title = "SecureProfit Hub — Rekomendasi Konsolidasi Lima FSD"
 description = "Dokumen Word berbahasa Indonesia yang menggabungkan rekomendasi untuk Lead ID, Pipedrive Margin Evaluator, Stage Probability Automation, Finance Margin Approval Gate, dan Project Baseline Sync. Mencakup current-state gaps, target architecture, state machine, roadmap, estimasi 45–73 SP, acceptance criteria, security, audit, concurrency, dan Go/No-Go."
+
+[[outputs]]
+id = "1ssPo6sv3Gg6p9uUaQ1Uz"
+uri = "file://downloads/SecureProfit-Hub-Integrated-Commercial-Lead-to-Project-FSD-Recommendation-ID-2026-08.docx"
+type = "word_document"
+title = "SecureProfit Hub — Rekomendasi Induk Konsolidasi 8 FSD"
+description = "Dokumen Word terpadu berbahasa Indonesia yang menggabungkan seluruh rekomendasi Structured Offerings, Client Contact, BU/Principal Routing, Lead ID, Probability, Pipedrive Margin, Finance Approval, dan Project Baseline. Mencakup unified Lead-to-Project lifecycle, target data model, roadmap, estimasi 87–141 SP, migration, security, acceptance criteria, dan Go/No-Go."
