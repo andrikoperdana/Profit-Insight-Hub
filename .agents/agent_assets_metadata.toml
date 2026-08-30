@@ -582,3 +582,10 @@ uri = "file://downloads/SecureProfit-Hub-Integrated-Commercial-Lead-to-Project-F
 type = "word_document"
 title = "SecureProfit Hub — Rekomendasi Induk Konsolidasi 8 FSD"
 description = "Dokumen Word terpadu berbahasa Indonesia yang menggabungkan seluruh rekomendasi Structured Offerings, Client Contact, BU/Principal Routing, Lead ID, Probability, Pipedrive Margin, Finance Approval, dan Project Baseline. Mencakup unified Lead-to-Project lifecycle, target data model, roadmap, estimasi 87–141 SP, migration, security, acceptance criteria, dan Go/No-Go."
+
+[[outputs]]
+id = "fo3G9hsc4VucOLJvEOGq-"
+uri = "file://downloads/SecureProfit-Hub-Master-Recommendation-All-11-FSD-ID-2026-08.docx"
+type = "word_document"
+title = "SecureProfit Hub — Rekomendasi Induk Seluruh 11 FSD"
+description = "Dokumen Word final berbahasa Indonesia yang mencakup seluruh DEMO-02 sampai DEMO-12. Termasuk Lead Type dan deal lineage, rekomendasi restricted opt-in PRESALES workspace untuk cost of sale, immutable Project client attribution dengan correction workflow, unified Lead-to-Project lifecycle, roadmap 118–190 SP, migration, security, acceptance criteria, dan Go/No-Go."
