@@ -561,3 +561,10 @@ uri = "file://downloads/SecureProfit-Hub-AI-Features-Technical-Documentation-EN-
 type = "word_document"
 title = "SecureProfit Hub — AI Features Technical Documentation"
 description = "English technical documentation for the four implemented AI features: AI Data Assistant, AI Monthly Project Report Draft, Weekly AI Digest, and AI Executive Copilot. Includes architecture, authorization, data flows, endpoints, persistence, security, rate limits, monitoring, testing, operations, and source map."
+
+[[outputs]]
+id = "aORENHOlLsndVjOLTvqDk"
+uri = "file://downloads/SecureProfit-Hub-Consolidated-FSD-Recommendation-ID-2026-08.docx"
+type = "word_document"
+title = "SecureProfit Hub — Rekomendasi Konsolidasi FSD"
+description = "Dokumen Word berbahasa Indonesia yang menggabungkan rekomendasi untuk Structured Offerings, Client Contact, dan Business Unit/Principal Routing. Mencakup gap analysis, target data model, roadmap, estimasi, dependencies, acceptance criteria, dan keputusan bisnis terbuka."
