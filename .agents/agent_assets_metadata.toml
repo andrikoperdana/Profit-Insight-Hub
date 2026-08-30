@@ -568,3 +568,10 @@ uri = "file://downloads/SecureProfit-Hub-Consolidated-FSD-Recommendation-ID-2026
 type = "word_document"
 title = "SecureProfit Hub — Rekomendasi Konsolidasi FSD"
 description = "Dokumen Word berbahasa Indonesia yang menggabungkan rekomendasi untuk Structured Offerings, Client Contact, dan Business Unit/Principal Routing. Mencakup gap analysis, target data model, roadmap, estimasi, dependencies, acceptance criteria, dan keputusan bisnis terbuka."
+
+[[outputs]]
+id = "u7ReWsfKliLbKnYnj_Qqq"
+uri = "file://downloads/SecureProfit-Hub-Commercial-Governance-FSD-Recommendation-ID-2026-08.docx"
+type = "word_document"
+title = "SecureProfit Hub — Rekomendasi Konsolidasi Lima FSD"
+description = "Dokumen Word berbahasa Indonesia yang menggabungkan rekomendasi untuk Lead ID, Pipedrive Margin Evaluator, Stage Probability Automation, Finance Margin Approval Gate, dan Project Baseline Sync. Mencakup current-state gaps, target architecture, state machine, roadmap, estimasi 45–73 SP, acceptance criteria, security, audit, concurrency, dan Go/No-Go."
