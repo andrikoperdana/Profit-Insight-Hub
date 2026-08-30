@@ -22,7 +22,6 @@ import {
   getListActiveAllUsersQueryKey,
   useReplaceProjectPm,
   useListUsersUnderSupervision,
-  useListClients,
   useListTimesheets,
   useListProjectTasks,
   useListProjectExpenses,
@@ -31,7 +30,6 @@ import {
   useApproveProjectExpense,
   useRejectProjectExpense,
   getListProjectExpensesQueryKey,
-  getListClientsQueryKey,
   getGetProjectQueryKey,
   getGetProjectFinancialsQueryKey,
   getListProjectDocumentsQueryKey,
@@ -54,7 +52,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft, Building2, User, Calendar, DollarSign, TrendingUp, TrendingDown,
   Activity, Flame, Upload, FileText, Trash2, CheckCircle2, AlertCircle, Plus,
-  Pencil, AlertTriangle, Paperclip, X,
+  Pencil, AlertTriangle, Paperclip, X, LockKeyhole,
 } from "lucide-react";
 import { formatIDR, formatMoney, formatDate, formatPct } from "@/lib/format";
 import { HealthBadge, MarginBadge, ProjectStatusBadge } from "@/components/common/Badges";
@@ -108,8 +106,6 @@ function OverviewTab({ project }: { project: any }) {
 
   const isDraft = project.status === ProjectStatus.DRAFT;
   const isSalesDraftEdit = isDraft && user?.role === "SALES";
-  const canPickClient = isSuperAdmin(user?.role) || user?.role === "MANAGEMENT" || isSalesDraftEdit;
-
   const canReplacePm =
     (isSuperAdmin(user?.role) || user?.role === "MANAGEMENT") && !isDraft;
   const [replacePmOpen, setReplacePmOpen] = useState(false);
@@ -142,13 +138,6 @@ function OverviewTab({ project }: { project: any }) {
           description: err?.message ?? "Unknown error",
         });
       },
-    },
-  });
-
-  const { data: clients } = useListClients({
-    query: {
-      queryKey: getListClientsQueryKey(),
-      enabled: isEditing && canPickClient,
     },
   });
 
@@ -255,10 +244,6 @@ function OverviewTab({ project }: { project: any }) {
           estimatedCost: Number(form.estimatedCost),
           plannedMandays: Number(form.plannedMandays),
         };
-    // MANAGEMENT may reassign the client at any time; SALES may also (re)assign while DRAFT.
-    if (canPickClient && form.clientId && form.clientId !== project.clientId) {
-      data.clientId = form.clientId;
-    }
     update.mutate({ id: project.id, data: data as any });
   }
 
@@ -427,26 +412,24 @@ function OverviewTab({ project }: { project: any }) {
               </>
             ) : (
               <>
-                {canPickClient ? (
-                  <div>
-                    <Label htmlFor="ov-client">Client *</Label>
-                    <Select
-                      value={form.clientId}
-                      onValueChange={(v) => setForm({ ...form, clientId: v })}
-                    >
-                      <SelectTrigger id="ov-client" className="mt-1" data-testid="input-overview-client">
-                        <SelectValue placeholder="Select a client" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {(clients ?? []).map((c: any) => (
-                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                <div
+                  className="rounded-md border border-border bg-muted/30 p-3"
+                  data-testid="project-client-attribution-locked"
+                >
+                  <div className="flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-muted-foreground" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide">Client</p>
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {project.clientName ?? "-"}
+                      </p>
+                    </div>
+                    <LockKeyhole className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                   </div>
-                ) : (
-                  <InfoRow icon={<Building2 className="h-4 w-4" />} label="Client" value={project.clientName ?? "-"} />
-                )}
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Client attribution is locked after project creation.
+                  </p>
+                </div>
                 <InfoRow icon={<User className="h-4 w-4" />} label="Sales" value={project.salesName ?? "-"} />
                 <InfoRow icon={<User className="h-4 w-4" />} label="Project Manager" value={project.pmName ?? "-"} />
                 <div>
@@ -699,9 +682,7 @@ function OverviewTab({ project }: { project: any }) {
                 )}
                 <div className="space-y-2 text-sm">
                   <ConfirmRow label="Client" value={
-                    (clients ?? []).find((c: any) => c.id === form.clientId)?.name
-                      ?? project.clientName
-                      ?? "-"
+                    project.clientName ?? "-"
                   } />
                   <ConfirmRow label="Timeline" value={
                     form.startDate || form.endDate

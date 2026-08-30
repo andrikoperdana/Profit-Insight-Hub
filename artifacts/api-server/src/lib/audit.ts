@@ -11,6 +11,7 @@ export type AuditAction =
   | "user.login_failed"
   | "project.created"
   | "project.updated"
+  | "project.client_change_rejected"
   | "project.status_changed"
   | "project.pm_replaced"
   | "project.deleted"

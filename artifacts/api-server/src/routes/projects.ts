@@ -356,6 +356,29 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     return;
   }
 
+  // A Project's client attribution is immutable after creation. Keep accepting
+  // the existing clientId for backward compatibility with older callers, but
+  // never allow the normal update endpoint to move a Project to another Client.
+  if (b.clientId !== undefined) {
+    const requestedClientId = b.clientId == null ? null : String(b.clientId);
+    if (requestedClientId !== beforeProj.clientId) {
+      await recordAudit(req, {
+        action: "project.client_change_rejected",
+        entityType: "Project",
+        entityId: beforeProj.id,
+        description: `Rejected client attribution change for project ${beforeProj.projectId ?? beforeProj.code ?? beforeProj.id}`,
+        before: { clientId: beforeProj.clientId },
+        after: { requestedClientId },
+      });
+      res.status(409).json({
+        error: "CLIENT_ATTRIBUTION_LOCKED",
+        message: "Client attribution cannot be changed after project creation.",
+      });
+      return;
+    }
+    delete b.clientId;
+  }
+
   // Field-level + ownership authorization.
   // SALES: only their own DRAFT projects, may update basic intake fields only.
   // PROJECT_MANAGER: only projects assigned to them; may update all detail fields.
@@ -376,9 +399,10 @@ router.patch("/projects/:id", requireRole(...writeRoles), validateBody(UpdatePro
     "salesId", "pmId", "clientId", "status", "statusChangeReason",
     "technicalWriterId", "adminProjectId",
   ]);
-  // PMs may not reassign people (salesId/pmId) nor reassign the client (set during Sales intake).
+  // PMs may not reassign people. clientId has already been validated and
+  // removed above when it matches the immutable attribution.
   // PMs CAN assign TW and Admin Project for their own projects.
-  const PM_FORBIDDEN = new Set(["salesId", "pmId", "clientId"]);
+  const PM_FORBIDDEN = new Set(["salesId", "pmId"]);
 
   if (role === "SALES") {
     if (beforeProj.salesId !== userId) {

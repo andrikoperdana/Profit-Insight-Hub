@@ -32,6 +32,7 @@ const activityCreateMock = vi.fn((_a: unknown) => Promise.resolve<unknown>({}));
 const documentCreateMock = vi.fn((_a: unknown) => Promise.resolve<unknown>(null));
 const documentFindFirstMock = vi.fn((_a: unknown) => Promise.resolve<unknown>(null));
 const documentUpdateMock = vi.fn((_a: unknown) => Promise.resolve<unknown>({}));
+const recordAuditMock = vi.hoisted(() => vi.fn(async () => {}));
 
 vi.mock("@workspace/db", () => {
   const tx = {
@@ -61,7 +62,7 @@ vi.mock("@workspace/db", () => {
 });
 
 vi.mock("../../lib/audit.js", () => ({
-  recordAudit: vi.fn(async () => {}),
+  recordAudit: recordAuditMock,
   recordAuditAnon: vi.fn(async () => {}),
 }));
 vi.mock("../../lib/notifications.js", () => ({
@@ -132,6 +133,54 @@ beforeEach(() => {
   documentCreateMock.mockReset();
   documentFindFirstMock.mockReset().mockResolvedValue(null);
   documentUpdateMock.mockReset();
+  recordAuditMock.mockClear();
+});
+
+describe("PATCH /projects/:id — immutable client attribution", () => {
+  it("rejects changing the client for management and records the attempt", async () => {
+    projectFindUniqueMock.mockResolvedValue({ ...baseProject });
+
+    const res = await request(makeApp(projectsRouter))
+      .patch(`/api/projects/${PROJECT_ID}`)
+      .set(MGMT)
+      .send({ clientId: "client-2" });
+
+    expect(res.status).toBe(409);
+    expect(res.body).toEqual({
+      error: "CLIENT_ATTRIBUTION_LOCKED",
+      message: "Client attribution cannot be changed after project creation.",
+    });
+    expect(projectUpdateMock).not.toHaveBeenCalled();
+    expect(projectUpdateManyMock).not.toHaveBeenCalled();
+    expect(recordAuditMock).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        action: "project.client_change_rejected",
+        entityType: "Project",
+        entityId: PROJECT_ID,
+        before: { clientId: "client-1" },
+        after: { requestedClientId: "client-2" },
+      }),
+    );
+  });
+
+  it("accepts the unchanged clientId while updating another field", async () => {
+    projectFindUniqueMock.mockResolvedValue({ ...baseProject });
+    projectUpdateMock.mockImplementation((a: any) =>
+      Promise.resolve({ ...baseProject, ...a.data }),
+    );
+
+    const res = await request(makeApp(projectsRouter))
+      .patch(`/api/projects/${PROJECT_ID}`)
+      .set(MGMT)
+      .send({ clientId: "client-1", description: "Updated safely" });
+
+    expect(res.status).toBe(200);
+    expect(projectUpdateMock).toHaveBeenCalledOnce();
+    const data = (projectUpdateMock.mock.calls[0]![0] as any).data;
+    expect(data.clientId).toBeUndefined();
+    expect(data.description).toBe("Updated safely");
+  });
 });
 
 describe("PATCH /projects/:id — closedAt bookkeeping", () => {
