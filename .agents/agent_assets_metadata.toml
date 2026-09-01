@@ -725,3 +725,17 @@ mtime_ms = 1788258452477
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/dc76fcae-162b-4294-a870-86f98d57b504/f0cf31f4-f5ae-4e48-8c24-6661377e0ce0"
 storage_version_token = "1788258477720077"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "3u-NvgKsTRHUcs9_4hcNb"
+uri = "file://downloads/SPH-12-FSD-v0.07-Final-Pre-Signoff-Review-ID.docx"
+type = "word_document"
+title = "Review Final Pre-Signoff v0.07 — SPH 12 FSD"
+description = "Dokumen Word formal berisi hasil review v0.07, empat mandatory corrections, koreksi traceability DEMO-07 dan DEMO-11, serta syarat sebelum baseline v1.00."
+logical_id = "20620395-41d7-4a0b-88f7-692a6a635e88"
+content_hash = "sha256:3622c14917414c2b0177f2b173d20b37f3f1432f3f63f88a5dded85452b4c7a1"
+size = 13948
+mtime_ms = 1788259456137
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/20620395-41d7-4a0b-88f7-692a6a635e88/0c00cfdf-1f9f-42f6-b407-066ef770d2c6"
+storage_version_token = "1788259468854449"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
