@@ -739,3 +739,17 @@ mtime_ms = 1788259456137
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/20620395-41d7-4a0b-88f7-692a6a635e88/0c00cfdf-1f9f-42f6-b407-066ef770d2c6"
 storage_version_token = "1788259468854449"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "0qqbWIaSy3qoZFhwjgs7U"
+uri = "file://downloads/SPH-12-FSD-v0.08-Review-and-Required-Revisions-ID.docx"
+type = "word_document"
+title = "Review dan Required Revisions v0.08 — SPH 12 FSD"
+description = "Dokumen Word formal berisi verdict v0.08, tujuh kelompok koreksi wajib, status terhadap review sebelumnya, dan rekomendasi v0.09 sebelum sign-off v1.00."
+logical_id = "ea5e4cca-1b0b-4645-b259-777ddcee7aee"
+content_hash = "sha256:b73fab5dc5402e165e99674ee43345c2dc3b2f11012693a07fb5307b0cf565fa"
+size = 14442
+mtime_ms = 1788266464581
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/ea5e4cca-1b0b-4645-b259-777ddcee7aee/acf40446-7e81-41ae-ba6d-3fddcbbec0cf"
+storage_version_token = "1788266474765778"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
