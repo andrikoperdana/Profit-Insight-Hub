@@ -29,30 +29,35 @@ id = "VaMECNkMzOFllpMSgSi8-"
 uri = "file://docs/SecureProfit_Hub_User_Guide.pdf"
 type = "pdf"
 title = "SecureProfit Hub — User Guide (Panduan Pengguna)"
+logical_id = "c1728997-a470-4231-afd2-e552c4a88846"
 
 [[outputs]]
 id = "AAofWIGsGuNtwSs1u73lr"
 uri = "file://docs/SecureProfit_Hub_Technical_Documentation.pdf"
 type = "pdf"
 title = "SecureProfit Hub — Technical Documentation"
+logical_id = "6d4821b2-472c-4949-9ebc-7f687f2891d7"
 
 [[outputs]]
 id = "FUzdvaeCJBIofJ6buU8UR"
 uri = "file://docs/USER_GUIDE.md"
 type = "text"
 title = "SecureProfit Hub — User Guide"
+logical_id = "5c7c4d50-b84e-4bd2-b40b-3e63d0a77cda"
 
 [[outputs]]
 id = "Cd5bRN0t7KBKD_asz7OQe"
 uri = "file://docs/TECHNICAL_DOCS.md"
 type = "text"
 title = "SecureProfit Hub — Technical Documentation"
+logical_id = "1c66a111-fb53-47cd-a30a-9f3478587407"
 
 [[outputs]]
 id = "4oRjCQZlJfohNxxzLFBaG"
 uri = "file://docs/SecureProfit-Hub-User-Guide.pdf"
 type = "pdf"
 title = "User Guide (PDF)"
+logical_id = "d54df635-764d-4b53-b898-2bcb75430fed"
 
 [[outputs]]
 id = "O_E99cM5WVOSyYNTCrkyw"
@@ -60,444 +65,518 @@ uri = "file://docs/SecureProfit-Hub-Technical-Documentation.pdf"
 type = "pdf"
 title = "SecureProfit Hub — Technical Documentation (PDF, April 2026)"
 description = "Dokumen technical documentation versi lama dalam format PDF. Untuk referensi terbaru, gunakan versi Word Agustus 2026."
+logical_id = "40d8b5c8-e948-466c-bed9-d7ea19d68732"
 
 [[outputs]]
 id = "X1sCdu7RVkIJdSqGB6XjY"
 uri = "file://docs/SecureProfit-Hub-Buku-Panduan-Pengguna.pdf"
 type = "pdf"
 title = "Buku Panduan Pengguna (PDF) — versi update"
+logical_id = "dcc4ce11-d9c4-4fb3-86ac-87364fab82f7"
 
 [[outputs]]
 id = "moCN30yJHf2Z1W23u-Na6"
 uri = "file://.local/outputs/Profit-Insight-Hub.pptx"
 type = "slides"
 title = "Profit Insight Hub.pptx"
+logical_id = "651d6475-2e8a-4396-b384-b3ef3972f570"
 
 [[outputs]]
 id = "2jVK2f4M8_ysuQG3s04xE"
 uri = "file://docs/modules/README.md"
 type = "text"
 title = "Index — Technical Documentation"
+logical_id = "c97bb97f-ac20-4ce6-961a-5025a6e4094e"
 
 [[outputs]]
 id = "dWRjZ-UFJRRu7HirxK3c0"
 uri = "file://docs/modules/01-dashboard.md"
 type = "text"
 title = "1. Dashboard"
+logical_id = "696357d7-dbcd-47e9-89e3-ff02b7a1248e"
 
 [[outputs]]
 id = "6Msy4nHfC1ojiTx9FwKq8"
 uri = "file://docs/modules/02-projects-clients.md"
 type = "text"
 title = "2. Projects & Clients"
+logical_id = "f976c24a-6772-4c2f-81cd-9f13f6893020"
 
 [[outputs]]
 id = "_JDSMspEgsHSMEl0l2p-8"
 uri = "file://docs/modules/03-resources-capacity.md"
 type = "text"
 title = "3. Resources & Capacity"
+logical_id = "83e682b2-ba38-44d9-bd13-1fd12ff3f1a3"
 
 [[outputs]]
 id = "e4dwU_m1Rc8gBNDpI0-S9"
 uri = "file://docs/modules/04-profitability-finance.md"
 type = "text"
 title = "4. Profitability & Finance"
+logical_id = "ac643400-3164-47c7-95cf-e3911e387a2f"
 
 [[outputs]]
 id = "YZtHBOdJojbmZFMIejhld"
 uri = "file://docs/modules/05-timesheets-approvals.md"
 type = "text"
 title = "5. Timesheets & Approvals"
+logical_id = "52d14fc6-b604-4298-9afb-504ee4aa9743"
 
 [[outputs]]
 id = "nGqVK5p2ilBMfwAN4VTrr"
 uri = "file://docs/modules/06-business-intelligence-csat.md"
 type = "text"
 title = "6. Business Intelligence & CSAT"
+logical_id = "6528cd25-239b-427a-887d-ab94094fa097"
 
 [[outputs]]
 id = "crl_68zej5dK6U68wKywM"
 uri = "file://docs/modules/07-governance-rbac.md"
 type = "text"
 title = "7. Governance & RBAC"
+logical_id = "cc7f7079-5d1c-43e0-8d1c-a9eb23665a07"
 
 [[outputs]]
 id = "k_ffhWebAq3NYrQQL-WmV"
 uri = "file://docs/SecureProfitHub-Modules.docx"
 type = "word_document"
 title = "SecureProfit Hub — Technical Documentation (DOCX)"
+logical_id = "d7e82d4e-dc8f-4404-95fd-b4ec05bc6be3"
 
 [[outputs]]
 id = "bKgDVmPriQjv9HW5GY0Zh"
 uri = "file://.local/outputs/SentinelScan-Pitch-Deck.pptx"
 type = "slides"
 title = "SentinelScan Pitch Deck (PPTX)"
+logical_id = "791b90ab-7ebf-48f4-9f6b-b64102cb83d4"
 
 [[outputs]]
 id = "BdG5NUMBboohmwHEtNJTB"
 uri = "file://attached_assets/erd/secureprofit-erd.svg"
 type = "image"
 title = "SecureProfit Hub — ERD (SVG, scalable)"
+logical_id = "5d50d389-9e9f-494a-80c2-9eed25e7af2d"
 
 [[outputs]]
 id = "M2KJmLGBNQ104i__uunEM"
 uri = "file://attached_assets/erd/secureprofit-erd.png"
 type = "image"
 title = "SecureProfit Hub — ERD (PNG)"
+logical_id = "1b99b522-b2c4-475a-8289-957f47193618"
 
 [[outputs]]
 id = "I4sNDhdTldnZ3-fu4ymR-"
 uri = "file://attached_assets/erd/secureprofit-erd.mmd.txt"
 type = "text"
 title = "Mermaid source (editable)"
+logical_id = "b1f42d1a-0a66-4408-9687-e49581d8beea"
 
 [[outputs]]
 id = "jqYZHcAxsiyRdlEiOkCZ6"
 uri = "file://attached_assets/erd/secureprofit-erd.pdf"
 type = "pdf"
 title = "SecureProfit Hub — ERD (PDF)"
+logical_id = "c10cc66a-3be6-4bce-8af7-9446f276fdfd"
 
 [[outputs]]
 id = "yVYqgjz4mtRWQrCyC5znL"
 uri = "file://attached_assets/erd/secureprofit-erd.jpg"
 type = "image"
 title = "SecureProfit Hub — ERD (JPG)"
+logical_id = "ab7b4609-f5cb-4f74-8cfb-32a9e8b5a44e"
 
 [[outputs]]
 id = "S43pix-99LM840yjyNh6h"
 uri = "file://.local/outputs/Profit-Insight-Hub.pdf"
 type = "pdf"
 title = "Profit Insight Hub.pdf"
+logical_id = "b297be3b-ce1d-4d2c-8e8c-d395c5dae55c"
 
 [[outputs]]
 id = "p49TlcyyF9iotK7iRWt_S"
 uri = "file://DEPLOY-LOKAL.md"
 type = "text"
 title = "Panduan Deploy SecureProfit Hub di Server Lokal"
+logical_id = "b7e7958b-5759-4a2f-9a17-cb1cc2fe43e4"
 
 [[outputs]]
 id = "drUBxbAh1GVtXUrbJ2GSA"
 uri = "file://exports/Review-9-Pertanyaan-User.docx"
 type = "word_document"
 title = "Review 9 Pertanyaan User (DOCX)"
+logical_id = "9a160fcc-7fdc-440c-9bae-b0e8b03008ea"
 
 [[outputs]]
 id = "sGZw6AQuYLdCR0yhTQo5u"
 uri = "file://docs/GAP_ANALYSIS_PSOHUB.md"
 type = "text"
 title = "Gap Analysis: SecureProfit Hub vs PSOHUB"
+logical_id = "44dda684-bd87-4a38-bd64-de234235eed2"
 
 [[outputs]]
 id = "VbCHCG3y0tVzLsSyFrR8k"
 uri = "file://docs/GAP_ANALYSIS_PSOHUB.docx"
 type = "word_document"
 title = "Gap Analysis: SecureProfit Hub vs PSOHUB (Word) - perbaikan"
+logical_id = "e693c011-5447-48c7-aad7-d7da04b00e6e"
 
 [[outputs]]
 id = "fyFo4QxXztsKEobmuHZfZ"
 uri = "file://attached_assets/Estimasi-Profit-Insight-Hub.docx"
 type = "word_document"
 title = "Estimasi Pembuatan Profit Insight Hub (Word)"
+logical_id = "75457b91-1f75-49d8-b085-1c3cf0342d05"
 
 [[outputs]]
 id = "-wEZaSnG4JEByOiKVmVy_"
 uri = "file://attached_assets/Gap-Analysis-SecureProfit-vs-PSOhub.docx"
 type = "word_document"
 title = "Gap Analysis: SecureProfit Hub vs PSOhub"
+logical_id = "1528636d-c957-487c-a1f5-78061e09e40f"
 
 [[outputs]]
 id = "2Am5Tyz-rCx7AnieUef48"
 uri = "file://attached_assets/Gap-Analysis-SecureProfit-vs-PSOHUB-Detail.docx"
 type = "word_document"
 title = "Gap Analysis SecureProfit Hub vs PSOHUB (Detail)"
+logical_id = "9d2f45a3-4b05-46c5-8b4e-e76f53e6164e"
 
 [[outputs]]
 id = "2eIzGhlH1wFVx7PQwLp8o"
 uri = "file://exports/SecureProfit-Hub-Gap-Analysis.docx"
 type = "word_document"
 title = "SecureProfit Hub — Gap Analysis (Word)"
+logical_id = "eaaf5f0d-9599-47ab-9c43-a8932e670604"
 
 [[outputs]]
 id = "cjzPshju073n3zpv3A9wN"
 uri = "file://exports/SecureProfit-Hub-Gap-Analysis-EN.docx"
 type = "word_document"
 title = "SecureProfit Hub — Gap Analysis (English)"
+logical_id = "55706495-a5d5-4501-be8a-3e9f2e64a92f"
 
 [[outputs]]
 id = "Yk_9nZg90BYAIOfKc717G"
 uri = "file://exports/FitGap_SecureProfitHub_vs_PSOhub.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub"
+logical_id = "db99b774-e027-4878-9e7c-c235c9ee3a29"
 
 [[outputs]]
 id = "6QWzghRDJoS6_XHUmx3z9"
 uri = "file://exports/FitGap_SecureProfitHub_vs_PSOhub_EN.docx"
 type = "word_document"
 title = "Fit-Gap Analysis (EN): SecureProfit Hub vs PSOhub"
+logical_id = "35778d57-3393-4998-a396-e6cfc0ec83c1"
 
 [[outputs]]
 id = "2ms3tqKtK6AfU-Qamn3fT"
 uri = "file://exports/sample_leads.csv"
 type = "table"
 title = "Sample Leads CSV (10 leads)"
+logical_id = "ecd9b3de-a317-4240-8d4a-f6c07a74d173"
 
 [[outputs]]
 id = "MkoLtH40TIld8I-EDQhLS"
 uri = "file://scripts/exports/fit-gap-psohub.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub (v2)"
+logical_id = "755de397-2ea3-49a6-92b1-663ee1755bb7"
 
 [[outputs]]
 id = "keE_5ULltT9o-g_ODUmgF"
 uri = "file://scripts/exports/role-features.docx"
 type = "word_document"
 title = "Dokumentasi Fitur per Role - SecureProfit Hub"
+logical_id = "b163f0dc-f676-47c0-934d-317734cee5e9"
 
 [[outputs]]
 id = "ngHNqN2WV9nhYBvRvMZqT"
 uri = "file://scripts/exports/SecureProfitHub_vs_PSOHub_FitGap.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: SecureProfit Hub vs PSOHub (.docx)"
+logical_id = "acff16e4-2bc8-4d12-b36c-ddd7608017bf"
 
 [[outputs]]
 id = "PJfUDnmdwdPu7CFP3EghI"
 uri = "file://scripts/exports/PDD_LeadToCash_vs_SecureProfitHub_FitGap.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: PDD Lead-to-Cash vs SecureProfit Hub (.docx)"
+logical_id = "c9c53040-d0b3-48c5-8209-d53684760410"
 
 [[outputs]]
 id = "A2sR16HuQr2PSIerJcNmX"
 uri = "file://dist/secureprofit-hub.tar.gz"
 type = "unspecified"
 title = "SecureProfit Hub - Source Code"
+logical_id = "e3bb0288-a8b8-497f-b814-04001bf00bc7"
 
 [[outputs]]
 id = "Mh0ivtu1XdulxtZE-bJGr"
 uri = "file://dist/secureprofit-hub-source.tar.gz"
 type = "unspecified"
 title = "SecureProfit Hub - Source Code (13MB)"
+logical_id = "4ed0b941-0021-4463-a1de-7e61e7808949"
 
 [[outputs]]
 id = "utXCjsBueOMTji1dkhAO_"
 uri = "file://dist/secureprofit-hub-db.sql.gz"
 type = "unspecified"
 title = "SecureProfit Hub - Database Dump (PostgreSQL)"
+logical_id = "b4ab56f3-f3f9-47fa-a955-b6758f349ed9"
 
 [[outputs]]
 id = "456gmZCWyEvtwEpwZgvEc"
 uri = "file://dist/Panduan-Instalasi-SecureProfit-Hub.docx"
 type = "word_document"
 title = "Panduan Instalasi SecureProfit Hub (MS Word)"
+logical_id = "19858564-51b2-4404-ab8d-f7abb0885ee3"
 
 [[outputs]]
 id = "XBP07ld6e58INIHGZaXTe"
 uri = "file://scripts/exports/SecureProfitHub-Flow-Proses.docx"
 type = "word_document"
 title = "SecureProfit Hub — Flow Proses End-to-End"
+logical_id = "407d97b1-fd92-4a01-b37c-fc336cc39770"
 
 [[outputs]]
 id = "6TfTB6twoUt9FOuZdxCoT"
 uri = "file://docs/USER_MANUAL_ID.md"
 type = "text"
 title = "Buku Panduan Pengguna (Updated)"
+logical_id = "0411c51c-26fa-47a0-9519-2a7a333ce854"
 
 [[outputs]]
 id = "r7kPcIfhElLm3JapljemK"
 uri = "file://exports/USER_MANUAL_ID.docx"
 type = "word_document"
 title = "User Manual (ID, versi Mei)"
+logical_id = "59b647b8-e169-4b0d-a6ba-8f9461e51eee"
 
 [[outputs]]
 id = "68ogdM9E7HLv4dQhfdMvV"
 uri = "file://exports/Rencana_Integrasi_Xero_SecureProfit_Hub.docx"
 type = "word_document"
 title = "Rencana Integrasi Xero — SecureProfit Hub"
+logical_id = "6ccc1ac8-d22c-4269-9097-4455b938dff8"
 
 [[outputs]]
 id = "Lgdn6RDTZep3f2ps6C77k"
 uri = "file://exports/SecureProfit-Hub-Fitur-dan-Perhitungan.docx"
 type = "word_document"
 title = "Dokumen Fitur & Perhitungan (ID, rev. 2)"
+logical_id = "22199ff5-c0c8-4f25-a033-df75f7488944"
 
 [[outputs]]
 id = "3RjFVUzkfHDtI6kmwTgZQ"
 uri = "file://exports/SecureProfit-Hub-Features-and-Calculations-EN.docx"
 type = "word_document"
 title = "Features & Calculations (EN, terbaru)"
+logical_id = "4384b7af-cb9f-4a0f-b384-c5e71e41e1e5"
 
 [[outputs]]
 id = "OjGb-ZYqAasdXoqgEC6f5"
 uri = "file://exports/SecureProfit-Hub-Executive-Summary-EN.docx"
 type = "word_document"
 title = "SecureProfit Hub — Executive Summary (English, 2 pages)"
+logical_id = "3e80d6ad-4574-42d0-b282-097be432657c"
 
 [[outputs]]
 id = "ZnWxpmMmL9KMQZIPzXKJL"
 uri = "file://backup/secureprofit-hub-backup.tar.gz"
 type = "unspecified"
 title = "SecureProfit Hub — Backup (Source Code + Database)"
+logical_id = "a4fe38da-c52c-41da-b459-ffc79a98fcba"
 
 [[outputs]]
 id = "fy23EmIj0Viw3L1_3gq02"
 uri = "file://attached_assets/SecureProfit-Hub-Features-and-Calculations-EN-updated.docx"
 type = "word_document"
 title = "SecureProfit Hub — Features & Calculations (Updated)"
+logical_id = "8ccc93e6-1910-4122-80f3-684f16cb0902"
 
 [[outputs]]
 id = "-t8456zQ_WlvY4NqcrqLu"
 uri = "file://exports/panduan-android.jpg"
 type = "image"
 title = "Panduan Android - SecureProfit (siap di-share)"
+logical_id = "65aef132-492c-4562-9c12-90d00c3f748c"
 
 [[outputs]]
 id = "gBgayBqWZaVBzFghqAEwo"
 uri = "file://exports/Panduan-Alur-Project-SecureProfit-Hub-ID.pdf"
 type = "pdf"
 title = "Panduan Alur Project (Indonesia) — Edisi 8 Juni 2026"
+logical_id = "223b88f5-9366-4083-8fb8-c9a818a7c8ee"
 
 [[outputs]]
 id = "TR30Kz7ZYvJ80WrBCWAyM"
 uri = "file://exports/SecureProfit-Hub-Project-Flow-Guide-EN.pdf"
 type = "pdf"
 title = "Project Flow Guide (English) — Edition 8 June 2026"
+logical_id = "775616b3-8655-4913-9b3b-2cb531d71e94"
 
 [[outputs]]
 id = "Quhs-ORQwAEsrWJBCvMPA"
 uri = "file://exports/SecureProfitHub-Dashboard-Menu-Guide-ID.docx"
 type = "word_document"
 title = "Panduan Menu & Dashboard (ID)"
+logical_id = "fe3dbb1a-dfde-4379-a9ff-1c4f02ba47b0"
 
 [[outputs]]
 id = "xHjOW1_-RUH7OEFjM_YyY"
 uri = "file://exports/SecureProfitHub-Dashboard-Menu-Guide-EN.docx"
 type = "word_document"
 title = "Dashboard & Menu Guide (EN) — v1.4"
+logical_id = "1708ff18-c5a6-4c14-ab2f-c1b84f078894"
 
 [[outputs]]
 id = "7-SHnDXlRUL7rKbetBX2p"
 uri = "file://exports/Fit-Gap-PSOhub-SecureProfit-Hub-2026-06-09.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub (9 Juni 2026)"
+logical_id = "2b9bc729-6744-41fc-8609-4edbb25a40d9"
 
 [[outputs]]
 id = "MR-UJdn6zCS9AtDLRu5lB"
 uri = "file://exports/Fit-Gap-PSOhub-SecureProfit-Hub-2026-06-09-EN.docx"
 type = "word_document"
 title = "Fit-Gap Analysis: SecureProfit Hub vs PSOhub (English, June 9, 2026)"
+logical_id = "c428ac5d-1c0a-4c0a-9d2f-d932499e666d"
 
 [[outputs]]
 id = "OxfFzoXz0VlCUM3HH4_xI"
 uri = "file://docs/SecureProfit-Hub-Database-Documentation.docx"
 type = "word_document"
 title = "Dokumentasi RDBMS SecureProfit Hub (.docx)"
+logical_id = "0ec64996-17da-4e72-9411-2c9cf32eee6c"
 
 [[outputs]]
 id = "WjWlxziVrBBoTikREOKoU"
 uri = "file://docs/DATABASE_RDBMS.md"
 type = "text"
 title = "Dokumentasi RDBMS (Markdown)"
+logical_id = "0b373b8c-d9e9-4b73-b1d8-37831a9f0425"
 
 [[outputs]]
 id = "Nth_FHohO0urO6BXYeFDU"
 uri = "file://docs/Dokumentasi-Fitur-PMP-SecureProfit-Hub.docx"
 type = "word_document"
 title = "Dokumentasi Fitur PMP — SecureProfit Hub"
+logical_id = "3056bcee-881e-4af9-9ef7-18e8c4be1553"
 
 [[outputs]]
 id = "P_w8BQu1bCRJI-MFNo-dc"
 uri = "file://docs/commission-feature-feasibility.md"
 type = "text"
 title = "Studi Kelayakan Fitur Commission Tracker"
+logical_id = "6178f97e-b39e-41e1-b240-9f387d43845f"
 
 [[outputs]]
 id = "APKdWCumvOtxybCCXLvZK"
 uri = "file://docs/commission-feature-feasibility.en.md"
 type = "text"
 title = "Commission Tracker — Feasibility Study (English)"
+logical_id = "f4bfe984-f758-4e80-b659-25b7320179b1"
 
 [[outputs]]
 id = "YGyp3bHYabd7tr7gDM5jF"
 uri = "file://docs/commission-feature-feasibility.en.docx"
 type = "word_document"
 title = "Commission Tracker — Feasibility Study (English, Word)"
+logical_id = "6e53d896-0c3b-4e79-9cab-c08f3ba54c69"
 
 [[outputs]]
 id = "3ccDA1pwOvum7fqYSxz8u"
 uri = "file://docs/commission-feature-feasibility.docx"
 type = "word_document"
 title = "Studi Kelayakan Commission Tracker (Bahasa Indonesia, Word)"
+logical_id = "d87f07b0-19d5-4fb8-8b80-3929fc46a033"
 
 [[outputs]]
 id = "yxpE1oJJu6XBiR0fZPmqy"
 uri = "file://docs/SecureProfit-Hub-BOD-Overview.docx"
 type = "word_document"
 title = "SecureProfit Hub — BOD Overview (DOCX)"
+logical_id = "f39dfdc8-6a81-449b-8196-1550cfd1fba4"
 
 [[outputs]]
 id = "kO2YlMQvEMYPnfX9YE1nL"
 uri = "file://docs/SecureProfit-Hub-BOD-Supplement.docx"
 type = "word_document"
 title = "SecureProfit Hub — BOD Supplement (Architecture, Security, Mobile & Roadmap)"
+logical_id = "44dfb47a-6249-4286-8228-75858a92e00e"
 
 [[outputs]]
 id = "z1CH_bhc0wm4QPV_MuG0s"
 uri = "file://scripts/exports/SecureProfit-Hub-Release-Notes-July-2026.docx"
 type = "word_document"
 title = "SecureProfit Hub — Release Notes, July 2026 (EN)"
+logical_id = "7c9190b3-7d89-4532-b36f-321747d5dc8c"
 
 [[outputs]]
 id = "nJK9YtCs5hBr74UfjqUdB"
 uri = "file://DEPLOY-LOCAL-EN.md"
 type = "text"
 title = "Deployment Guide (English)"
+logical_id = "d5998db8-6ed9-47c7-8afe-369cd601bb88"
 
 [[outputs]]
 id = "tIAJKNRcchWmSuvKjyGso"
 uri = "file://dist/secureprofit-hub-source-2026-07-23.tar.gz"
 type = "unspecified"
 title = "Source Code Archive (updated with security fixes)"
+logical_id = "1439f064-5305-488d-8660-d5b7e47f2a53"
 
 [[outputs]]
 id = "fgIKass9Ge-clKMqrdcq_"
 uri = "file://dist/secureprofit-hub-db-2026-07-23.sql.gz"
 type = "unspecified"
 title = "Database Dump (448 KB)"
+logical_id = "0b702b39-41db-4c47-a7d1-3f5ac22d84f6"
 
 [[outputs]]
 id = "Frlc7WsFeMUu1ckpr-pwX"
 uri = "file://dist/SecureProfit-Hub-Deployment-Guide-EN.docx"
 type = "word_document"
 title = "Deployment Guide (Word / .docx)"
+logical_id = "5a03f8e7-6f23-4a39-9bd2-33430cc24373"
 
 [[outputs]]
 id = "DOAVmCqBzHQRVPc4gbIKW"
 uri = "file://exports/SecureProfit-Hub-Integrations-Technical-Guide-EN.docx"
 type = "word_document"
 title = "Integrations Technical Guide (Xero, Pipedrive, AI Copilot)"
+logical_id = "d4147247-463c-4160-b7df-a0b4b5ab4395"
 
 [[outputs]]
 id = "NlFhkXaeg9bqM27UlEKdX"
 uri = "file://.local/outputs/SecureProfit-Hub-Deck.pptx"
 type = "slides"
 title = "SecureProfit Hub Deck (PPTX, tema merah-hitam-putih)"
+logical_id = "469d16dd-31cc-4220-b3d8-2b70d14d9f53"
 
 [[outputs]]
 id = "YmbbLN1eUBO-VRd7INWfq"
 uri = "file://.local/outputs/SecureProfit-Hub---Technical-Overview.pptx"
 type = "slides"
 title = "SecureProfit Hub - Technical Overview (PPTX)"
+logical_id = "80758e71-eea1-4722-804e-8905efae4d66"
 
 [[outputs]]
 id = "Nc7vmUZLWwEDHX-876WF4"
 uri = "file://docs/SecureProfit-Hub-AI-Features-Manual.docx"
 type = "word_document"
 title = "AI Features Manual (EN + ID)"
+logical_id = "4a241e8e-8230-40ce-8f1f-4f8b4f1754a0"
 
 [[outputs]]
 id = "jcAmfAJ20x25xM5DOdLGz"
 uri = "file://docs/Ringkasan-Pekerjaan-2026-07-30.docx"
 type = "word_document"
 title = "Ringkasan Pekerjaan — 30 Juli 2026"
+logical_id = "7bf23d31-2de1-408b-b326-d5a366921bf1"
 
 [[outputs]]
 id = "xlAn60Hil4WqQ7tvk0bHc"
@@ -505,6 +584,7 @@ uri = "file://exports/SecureProfit-Hub-Source-dan-Database-2026-08-19.zip"
 type = "unspecified"
 title = "SecureProfit Hub — Source Code & Database Terbaru"
 description = "Paket ZIP berisi source code versi terbaru, backup lengkap database produksi PostgreSQL, dan petunjuk restore. Simpan secara aman karena database memuat data aplikasi."
+logical_id = "ecb8b56d-c346-4a4c-8efe-279425261453"
 
 [[outputs]]
 id = "z98bj6ZqHA12MqHFyXqt5"
@@ -512,6 +592,7 @@ uri = "file://downloads/secureprofit-hub-source-2026-08-20.zip"
 type = "unspecified"
 title = "SecureProfit Hub — Source Code"
 description = "Snapshot source code terbaru (commit 9006798), siap diunduh. Berisi kode, konfigurasi, dokumentasi, dan aset proyek tanpa dependensi terpasang, cache, build output, atau file rahasia."
+logical_id = "0d2c401d-2d92-4135-ac12-dd1c97155577"
 
 [[outputs]]
 id = "vdcrnMmBhwjm5U9A6tgUH"
@@ -519,6 +600,7 @@ uri = "file://downloads/secureprofit-hub-source-with-db-schema-2026-08-26.zip"
 type = "unspecified"
 title = "SecureProfit Hub — Source + Database Schema"
 description = "Source code lengkap dari commit 2d1a0cd, termasuk Prisma schema, seluruh migration, dan database/schema-only.sql. Tidak berisi data database, kredensial, dependency terpasang, cache, atau build output."
+logical_id = "181687ba-5941-434f-96e3-589dcb254749"
 
 [[outputs]]
 id = "GLC09FhMw2uhh2WDuqnKI"
@@ -526,6 +608,7 @@ uri = "file://downloads/Rekomendasi-Spesifikasi-Server-SecureProfit-Hub-On-Premi
 type = "word_document"
 title = "Rekomendasi Spesifikasi Server SecureProfit Hub"
 description = "Dokumen Word rekomendasi on-premise untuk Web/Application Server dan PostgreSQL Database Server, mencakup sizing pilot, production, HA, keamanan, backup/DR, monitoring, parameter awal PostgreSQL, dan acceptance criteria."
+logical_id = "6f4b03ab-dbca-43ac-a3fe-215b591c0034"
 
 [[outputs]]
 id = "tAOJKH8c0BkrSvHcKaxRl"
@@ -533,6 +616,7 @@ uri = "file://downloads/SecureProfit-Hub-Technical-Documentation-EN-2026-08.docx
 type = "word_document"
 title = "SecureProfit Hub — Technical Documentation (Latest Word Version)"
 description = "Technical documentation terbaru dalam format Word, edisi Agustus 2026, berdasarkan source commit 5f6bb27."
+logical_id = "20c00edc-5e2b-487a-9743-133ccc73aa57"
 
 [[outputs]]
 id = "bxffIvzsfHF46w1mBeCFn"
@@ -540,6 +624,7 @@ uri = "file://downloads/SecureProfit-Hub-User-Manual-Web-Mobile-EN-2026-08.docx"
 type = "word_document"
 title = "SecureProfit Hub — Web & Mobile User Manual (English)"
 description = "Updated English user manual for web and mobile, with role-based workflows, project delivery, timesheets, expenses, approvals, billing, documents, CSAT/360 closing, reporting, troubleshooting, and 16 selected screenshots."
+logical_id = "bdc57b9c-4e0a-4ae5-8656-230fa18c62fa"
 
 [[outputs]]
 id = "5RDwlUTzeLGgaYmma4L_c"
@@ -547,6 +632,7 @@ uri = "file://downloads/SecureProfit-Hub-Pipedrive-Xero-Integration-Technical-Gu
 type = "word_document"
 title = "SecureProfit Hub — Pipedrive & Xero Integration Technical Guide"
 description = "Combined English Word guide based on source commit 9a6e0be. Covers Pipedrive import/mapping/webhook/scheduler and Xero OAuth/token encryption/invoice/payment/webhook, plus security, monitoring, troubleshooting, and go-live checklists."
+logical_id = "9fff9769-6d50-4b53-9bd4-44be81464779"
 
 [[outputs]]
 id = "A-ywJcv5xAddaDagREVF3"
@@ -554,6 +640,7 @@ uri = "file://downloads/SecureProfit-Hub-Database-Technical-Documentation-EN-202
 type = "word_document"
 title = "SecureProfit Hub — Database Technical Documentation"
 description = "Updated English Word documentation based on source commit af7b5e4. Covers 48 models, 26 enums, conceptual ERD, domain catalog, relationships, lifecycle data, integrations, security classification, migration, backup/DR, performance, and DBA runbooks."
+logical_id = "ade1cf41-5f87-4b36-b92e-76dcd0e4038f"
 
 [[outputs]]
 id = "8DeZvP999xLMdodV3IZuy"
@@ -561,6 +648,7 @@ uri = "file://downloads/SecureProfit-Hub-AI-Features-Technical-Documentation-EN-
 type = "word_document"
 title = "SecureProfit Hub — AI Features Technical Documentation"
 description = "English technical documentation for the four implemented AI features: AI Data Assistant, AI Monthly Project Report Draft, Weekly AI Digest, and AI Executive Copilot. Includes architecture, authorization, data flows, endpoints, persistence, security, rate limits, monitoring, testing, operations, and source map."
+logical_id = "82529345-f008-4bea-8bb7-134797f32b92"
 
 [[outputs]]
 id = "aORENHOlLsndVjOLTvqDk"
@@ -568,6 +656,7 @@ uri = "file://downloads/SecureProfit-Hub-Consolidated-FSD-Recommendation-ID-2026
 type = "word_document"
 title = "SecureProfit Hub — Rekomendasi Konsolidasi FSD"
 description = "Dokumen Word berbahasa Indonesia yang menggabungkan rekomendasi untuk Structured Offerings, Client Contact, dan Business Unit/Principal Routing. Mencakup gap analysis, target data model, roadmap, estimasi, dependencies, acceptance criteria, dan keputusan bisnis terbuka."
+logical_id = "896a954c-3664-40d7-9050-edc41a88d32d"
 
 [[outputs]]
 id = "u7ReWsfKliLbKnYnj_Qqq"
@@ -575,6 +664,7 @@ uri = "file://downloads/SecureProfit-Hub-Commercial-Governance-FSD-Recommendatio
 type = "word_document"
 title = "SecureProfit Hub — Rekomendasi Konsolidasi Lima FSD"
 description = "Dokumen Word berbahasa Indonesia yang menggabungkan rekomendasi untuk Lead ID, Pipedrive Margin Evaluator, Stage Probability Automation, Finance Margin Approval Gate, dan Project Baseline Sync. Mencakup current-state gaps, target architecture, state machine, roadmap, estimasi 45–73 SP, acceptance criteria, security, audit, concurrency, dan Go/No-Go."
+logical_id = "a96aefff-72ab-49c2-9a91-96dfe28de645"
 
 [[outputs]]
 id = "1ssPo6sv3Gg6p9uUaQ1Uz"
@@ -582,6 +672,7 @@ uri = "file://downloads/SecureProfit-Hub-Integrated-Commercial-Lead-to-Project-F
 type = "word_document"
 title = "SecureProfit Hub — Rekomendasi Induk Konsolidasi 8 FSD"
 description = "Dokumen Word terpadu berbahasa Indonesia yang menggabungkan seluruh rekomendasi Structured Offerings, Client Contact, BU/Principal Routing, Lead ID, Probability, Pipedrive Margin, Finance Approval, dan Project Baseline. Mencakup unified Lead-to-Project lifecycle, target data model, roadmap, estimasi 87–141 SP, migration, security, acceptance criteria, dan Go/No-Go."
+logical_id = "46d65346-c06b-4f71-98b0-3870738e5691"
 
 [[outputs]]
 id = "fo3G9hsc4VucOLJvEOGq-"
@@ -589,6 +680,7 @@ uri = "file://downloads/SecureProfit-Hub-Master-Recommendation-All-11-FSD-ID-202
 type = "word_document"
 title = "SecureProfit Hub — Rekomendasi Induk Seluruh 11 FSD"
 description = "Dokumen Word final berbahasa Indonesia yang mencakup seluruh DEMO-02 sampai DEMO-12. Termasuk Lead Type dan deal lineage, rekomendasi restricted opt-in PRESALES workspace untuk cost of sale, immutable Project client attribution dengan correction workflow, unified Lead-to-Project lifecycle, roadmap 118–190 SP, migration, security, acceptance criteria, dan Go/No-Go."
+logical_id = "04ce3376-cab1-4d23-8959-7c4febf1a343"
 
 [[outputs]]
 id = "W4Nc50MbNbOpxRMd07iUI"
@@ -596,6 +688,7 @@ uri = "file://downloads/SecureProfit-Hub-Master-Recommendation-All-12-FSD-ID-202
 type = "word_document"
 title = "SecureProfit Hub — Rekomendasi Induk Seluruh 12 FSD"
 description = "Dokumen Word final berbahasa Indonesia yang mencakup DEMO-01 sampai DEMO-12. DEMO-01 direkomendasikan memakai normalized IndustrySector dengan LeadSector/ClientSector, compatibility untuk industry lama, server-side filtering, Pipedrive/CSV mapping, dan analytics anti-double-counting. Total estimasi program diperbarui menjadi 152–245 SP."
+logical_id = "3851220f-ffd3-4c16-b33a-c82b0bc81391"
 
 [[outputs]]
 id = "HFacPeYP-5GYV-RftWQiM"
@@ -603,3 +696,18 @@ uri = "file://downloads/SPH-12-FSD-Required-Revisions-Response-ID.docx"
 type = "word_document"
 title = "Balasan Revisi — SPH 12 FSD"
 description = "Surat balasan formal dalam format Microsoft Word yang meminta perbaikan dokumen Clarification & Go/No-Go sebelum dipromosikan menjadi baseline v1.00."
+logical_id = "12b4d57b-53c9-4910-bb1f-5df2a44d8748"
+
+[[outputs]]
+id = "d6TN_ZXmAoy-xSf1bVCw4"
+uri = "file://downloads/SPH-12-FSD-v0.06-Review-and-Remaining-Revisions-ID.docx"
+type = "word_document"
+title = "Review Balasan v0.06 — SPH 12 FSD"
+description = "Dokumen Word formal berisi hasil pemeriksaan balasan v0.06, perbaikan yang sudah diterima, 11 outstanding revisions, dan syarat sebelum promosi ke baseline v1.00."
+logical_id = "ad94ea27-2891-4357-bb9c-970212e03d39"
+content_hash = "sha256:b6a4ac22e73bf6820efee3d96a7f9216749bfa03caad9b8ccb216bfef9b6fcf6"
+size = 14492
+mtime_ms = 1788247857422
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/ad94ea27-2891-4357-bb9c-970212e03d39/a2c5bbc5-1a8a-4bc7-b987-d3e9d27f5653"
+storage_version_token = "1788247874217288"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
