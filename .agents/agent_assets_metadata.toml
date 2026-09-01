@@ -596,3 +596,10 @@ uri = "file://downloads/SecureProfit-Hub-Master-Recommendation-All-12-FSD-ID-202
 type = "word_document"
 title = "SecureProfit Hub — Rekomendasi Induk Seluruh 12 FSD"
 description = "Dokumen Word final berbahasa Indonesia yang mencakup DEMO-01 sampai DEMO-12. DEMO-01 direkomendasikan memakai normalized IndustrySector dengan LeadSector/ClientSector, compatibility untuk industry lama, server-side filtering, Pipedrive/CSV mapping, dan analytics anti-double-counting. Total estimasi program diperbarui menjadi 152–245 SP."
+
+[[outputs]]
+id = "HFacPeYP-5GYV-RftWQiM"
+uri = "file://downloads/SPH-12-FSD-Required-Revisions-Response-ID.docx"
+type = "word_document"
+title = "Balasan Revisi — SPH 12 FSD"
+description = "Surat balasan formal dalam format Microsoft Word yang meminta perbaikan dokumen Clarification & Go/No-Go sebelum dipromosikan menjadi baseline v1.00."
