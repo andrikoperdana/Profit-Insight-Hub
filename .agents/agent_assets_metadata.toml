@@ -711,3 +711,17 @@ mtime_ms = 1788247857422
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/ad94ea27-2891-4357-bb9c-970212e03d39/a2c5bbc5-1a8a-4bc7-b987-d3e9d27f5653"
 storage_version_token = "1788247874217288"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "eRX_evCIX2RKMbPCWfQ9r"
+uri = "file://downloads/SPH-12-FSD-v0.06-Review-Revised-ID.docx"
+type = "word_document"
+title = "Review Balasan v0.06 — Versi Revisi"
+description = "Versi Word terbaru setelah section Tambahkan daftar stakeholder sign-off dihapus dan seluruh heading berikutnya dinomori ulang menjadi 2–10."
+logical_id = "dc76fcae-162b-4294-a870-86f98d57b504"
+content_hash = "sha256:6c5041d659db8057e5d346a6f903941aca12e2e57e934bd37c8f8aab6de4cefd"
+size = 14079
+mtime_ms = 1788258452477
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/dc76fcae-162b-4294-a870-86f98d57b504/f0cf31f4-f5ae-4e48-8c24-6661377e0ce0"
+storage_version_token = "1788258477720077"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
