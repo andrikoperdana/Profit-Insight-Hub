@@ -767,3 +767,17 @@ mtime_ms = 1788317819838
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/8a5bb190-0100-4eb5-8aaf-ccd9f2391afb/cd9900df-9aeb-4f16-96fa-b98ac391cb56"
 storage_version_token = "1788317833225640"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "qfeVx8F5UROomBxuDAn7Z"
+uri = "file://downloads/SPH-12-FSD-v0.10-Final-Acceptance-and-Minor-Edits-ID.docx"
+type = "word_document"
+title = "Final Acceptance v0.10 — SPH 12 FSD"
+description = "Dokumen Word formal yang menyatakan v0.10 diterima sebagai Final Decision Baseline Candidate, dengan tiga minor edits sebelum promosi ke v1.00."
+logical_id = "a32f3480-391a-4bb1-9d33-994d79ae55c0"
+content_hash = "sha256:4ca88f48d7503db5c94aad00b6d4298c03b4b8dc8cf899382395b4fbce4d35db"
+size = 13531
+mtime_ms = 1788318540474
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/a32f3480-391a-4bb1-9d33-994d79ae55c0/73caffbb-c08a-40f0-a5a1-8b384b911d38"
+storage_version_token = "1788318550867902"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
