@@ -781,3 +781,17 @@ mtime_ms = 1788318540474
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/a32f3480-391a-4bb1-9d33-994d79ae55c0/73caffbb-c08a-40f0-a5a1-8b384b911d38"
 storage_version_token = "1788318550867902"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "C6Gw_ejJfSbIRZA4p-eG6"
+uri = "file://downloads/SPH-12-FSD-v0.11-Final-Approval-for-Stakeholder-Sign-Off-ID.docx"
+type = "word_document"
+title = "Final Approval v0.11 — SPH 12 FSD"
+description = "Dokumen Word formal yang menyatakan v0.11 disetujui dan siap untuk stakeholder sign-off serta promosi ke Decision Baseline v1.00."
+logical_id = "cc17a0d4-a922-46d8-86e2-f0d36f682a6b"
+content_hash = "sha256:34d1c58589dd005e95d6d22d8e43d73e4ff10483afaeab9f3fb9f44b33c63508"
+size = 12827
+mtime_ms = 1788319422030
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/cc17a0d4-a922-46d8-86e2-f0d36f682a6b/26adcfca-26d1-488b-a504-2288d61b8846"
+storage_version_token = "1788319431643560"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
