@@ -753,3 +753,17 @@ mtime_ms = 1788266464581
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/ea5e4cca-1b0b-4645-b259-777ddcee7aee/acf40446-7e81-41ae-ba6d-3fddcbbec0cf"
 storage_version_token = "1788266474765778"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "pTlQX78rJzgRAUgERXmY2"
+uri = "file://downloads/SPH-12-FSD-v0.09-Final-Review-and-Minor-Revisions-ID.docx"
+type = "word_document"
+title = "Final Review dan Minor Revisions v0.09 — SPH 12 FSD"
+description = "Dokumen Word formal berisi verdict v0.09, empat koreksi wajib, penyempurnaan minor, status ringkas, dan rekomendasi v0.10 sebelum stakeholder sign-off."
+logical_id = "8a5bb190-0100-4eb5-8aaf-ccd9f2391afb"
+content_hash = "sha256:7a53d5d37dc60db011eaebfcd31cf53ff8b0555f0da11c31504bcdfec0dab58b"
+size = 14312
+mtime_ms = 1788317819838
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/8a5bb190-0100-4eb5-8aaf-ccd9f2391afb/cd9900df-9aeb-4f16-96fa-b98ac391cb56"
+storage_version_token = "1788317833225640"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
