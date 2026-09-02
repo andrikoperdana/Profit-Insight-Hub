@@ -795,3 +795,17 @@ mtime_ms = 1788319422030
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/cc17a0d4-a922-46d8-86e2-f0d36f682a6b/26adcfca-26d1-488b-a504-2288d61b8846"
 storage_version_token = "1788319431643560"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "O37COhR-5twcbTUj02oQc"
+uri = "file://downloads/SPH-12-FSD-v1.00-Technical-Approval-and-Governance-Review-ID.docx"
+type = "word_document"
+title = "Technical Approval dan Governance Review v1.00 — SPH 12 FSD"
+description = "Dokumen Word formal yang menyatakan isi teknis disetujui, tetapi promosi v1.00 masih menunggu bukti stakeholder ratification."
+logical_id = "11f571ad-fa48-4c53-a641-223c47da35cc"
+content_hash = "sha256:54906f33a3365877c952f059df6c21d74f8d75b135f936803eed80aa52952add"
+size = 13009
+mtime_ms = 1788320617126
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/11f571ad-fa48-4c53-a641-223c47da35cc/0f5d3979-ae23-4f79-8f1e-765954655c7a"
+storage_version_token = "1788320629726177"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
