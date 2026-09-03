@@ -29,20 +29,16 @@ const features = [
   },
 ];
 
-function safeBaseUrl(value: string) {
+export function safeBaseUrl(value: string) {
   if (!value) return { displayValue: null, valid: false };
   try {
     const url = new URL(value);
-    const valid =
-      (url.protocol === "https:" || url.protocol === "http:") &&
-      !url.username &&
-      !url.password;
-    url.username = "";
-    url.password = "";
-    url.search = "";
-    url.hash = "";
+    const valid = url.protocol === "https:" && !url.username && !url.password;
     return {
-      displayValue: valid ? url.toString().replace(/\/$/, "") : "Configured value is invalid",
+      // Diagnostics only need the provider origin. Paths, query strings, and
+      // fragments may contain tenant identifiers or credentials and must never
+      // be reflected to the browser.
+      displayValue: valid ? url.origin : "Configured value is invalid",
       valid,
     };
   } catch {
@@ -50,7 +46,7 @@ function safeBaseUrl(value: string) {
   }
 }
 
-function statusPayload() {
+export function statusPayload() {
   const configuration = getAiConfiguration();
   const safeUrl = safeBaseUrl(configuration.baseUrl);
   return {
@@ -88,12 +84,12 @@ router.post("/ai-setup/test", async (req, res) => {
   if (!configuration.configured || !safeUrl.valid) {
     return res.status(422).json({
       error: "AI_CONFIGURATION_INCOMPLETE",
-      message: "Set a valid AI base URL and API key on the server before testing.",
+      message: "Set a valid HTTPS AI base URL and API key on the server before testing.",
       missing: [
         ...(!configuration.baseUrlConfigured ? ["AI_INTEGRATIONS_OPENAI_BASE_URL"] : []),
         ...(!configuration.apiKeyConfigured ? ["AI_INTEGRATIONS_OPENAI_API_KEY"] : []),
         ...(configuration.baseUrlConfigured && !safeUrl.valid
-          ? ["VALID_AI_BASE_URL"]
+          ? ["VALID_HTTPS_AI_BASE_URL"]
           : []),
       ],
     });
