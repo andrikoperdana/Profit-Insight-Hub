@@ -851,3 +851,17 @@ mtime_ms = 1788402938556
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/ae3a51f4-8f17-4c97-aa2f-a80273c69b40/fd6408ba-7af1-4c5e-b76a-4cbb9712c9fb"
 storage_version_token = "1788402962853210"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "b5xwaEM8ZsiKTXdDzaA2A"
+uri = "file://downloads/SPH-DEMO-13-14-Baseline-Rekomendasi-dan-Klarifikasi-ID.docx"
+type = "word_document"
+title = "SPH DEMO-13/14 — Baseline Rekomendasi dan Klarifikasi"
+description = "Versi Bahasa Indonesia, tanpa strategi implementasi tiga fase dan tanpa stakeholder sign-off. Istilah teknis dan kontrak API tetap dipertahankan."
+logical_id = "91ff075c-0cb5-4d83-89ea-7636773f9e4b"
+content_hash = "sha256:b23d934738a3cf9be999362d9afa0cf05202b6db28dc2f552c4219d6c6f6fbf0"
+size = 19915
+mtime_ms = 1788403145365
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/91ff075c-0cb5-4d83-89ea-7636773f9e4b/49f5f786-aee1-4b26-b6d4-5e668585752b"
+storage_version_token = "1788403156357460"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
