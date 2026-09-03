@@ -1,5 +1,5 @@
 import { prisma, Prisma } from "@workspace/db";
-import { openai } from "@workspace/integrations-openai-ai-server";
+import { AI_MODEL as MODEL, openai } from "@workspace/integrations-openai-ai-server";
 import { GenerateAiWeeklyDigestResponse } from "@workspace/api-zod";
 import { getAppSettings } from "./app-settings.js";
 import { notifyUser } from "./notifications.js";
@@ -19,7 +19,6 @@ import {
  * in AiWeeklyDigest (id = weekKey) so all managers read the same digest.
  */
 
-const MODEL = "gpt-5.4";
 const DAY_MS = 86_400_000;
 const WIB_OFFSET_MS = 7 * 3_600_000;
 

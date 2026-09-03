@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { prisma, Prisma } from "@workspace/db";
 import { requireAuth } from "../middlewares/auth.js";
-import { openai } from "@workspace/integrations-openai-ai-server";
+import { AI_MODEL as MODEL, openai } from "@workspace/integrations-openai-ai-server";
 import { GenerateExecutiveBriefingResponse } from "@workspace/api-zod";
 import {
   buildExecutiveCopilotFacts,
@@ -12,7 +12,6 @@ import { streamExecutiveBriefingPdf } from "../lib/executive-copilot-pdf.js";
 const router: IRouter = Router();
 router.use(requireAuth);
 
-const MODEL = "gpt-5.4";
 
 // A briefing older than this is served with `stale: true` so the UI can nudge a
 // refresh, but it is never auto-evicted (we keep the last briefing available so

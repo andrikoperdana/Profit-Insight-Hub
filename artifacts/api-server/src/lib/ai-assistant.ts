@@ -1,5 +1,5 @@
 import { prisma, Prisma, type UserRole } from "@workspace/db";
-import { openai } from "@workspace/integrations-openai-ai-server";
+import { AI_MODEL as MODEL, openai } from "@workspace/integrations-openai-ai-server";
 import {
   computeMetrics,
   computeHealthScore,
@@ -18,7 +18,6 @@ import { fetchOpenMilestones, sumAmounts, type OpenMilestoneRow } from "./billin
  * their own rows). The model then phrases the tool results as an answer.
  */
 
-const MODEL = "gpt-5.4";
 const MAX_TOOL_ROUNDS = 4;
 const TOOL_RESULT_CHAR_CAP = 12_000;
 

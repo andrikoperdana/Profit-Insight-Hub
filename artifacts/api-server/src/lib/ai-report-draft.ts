@@ -1,5 +1,5 @@
 import { Prisma, type UserRole } from "@workspace/db";
-import { openai } from "@workspace/integrations-openai-ai-server";
+import { AI_MODEL as MODEL, openai } from "@workspace/integrations-openai-ai-server";
 import { GenerateAiReportDraftResponse } from "@workspace/api-zod";
 import {
   computeMetrics,
@@ -15,7 +15,6 @@ import {
  * into their formal report.
  */
 
-const MODEL = "gpt-5.4";
 
 export const reportDraftProjectSelect = {
   ...projectMetricsSelect,

@@ -55,6 +55,7 @@ import clientPortalRouter from "./client-portal.js";
 import executiveCopilotRouter from "./executive-copilot.js";
 import accessRequestsRouter from "./access-requests.js";
 import hostSetupRouter from "./host-setup.js";
+import aiSetupRouter from "./ai-setup.js";
 
 const router: IRouter = Router();
 
@@ -112,6 +113,7 @@ router.use(revenueRecognitionRouter);
 router.use(invoiceSettingsRouter);
 router.use(appSettingsRouter);
 router.use(hostSetupRouter);
+router.use(aiSetupRouter);
 router.use(reportsRouter);
 router.use(leadsRouter);
 router.use(skillMatrixRouter);
