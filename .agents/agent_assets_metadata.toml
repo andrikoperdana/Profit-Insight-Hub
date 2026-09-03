@@ -1047,3 +1047,17 @@ mtime_ms = 1788456008961
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/d49f18f2-cd9a-49d8-8e24-e5bfeb7a2a67/a477af7d-1ff6-4b61-ad4e-76f0719a0b16"
 storage_version_token = "1788456020643318"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "_QYUEBJgA4ahWWryZ3bV2"
+uri = "file://downloads/SecureProfit-Mobile-AI-Configuration-and-Required-Changes-ID.docx"
+type = "word_document"
+title = "SecureProfit Mobile AI — Configuration and Required Changes"
+description = "Panduan Word Bahasa Indonesia untuk mengarahkan mobile ke ActivityHub, menjaga AI key hanya di backend, menangani authentication/token, serta membangun AI Assistant, Report Draft, Weekly Digest, dan Executive Copilot pada aplikasi mobile."
+logical_id = "5e0d7d2c-9cc5-402c-9eef-49e8d4650cb3"
+content_hash = "sha256:502aafee2a124edd9801e5d50d376659df380080534562d337709df46bcf87a6"
+size = 41478
+mtime_ms = 1788456271728
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/5e0d7d2c-9cc5-402c-9eef-49e8d4650cb3/2670b7ed-f2b3-4d76-bc10-4802fd570c20"
+storage_version_token = "1788456279389554"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
