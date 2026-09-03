@@ -935,3 +935,17 @@ mtime_ms = 1788407624679
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/1acee4d7-553b-4811-89d2-8fb0b86297a3/410f06d5-4f28-4830-83e1-314275229ee3"
 storage_version_token = "1788407630489476"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "bc4qe7-H5pOgRdlAjJWD_"
+uri = "file://downloads/SPH-14-DEMO-Dokumen-Detail-Perubahan-dan-Kriteria-Penerimaan-ID.docx"
+type = "word_document"
+title = "SecureProfit Hub — Dokumen Detail Perubahan 14 DEMO"
+description = "Dokumen Word Bahasa Indonesia untuk DEMO-01 sampai DEMO-14, mencakup requirement, keputusan/perubahan, acceptance criteria, dampak teknis, dependensi/risiko, serta status keputusan, implementasi, dan pengujian."
+logical_id = "d4bf1baf-c54d-4c33-a48c-23a269f9ae2b"
+content_hash = "sha256:a0224c4529ecb9d6cd6d9b65ceaf3e44cd70383b7f22a4b157604a0968b59220"
+size = 49866
+mtime_ms = 1788408270684
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/d4bf1baf-c54d-4c33-a48c-23a269f9ae2b/54bd5631-8c01-422a-9a6c-c984e337fc18"
+storage_version_token = "1788408279718336"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
