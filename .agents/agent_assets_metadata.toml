@@ -1075,3 +1075,17 @@ mtime_ms = 1788456616008
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/4b3e08de-509e-4993-b3e8-9eeff859b116/86b65d1d-7a84-4671-bce0-36153a076333"
 storage_version_token = "1788456623845764"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "TmTcXOZF5xaxUPVP-pdbK"
+uri = "file://downloads/ActivityHub-AI-Xero-Pipedrive-Feature-Impact-Assessment-ID.docx"
+type = "word_document"
+title = "ActivityHub — AI, Xero and Pipedrive Feature Impact Assessment"
+description = "Laporan Word Bahasa Indonesia berisi daftar fitur terdampak oleh kegagalan AI, Xero, dan Pipedrive; dampak proses bisnis dan mobile; fitur yang tetap tersedia; serta recovery priorities dan acceptance criteria."
+logical_id = "f5873b2f-7b03-44f5-a682-c928aab4bee3"
+content_hash = "sha256:e26f60d817f577145fc95bdeadb351dc2c072892370fb24b2655c6d95b5a660c"
+size = 42736
+mtime_ms = 1788456862832
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/f5873b2f-7b03-44f5-a682-c928aab4bee3/eee38bf1-9f72-4a28-a634-6a8280b19108"
+storage_version_token = "1788456871245904"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
