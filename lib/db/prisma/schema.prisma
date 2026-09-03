@@ -1230,6 +1230,9 @@ model AppSetting {
   integrationDraftValidatedAt DateTime?
   pipedriveManagedWebhookId   String?
   pipedriveManagedWebhookUrl  String?
+  pipedriveStaleWebhookIds    String[] @default([])
+  pipedriveWebhookCleanupError String? @db.Text
+  pipedriveWebhookCleanupFailedAt DateTime?
   // Cross-instance claim timestamp for the scheduled notification-rules run
   // (see api-server index.ts scheduler). Claimed atomically via updateMany.
   notificationChecksLastRunAt DateTime?

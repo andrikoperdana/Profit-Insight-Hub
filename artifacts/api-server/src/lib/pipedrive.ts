@@ -108,7 +108,7 @@ export async function replaceManagedPipedriveWebhook(input: {
   subscriptionUrl: string;
   secret: string;
   previousId?: string | null;
-}): Promise<{ id: string; url: string }> {
+}): Promise<{ id: string; url: string; staleWebhookId: string | null; cleanupError: string | null }> {
   const created = await pdFetch<{ data?: PdWebhook }>("/webhooks", {
     method: "POST",
     body: JSON.stringify({
@@ -125,17 +125,37 @@ export async function replaceManagedPipedriveWebhook(input: {
 
   // Creation comes first: a provider/API failure must never remove the
   // previously working webhook.
+  let staleWebhookId: string | null = null;
+  let cleanupError: string | null = null;
   if (input.previousId && input.previousId !== String(id)) {
     try {
       await pdFetch(`/webhooks/${encodeURIComponent(input.previousId)}`, {
         method: "DELETE",
       });
-    } catch {
+    } catch (error) {
       // The replacement is already active. A stale old webhook is safer than
       // deleting the new one or reporting the repair as failed.
+      staleWebhookId = input.previousId;
+      cleanupError = errorMessage(error);
+      logger.warn(
+        { err: error, staleWebhookId },
+        "pipedrive: replacement active but old webhook cleanup failed",
+      );
     }
   }
-  return { id: String(id), url: input.subscriptionUrl };
+  return { id: String(id), url: input.subscriptionUrl, staleWebhookId, cleanupError };
+}
+
+export async function deleteStalePipedriveWebhook(input: {
+  staleId: string;
+  managedId: string | null | undefined;
+}): Promise<void> {
+  if (input.managedId && input.staleId === input.managedId) {
+    throw new Error("Refusing to delete the currently managed Pipedrive webhook");
+  }
+  await pdFetch(`/webhooks/${encodeURIComponent(input.staleId)}`, {
+    method: "DELETE",
+  });
 }
 
 // ---------------------------------------------------------------------------

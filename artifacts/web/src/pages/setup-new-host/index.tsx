@@ -60,6 +60,9 @@ type HostSetup = {
     managedWebhookId: string | null;
     managedWebhookUrl: string | null;
     webhookSecretConfigured: boolean;
+    staleWebhookIds: string[];
+    cleanupError: string | null;
+    cleanupFailedAt: string | null;
   };
 };
 
@@ -372,6 +375,44 @@ export default function SetupNewHostPage() {
                 <div className="flex justify-between"><span>API connection</span><StatusBadge ok={Boolean(data?.pipedrive.configured)} /></div>
                 <div className="flex justify-between"><span>Webhook secret</span><StatusBadge ok={Boolean(data?.pipedrive.webhookSecretConfigured)} /></div>
                 {data?.pipedrive.managedWebhookUrl ? <p className="text-xs font-mono break-all text-muted-foreground">{data.pipedrive.managedWebhookUrl}</p> : null}
+                {data?.pipedrive.staleWebhookIds.length ? (
+                  <Alert>
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>Old Pipedrive webhook cleanup is incomplete</AlertTitle>
+                    <AlertDescription className="space-y-3">
+                      <p>
+                        The new webhook is active, but {data.pipedrive.staleWebhookIds.length} old
+                        webhook{data.pipedrive.staleWebhookIds.length === 1 ? "" : "s"} could not be
+                        removed. Duplicate deal deliveries may occur until cleanup succeeds.
+                      </p>
+                      {data.pipedrive.cleanupError ? (
+                        <p className="text-xs break-words">{data.pipedrive.cleanupError}</p>
+                      ) : null}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          run(
+                            "pipedrive-cleanup",
+                            () =>
+                              customFetch("/api/host-setup/pipedrive/cleanup", {
+                                method: "POST",
+                              }),
+                            "Old Pipedrive webhook cleanup retried",
+                          )
+                        }
+                        disabled={Boolean(busy) || !data.pipedrive.configured}
+                      >
+                        {busy === "pipedrive-cleanup" ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <RefreshCw className="h-4 w-4 mr-2" />
+                        )}
+                        Retry stale webhook cleanup
+                      </Button>
+                    </AlertDescription>
+                  </Alert>
+                ) : null}
                 <Button onClick={() => run("pipedrive", () => customFetch("/api/host-setup/pipedrive/repair", { method: "POST" }), "Pipedrive webhook registered")} disabled={Boolean(busy) || !data?.draftValidatedAt || !data?.pipedrive.configured}>
                   {busy === "pipedrive" ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />} Register / repair webhook
                 </Button>

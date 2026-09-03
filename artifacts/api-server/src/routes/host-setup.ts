@@ -8,6 +8,7 @@ import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { recordAudit } from "../lib/audit.js";
 import { APP_SETTINGS_ID } from "../lib/app-settings.js";
 import {
+  deleteStalePipedriveWebhook,
   pipedriveConfigured,
   replaceManagedPipedriveWebhook,
 } from "../lib/pipedrive.js";
@@ -142,6 +143,9 @@ router.get("/host-setup", async (_req, res) => {
       managedWebhookId: row.pipedriveManagedWebhookId,
       managedWebhookUrl: row.pipedriveManagedWebhookUrl,
       webhookSecretConfigured: Boolean(row.pipedriveWebhookSecret),
+      staleWebhookIds: row.pipedriveStaleWebhookIds,
+      cleanupError: row.pipedriveWebhookCleanupError,
+      cleanupFailedAt: row.pipedriveWebhookCleanupFailedAt,
     },
   });
 });
@@ -235,12 +239,23 @@ router.post("/host-setup/pipedrive/repair", async (req, res) => {
     secret,
     previousId: row.pipedriveManagedWebhookId,
   });
+  const staleWebhookIds = Array.from(
+    new Set(
+      [
+        ...row.pipedriveStaleWebhookIds,
+        ...(webhook.staleWebhookId ? [webhook.staleWebhookId] : []),
+      ].filter((id) => id !== webhook.id),
+    ),
+  );
   await prisma.appSetting.update({
     where: { id: APP_SETTINGS_ID },
     data: {
       pipedriveWebhookSecret: secret,
       pipedriveManagedWebhookId: webhook.id,
       pipedriveManagedWebhookUrl: webhook.url,
+      pipedriveStaleWebhookIds: staleWebhookIds,
+      pipedriveWebhookCleanupError: webhook.cleanupError,
+      pipedriveWebhookCleanupFailedAt: webhook.cleanupError ? new Date() : null,
       updatedById: req.user!.sub,
     },
   });
@@ -252,6 +267,51 @@ router.post("/host-setup/pipedrive/repair", async (req, res) => {
     after: webhook,
   });
   res.json(webhook);
+});
+
+router.post("/host-setup/pipedrive/cleanup", async (req, res) => {
+  const row = await settings();
+  if (!(await pipedriveConfigured())) {
+    res.status(409).json({ error: "Pipedrive is not configured on the server" });
+    return;
+  }
+  const staleIds = row.pipedriveStaleWebhookIds.filter(
+    (id) => id !== row.pipedriveManagedWebhookId,
+  );
+
+  const failed: string[] = [];
+  let lastError: string | null = null;
+  for (const staleId of staleIds) {
+    try {
+      await deleteStalePipedriveWebhook({
+        staleId,
+        managedId: row.pipedriveManagedWebhookId,
+      });
+    } catch (error) {
+      failed.push(staleId);
+      lastError = error instanceof Error ? error.message : String(error);
+    }
+  }
+  await prisma.appSetting.update({
+    where: { id: APP_SETTINGS_ID },
+    data: {
+      pipedriveStaleWebhookIds: failed,
+      pipedriveWebhookCleanupError: lastError?.slice(0, 1000) ?? null,
+      pipedriveWebhookCleanupFailedAt: lastError ? new Date() : null,
+      updatedById: req.user!.sub,
+    },
+  });
+  await recordAudit(req, {
+    action: "host_setup.pipedrive_webhook_cleanup_retried",
+    entityType: "AppSetting",
+    entityId: APP_SETTINGS_ID,
+    description: failed.length
+      ? `Pipedrive stale webhook cleanup retried with ${failed.length} failure(s)`
+      : "Pipedrive stale webhook cleanup completed",
+    before: { staleWebhookIds: row.pipedriveStaleWebhookIds },
+    after: { staleWebhookIds: failed },
+  });
+  res.json({ cleaned: staleIds.length - failed.length, remaining: failed.length });
 });
 
 router.post("/host-setup/activate", async (req, res) => {

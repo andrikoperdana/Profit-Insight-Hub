@@ -54447,6 +54447,8 @@ export namespace Prisma {
     integrationDraftValidatedAt: Date | null
     pipedriveManagedWebhookId: string | null
     pipedriveManagedWebhookUrl: string | null
+    pipedriveWebhookCleanupError: string | null
+    pipedriveWebhookCleanupFailedAt: Date | null
     notificationChecksLastRunAt: Date | null
     updatedAt: Date | null
     updatedById: string | null
@@ -54477,6 +54479,8 @@ export namespace Prisma {
     integrationDraftValidatedAt: Date | null
     pipedriveManagedWebhookId: string | null
     pipedriveManagedWebhookUrl: string | null
+    pipedriveWebhookCleanupError: string | null
+    pipedriveWebhookCleanupFailedAt: Date | null
     notificationChecksLastRunAt: Date | null
     updatedAt: Date | null
     updatedById: string | null
@@ -54508,6 +54512,9 @@ export namespace Prisma {
     integrationDraftValidatedAt: number
     pipedriveManagedWebhookId: number
     pipedriveManagedWebhookUrl: number
+    pipedriveStaleWebhookIds: number
+    pipedriveWebhookCleanupError: number
+    pipedriveWebhookCleanupFailedAt: number
     notificationChecksLastRunAt: number
     updatedAt: number
     updatedById: number
@@ -54560,6 +54567,8 @@ export namespace Prisma {
     integrationDraftValidatedAt?: true
     pipedriveManagedWebhookId?: true
     pipedriveManagedWebhookUrl?: true
+    pipedriveWebhookCleanupError?: true
+    pipedriveWebhookCleanupFailedAt?: true
     notificationChecksLastRunAt?: true
     updatedAt?: true
     updatedById?: true
@@ -54590,6 +54599,8 @@ export namespace Prisma {
     integrationDraftValidatedAt?: true
     pipedriveManagedWebhookId?: true
     pipedriveManagedWebhookUrl?: true
+    pipedriveWebhookCleanupError?: true
+    pipedriveWebhookCleanupFailedAt?: true
     notificationChecksLastRunAt?: true
     updatedAt?: true
     updatedById?: true
@@ -54621,6 +54632,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: true
     pipedriveManagedWebhookId?: true
     pipedriveManagedWebhookUrl?: true
+    pipedriveStaleWebhookIds?: true
+    pipedriveWebhookCleanupError?: true
+    pipedriveWebhookCleanupFailedAt?: true
     notificationChecksLastRunAt?: true
     updatedAt?: true
     updatedById?: true
@@ -54739,6 +54753,9 @@ export namespace Prisma {
     integrationDraftValidatedAt: Date | null
     pipedriveManagedWebhookId: string | null
     pipedriveManagedWebhookUrl: string | null
+    pipedriveStaleWebhookIds: string[]
+    pipedriveWebhookCleanupError: string | null
+    pipedriveWebhookCleanupFailedAt: Date | null
     notificationChecksLastRunAt: Date | null
     updatedAt: Date
     updatedById: string | null
@@ -54789,6 +54806,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: boolean
     pipedriveManagedWebhookId?: boolean
     pipedriveManagedWebhookUrl?: boolean
+    pipedriveStaleWebhookIds?: boolean
+    pipedriveWebhookCleanupError?: boolean
+    pipedriveWebhookCleanupFailedAt?: boolean
     notificationChecksLastRunAt?: boolean
     updatedAt?: boolean
     updatedById?: boolean
@@ -54820,6 +54840,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: boolean
     pipedriveManagedWebhookId?: boolean
     pipedriveManagedWebhookUrl?: boolean
+    pipedriveStaleWebhookIds?: boolean
+    pipedriveWebhookCleanupError?: boolean
+    pipedriveWebhookCleanupFailedAt?: boolean
     notificationChecksLastRunAt?: boolean
     updatedAt?: boolean
     updatedById?: boolean
@@ -54851,6 +54874,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: boolean
     pipedriveManagedWebhookId?: boolean
     pipedriveManagedWebhookUrl?: boolean
+    pipedriveStaleWebhookIds?: boolean
+    pipedriveWebhookCleanupError?: boolean
+    pipedriveWebhookCleanupFailedAt?: boolean
     notificationChecksLastRunAt?: boolean
     updatedAt?: boolean
     updatedById?: boolean
@@ -54886,6 +54912,9 @@ export namespace Prisma {
       integrationDraftValidatedAt: Date | null
       pipedriveManagedWebhookId: string | null
       pipedriveManagedWebhookUrl: string | null
+      pipedriveStaleWebhookIds: string[]
+      pipedriveWebhookCleanupError: string | null
+      pipedriveWebhookCleanupFailedAt: Date | null
       notificationChecksLastRunAt: Date | null
       updatedAt: Date
       updatedById: string | null
@@ -55307,6 +55336,9 @@ export namespace Prisma {
     readonly integrationDraftValidatedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly pipedriveManagedWebhookId: FieldRef<"AppSetting", 'String'>
     readonly pipedriveManagedWebhookUrl: FieldRef<"AppSetting", 'String'>
+    readonly pipedriveStaleWebhookIds: FieldRef<"AppSetting", 'String[]'>
+    readonly pipedriveWebhookCleanupError: FieldRef<"AppSetting", 'String'>
+    readonly pipedriveWebhookCleanupFailedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly notificationChecksLastRunAt: FieldRef<"AppSetting", 'DateTime'>
     readonly updatedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly updatedById: FieldRef<"AppSetting", 'String'>
@@ -60031,6 +60063,9 @@ export namespace Prisma {
     integrationDraftValidatedAt: 'integrationDraftValidatedAt',
     pipedriveManagedWebhookId: 'pipedriveManagedWebhookId',
     pipedriveManagedWebhookUrl: 'pipedriveManagedWebhookUrl',
+    pipedriveStaleWebhookIds: 'pipedriveStaleWebhookIds',
+    pipedriveWebhookCleanupError: 'pipedriveWebhookCleanupError',
+    pipedriveWebhookCleanupFailedAt: 'pipedriveWebhookCleanupFailedAt',
     notificationChecksLastRunAt: 'notificationChecksLastRunAt',
     updatedAt: 'updatedAt',
     updatedById: 'updatedById'
@@ -65004,6 +65039,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     pipedriveManagedWebhookId?: StringNullableFilter<"AppSetting"> | string | null
     pipedriveManagedWebhookUrl?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveStaleWebhookIds?: StringNullableListFilter<"AppSetting">
+    pipedriveWebhookCleanupError?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveWebhookCleanupFailedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     notificationChecksLastRunAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
@@ -65035,6 +65073,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: SortOrderInput | SortOrder
     pipedriveManagedWebhookId?: SortOrderInput | SortOrder
     pipedriveManagedWebhookUrl?: SortOrderInput | SortOrder
+    pipedriveStaleWebhookIds?: SortOrder
+    pipedriveWebhookCleanupError?: SortOrderInput | SortOrder
+    pipedriveWebhookCleanupFailedAt?: SortOrderInput | SortOrder
     notificationChecksLastRunAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
@@ -65069,6 +65110,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     pipedriveManagedWebhookId?: StringNullableFilter<"AppSetting"> | string | null
     pipedriveManagedWebhookUrl?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveStaleWebhookIds?: StringNullableListFilter<"AppSetting">
+    pipedriveWebhookCleanupError?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveWebhookCleanupFailedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     notificationChecksLastRunAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
@@ -65100,6 +65144,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: SortOrderInput | SortOrder
     pipedriveManagedWebhookId?: SortOrderInput | SortOrder
     pipedriveManagedWebhookUrl?: SortOrderInput | SortOrder
+    pipedriveStaleWebhookIds?: SortOrder
+    pipedriveWebhookCleanupError?: SortOrderInput | SortOrder
+    pipedriveWebhookCleanupFailedAt?: SortOrderInput | SortOrder
     notificationChecksLastRunAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
@@ -65139,6 +65186,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
     pipedriveManagedWebhookId?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
     pipedriveManagedWebhookUrl?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+    pipedriveStaleWebhookIds?: StringNullableListFilter<"AppSetting">
+    pipedriveWebhookCleanupError?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+    pipedriveWebhookCleanupFailedAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
     notificationChecksLastRunAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
@@ -70242,6 +70292,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: Date | string | null
     pipedriveManagedWebhookId?: string | null
     pipedriveManagedWebhookUrl?: string | null
+    pipedriveStaleWebhookIds?: AppSettingCreatepipedriveStaleWebhookIdsInput | string[]
+    pipedriveWebhookCleanupError?: string | null
+    pipedriveWebhookCleanupFailedAt?: Date | string | null
     notificationChecksLastRunAt?: Date | string | null
     updatedAt?: Date | string
     updatedById?: string | null
@@ -70273,6 +70326,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: Date | string | null
     pipedriveManagedWebhookId?: string | null
     pipedriveManagedWebhookUrl?: string | null
+    pipedriveStaleWebhookIds?: AppSettingCreatepipedriveStaleWebhookIdsInput | string[]
+    pipedriveWebhookCleanupError?: string | null
+    pipedriveWebhookCleanupFailedAt?: Date | string | null
     notificationChecksLastRunAt?: Date | string | null
     updatedAt?: Date | string
     updatedById?: string | null
@@ -70304,6 +70360,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveManagedWebhookId?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveManagedWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveStaleWebhookIds?: AppSettingUpdatepipedriveStaleWebhookIdsInput | string[]
+    pipedriveWebhookCleanupError?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveWebhookCleanupFailedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70335,6 +70394,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveManagedWebhookId?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveManagedWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveStaleWebhookIds?: AppSettingUpdatepipedriveStaleWebhookIdsInput | string[]
+    pipedriveWebhookCleanupError?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveWebhookCleanupFailedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70366,6 +70428,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: Date | string | null
     pipedriveManagedWebhookId?: string | null
     pipedriveManagedWebhookUrl?: string | null
+    pipedriveStaleWebhookIds?: AppSettingCreatepipedriveStaleWebhookIdsInput | string[]
+    pipedriveWebhookCleanupError?: string | null
+    pipedriveWebhookCleanupFailedAt?: Date | string | null
     notificationChecksLastRunAt?: Date | string | null
     updatedAt?: Date | string
     updatedById?: string | null
@@ -70397,6 +70462,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveManagedWebhookId?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveManagedWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveStaleWebhookIds?: AppSettingUpdatepipedriveStaleWebhookIdsInput | string[]
+    pipedriveWebhookCleanupError?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveWebhookCleanupFailedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70428,6 +70496,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveManagedWebhookId?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveManagedWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveStaleWebhookIds?: AppSettingUpdatepipedriveStaleWebhookIdsInput | string[]
+    pipedriveWebhookCleanupError?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveWebhookCleanupFailedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74271,6 +74342,9 @@ export namespace Prisma {
     integrationDraftValidatedAt?: SortOrder
     pipedriveManagedWebhookId?: SortOrder
     pipedriveManagedWebhookUrl?: SortOrder
+    pipedriveStaleWebhookIds?: SortOrder
+    pipedriveWebhookCleanupError?: SortOrder
+    pipedriveWebhookCleanupFailedAt?: SortOrder
     notificationChecksLastRunAt?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
@@ -74311,6 +74385,8 @@ export namespace Prisma {
     integrationDraftValidatedAt?: SortOrder
     pipedriveManagedWebhookId?: SortOrder
     pipedriveManagedWebhookUrl?: SortOrder
+    pipedriveWebhookCleanupError?: SortOrder
+    pipedriveWebhookCleanupFailedAt?: SortOrder
     notificationChecksLastRunAt?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
@@ -74341,6 +74417,8 @@ export namespace Prisma {
     integrationDraftValidatedAt?: SortOrder
     pipedriveManagedWebhookId?: SortOrder
     pipedriveManagedWebhookUrl?: SortOrder
+    pipedriveWebhookCleanupError?: SortOrder
+    pipedriveWebhookCleanupFailedAt?: SortOrder
     notificationChecksLastRunAt?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
@@ -79985,6 +80063,15 @@ export namespace Prisma {
   }
 
   export type InvoiceSettingUpdateaddressLinesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type AppSettingCreatepipedriveStaleWebhookIdsInput = {
+    set: string[]
+  }
+
+  export type AppSettingUpdatepipedriveStaleWebhookIdsInput = {
     set?: string[]
     push?: string | string[]
   }

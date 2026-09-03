@@ -36,6 +36,9 @@ const row: Record<string, any> = {
   pipedriveManagedWebhookId: null,
   pipedriveManagedWebhookUrl: null,
   pipedriveWebhookSecret: null,
+  pipedriveStaleWebhookIds: [],
+  pipedriveWebhookCleanupError: null,
+  pipedriveWebhookCleanupFailedAt: null,
 };
 const updateMock = vi.fn();
 const findUniqueMock = vi.fn();
@@ -53,7 +56,9 @@ vi.mock("@workspace/db", () => ({
 vi.mock("../../lib/audit.js", () => ({ recordAudit: vi.fn(async () => {}) }));
 const pipedriveConfiguredMock = vi.fn();
 const replaceManagedPipedriveWebhookMock = vi.fn();
+const deleteStalePipedriveWebhookMock = vi.fn();
 vi.mock("../../lib/pipedrive.js", () => ({
+  deleteStalePipedriveWebhook: (...args: unknown[]) => deleteStalePipedriveWebhookMock(...args),
   pipedriveConfigured: (...args: unknown[]) => pipedriveConfiguredMock(...args),
   replaceManagedPipedriveWebhook: (...args: unknown[]) =>
     replaceManagedPipedriveWebhookMock(...args),
@@ -72,6 +77,7 @@ const mutations = [
   ["put", "/api/host-setup/draft"],
   ["post", "/api/host-setup/validate"],
   ["post", "/api/host-setup/pipedrive/repair"],
+  ["post", "/api/host-setup/pipedrive/cleanup"],
   ["post", "/api/host-setup/activate"],
   ["post", "/api/host-setup/restore"],
 ] as const;
@@ -83,6 +89,9 @@ beforeEach(() => {
     integrationDraftBaseUrl: "https://new.example.com",
     integrationPreviousBaseUrl: "https://older.example.com",
     integrationDraftValidatedAt: new Date("2026-09-01T00:00:00Z"),
+    pipedriveStaleWebhookIds: [],
+    pipedriveWebhookCleanupError: null,
+    pipedriveWebhookCleanupFailedAt: null,
   });
   upsertMock.mockResolvedValue(row);
   updateMock.mockImplementation(async ({ data }: any) => Object.assign(row, data));
@@ -209,5 +218,56 @@ describe("Pipedrive repair failure safety", () => {
     });
     expect(updateMock).not.toHaveBeenCalled();
     expect(row.pipedriveManagedWebhookId).toBe("old-11");
+  });
+
+  it("records stale cleanup without invalidating the replacement", async () => {
+    Object.assign(row, {
+      pipedriveManagedWebhookId: "old-11",
+      pipedriveStaleWebhookIds: ["older-10"],
+      pipedriveWebhookSecret: "existing-secret",
+    });
+    pipedriveConfiguredMock.mockResolvedValue(true);
+    replaceManagedPipedriveWebhookMock.mockResolvedValue({
+      id: "new-12",
+      url: "https://new.example.com/api/pipedrive/webhook",
+      staleWebhookId: "old-11",
+      cleanupError: "provider unavailable",
+    });
+
+    const res = await request(app())
+      .post("/api/host-setup/pipedrive/repair")
+      .set("x-user-role", "SUPER_ADMIN");
+
+    expect(res.status).toBe(200);
+    expect(updateMock).toHaveBeenCalledWith(expect.objectContaining({
+      data: expect.objectContaining({
+        pipedriveManagedWebhookId: "new-12",
+        pipedriveStaleWebhookIds: ["older-10", "old-11"],
+        pipedriveWebhookCleanupError: "provider unavailable",
+      }),
+    }));
+  });
+
+  it("retries stale cleanup without deleting the managed webhook", async () => {
+    Object.assign(row, {
+      pipedriveManagedWebhookId: "managed-22",
+      pipedriveStaleWebhookIds: ["old-11", "managed-22"],
+    });
+    pipedriveConfiguredMock.mockResolvedValue(true);
+    deleteStalePipedriveWebhookMock.mockResolvedValue(undefined);
+
+    const res = await request(app())
+      .post("/api/host-setup/pipedrive/cleanup")
+      .set("x-user-role", "SUPER_ADMIN");
+
+    expect(res.status).toBe(200);
+    expect(deleteStalePipedriveWebhookMock).toHaveBeenCalledTimes(1);
+    expect(deleteStalePipedriveWebhookMock).toHaveBeenCalledWith({
+      staleId: "old-11",
+      managedId: "managed-22",
+    });
+    expect(updateMock).toHaveBeenCalledWith(expect.objectContaining({
+      data: expect.objectContaining({ pipedriveStaleWebhookIds: [] }),
+    }));
   });
 });

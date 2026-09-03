@@ -81,6 +81,7 @@ export type AuditAction =
   | "host_setup.draft_saved"
   | "host_setup.validated"
   | "host_setup.pipedrive_webhook_repaired"
+  | "host_setup.pipedrive_webhook_cleanup_retried"
   | "host_setup.activated"
   | "host_setup.restored"
   | "app_settings.email_notifications_updated"

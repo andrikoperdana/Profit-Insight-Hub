@@ -1201,40 +1201,43 @@ model InvoiceSetting {
 }
 
 model AppSetting {
-  id                          String    @id @default("default")
-  defaultVatPercent           Float     @default(11)
-  timesheetBackdateDays       Int       @default(5)
-  lowMarginPct                Float     @default(15)
-  budgetOverrunPct            Float     @default(80)
-  invoiceDueSoonDays          Int       @default(7)
-  lateTimesheetDays           Int       @default(3)
-  xeroAutoSyncEnabled         Boolean   @default(false)
+  id                              String    @id @default("default")
+  defaultVatPercent               Float     @default(11)
+  timesheetBackdateDays           Int       @default(5)
+  lowMarginPct                    Float     @default(15)
+  budgetOverrunPct                Float     @default(80)
+  invoiceDueSoonDays              Int       @default(7)
+  lateTimesheetDays               Int       @default(3)
+  xeroAutoSyncEnabled             Boolean   @default(false)
   // Auto-archive projects that have been CLOSED for this many months.
   // 0 = policy disabled (default).
-  autoArchiveClosedMonths     Int       @default(0)
-  emailNotificationsEnabled   Boolean   @default(false)
-  pipedriveAutoSyncEnabled    Boolean   @default(false)
-  pipedriveLastSyncAt         DateTime?
-  pipedriveDefaultOwnerId     String?
-  pipedriveWebhookSecret      String?
-  pipedriveSyncRunId          String?
-  pipedriveSyncStartedAt      DateTime?
-  pipedriveSyncFinishedAt     DateTime?
-  pipedriveSyncError          String?   @db.Text
-  pipedriveSyncResult         Json?
+  autoArchiveClosedMonths         Int       @default(0)
+  emailNotificationsEnabled       Boolean   @default(false)
+  pipedriveAutoSyncEnabled        Boolean   @default(false)
+  pipedriveLastSyncAt             DateTime?
+  pipedriveDefaultOwnerId         String?
+  pipedriveWebhookSecret          String?
+  pipedriveSyncRunId              String?
+  pipedriveSyncStartedAt          DateTime?
+  pipedriveSyncFinishedAt         DateTime?
+  pipedriveSyncError              String?   @db.Text
+  pipedriveSyncResult             Json?
   // SUPER_ADMIN deployment-host wizard. The active value is a trusted
   // server-side origin used for integration callback/webhook URL generation.
-  integrationPublicBaseUrl    String?
-  integrationDraftBaseUrl     String?
-  integrationPreviousBaseUrl  String?
-  integrationDraftValidatedAt DateTime?
-  pipedriveManagedWebhookId   String?
-  pipedriveManagedWebhookUrl  String?
+  integrationPublicBaseUrl        String?
+  integrationDraftBaseUrl         String?
+  integrationPreviousBaseUrl      String?
+  integrationDraftValidatedAt     DateTime?
+  pipedriveManagedWebhookId       String?
+  pipedriveManagedWebhookUrl      String?
+  pipedriveStaleWebhookIds        String[]  @default([])
+  pipedriveWebhookCleanupError    String?   @db.Text
+  pipedriveWebhookCleanupFailedAt DateTime?
   // Cross-instance claim timestamp for the scheduled notification-rules run
   // (see api-server index.ts scheduler). Claimed atomically via updateMany.
-  notificationChecksLastRunAt DateTime?
-  updatedAt                   DateTime  @updatedAt
-  updatedById                 String?
+  notificationChecksLastRunAt     DateTime?
+  updatedAt                       DateTime  @updatedAt
+  updatedById                     String?
 }
 
 // Last generated Executive Copilot briefing, persisted so it survives restarts

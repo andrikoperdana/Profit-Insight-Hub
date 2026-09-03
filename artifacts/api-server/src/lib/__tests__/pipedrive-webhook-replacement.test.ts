@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 vi.mock("@workspace/db", () => ({ prisma: {}, Prisma: {} }));
 vi.mock("../logger.js", () => ({ logger: { warn: vi.fn(), error: vi.fn() } }));
 
-const { replaceManagedPipedriveWebhook } = await import("../pipedrive.js");
+const { deleteStalePipedriveWebhook, replaceManagedPipedriveWebhook } = await import("../pipedrive.js");
 const originalFetch = globalThis.fetch;
 
 beforeEach(() => vi.clearAllMocks());
@@ -25,7 +25,7 @@ describe("managed Pipedrive webhook replacement", () => {
         { status: 200, headers: { "content-type": "application/json" } },
       );
     }) as any;
-    await replaceManagedPipedriveWebhook({
+    const result = await replaceManagedPipedriveWebhook({
       subscriptionUrl: "https://new.example.com/api/pipedrive/webhook",
       secret: "secret",
       previousId: "11",
@@ -34,6 +34,7 @@ describe("managed Pipedrive webhook replacement", () => {
       "POST https://company.pipedrive.com/api/v1/webhooks",
       "DELETE https://company.pipedrive.com/api/v1/webhooks/11",
     ]);
+    expect(result.staleWebhookId).toBeNull();
   });
 
   it("never deletes the old webhook when replacement creation fails", async () => {
@@ -46,5 +47,30 @@ describe("managed Pipedrive webhook replacement", () => {
       previousId: "11",
     })).rejects.toThrow("provider failure");
     expect(globalThis.fetch).toHaveBeenCalledOnce();
+  });
+
+  it("reports an old webhook that could not be deleted without failing the replacement", async () => {
+    process.env["PIPEDRIVE_API_TOKEN"] = "test-token";
+    process.env["PIPEDRIVE_API_DOMAIN"] = "https://company.pipedrive.com";
+    globalThis.fetch = vi.fn(async (_url, init) =>
+      init?.method === "POST"
+        ? new Response(JSON.stringify({ data: { id: 22 } }), { status: 200 })
+        : new Response("delete failed", { status: 503 }),
+    ) as any;
+    const result = await replaceManagedPipedriveWebhook({
+      subscriptionUrl: "https://new.example.com/api/pipedrive/webhook",
+      secret: "secret",
+      previousId: "11",
+    });
+    expect(result).toMatchObject({ id: "22", staleWebhookId: "11" });
+    expect(result.cleanupError).toContain("503");
+  });
+
+  it("refuses to clean up the currently managed webhook", async () => {
+    globalThis.fetch = vi.fn();
+    await expect(
+      deleteStalePipedriveWebhook({ staleId: "22", managedId: "22" }),
+    ).rejects.toThrow("currently managed");
+    expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 });
