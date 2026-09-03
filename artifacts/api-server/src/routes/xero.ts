@@ -38,7 +38,7 @@ const ADMIN_ROLES = ["MANAGEMENT", "FINANCE"] as const;
  *  attacker-controllable and would allow redirect_uri poisoning of the OAuth
  *  flow. Returns null when no trusted origin is configured, and callers must
  *  refuse to proceed. */
-async function redirectUri(): Promise<string | null> {
+export async function redirectUri(): Promise<string | null> {
   const setting = await prisma.appSetting.findUnique({
     where: { id: "default" },
     select: { integrationPublicBaseUrl: true },

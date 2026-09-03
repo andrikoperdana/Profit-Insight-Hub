@@ -16,7 +16,7 @@ import { xeroConfigured } from "../lib/xero.js";
 const router: IRouter = Router();
 router.use(requireAuth, requireRole("SUPER_ADMIN"));
 
-function normalizePublicOrigin(value: unknown): string {
+export function normalizePublicOrigin(value: unknown): string {
   if (typeof value !== "string") throw new Error("Public host is required");
   const url = new URL(value.trim());
   if (url.protocol !== "https:") throw new Error("Public host must use HTTPS");
@@ -45,7 +45,7 @@ function endpoints(baseUrl: string | null | undefined) {
   };
 }
 
-function isPrivateAddress(address: string): boolean {
+export function isPrivateAddress(address: string): boolean {
   const normalized = address.toLowerCase().split("%")[0];
   const mapped = normalized.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/)?.[1];
   if (mapped) return isPrivateAddress(mapped);
@@ -79,7 +79,7 @@ function isPrivateAddress(address: string): boolean {
   );
 }
 
-async function probeHealth(origin: string, address: string, family: number): Promise<number> {
+export async function probeHealth(origin: string, address: string, family: number): Promise<number> {
   const url = new URL(origin);
   return await new Promise<number>((resolve, reject) => {
     const request = https.request(
@@ -255,21 +255,26 @@ router.post("/host-setup/pipedrive/repair", async (req, res) => {
 });
 
 router.post("/host-setup/activate", async (req, res) => {
-  const before = await settings();
-  if (!before.integrationDraftBaseUrl || !before.integrationDraftValidatedAt) {
+  const result = await prisma.$transaction(async (tx) => {
+    const before = await tx.appSetting.findUnique({ where: { id: APP_SETTINGS_ID } });
+    if (!before?.integrationDraftBaseUrl || !before.integrationDraftValidatedAt) return null;
+    const saved = await tx.appSetting.update({
+      where: { id: APP_SETTINGS_ID },
+      data: {
+        integrationPreviousBaseUrl: before.integrationPublicBaseUrl,
+        integrationPublicBaseUrl: before.integrationDraftBaseUrl,
+        integrationDraftBaseUrl: null,
+        integrationDraftValidatedAt: null,
+        updatedById: req.user!.sub,
+      },
+    });
+    return { before, saved };
+  });
+  if (!result) {
     res.status(409).json({ error: "Validate the draft host before activation" });
     return;
   }
-  const saved = await prisma.appSetting.update({
-    where: { id: APP_SETTINGS_ID },
-    data: {
-      integrationPreviousBaseUrl: before.integrationPublicBaseUrl,
-      integrationPublicBaseUrl: before.integrationDraftBaseUrl,
-      integrationDraftBaseUrl: null,
-      integrationDraftValidatedAt: null,
-      updatedById: req.user!.sub,
-    },
-  });
+  const { before, saved } = result;
   await recordAudit(req, {
     action: "host_setup.activated",
     entityType: "AppSetting",
@@ -282,21 +287,26 @@ router.post("/host-setup/activate", async (req, res) => {
 });
 
 router.post("/host-setup/restore", async (req, res) => {
-  const before = await settings();
-  if (!before.integrationPreviousBaseUrl) {
+  const result = await prisma.$transaction(async (tx) => {
+    const before = await tx.appSetting.findUnique({ where: { id: APP_SETTINGS_ID } });
+    if (!before?.integrationPreviousBaseUrl) return null;
+    const saved = await tx.appSetting.update({
+      where: { id: APP_SETTINGS_ID },
+      data: {
+        integrationPublicBaseUrl: before.integrationPreviousBaseUrl,
+        integrationPreviousBaseUrl: before.integrationPublicBaseUrl,
+        integrationDraftBaseUrl: null,
+        integrationDraftValidatedAt: null,
+        updatedById: req.user!.sub,
+      },
+    });
+    return { before, saved };
+  });
+  if (!result) {
     res.status(409).json({ error: "No previous host is available" });
     return;
   }
-  const saved = await prisma.appSetting.update({
-    where: { id: APP_SETTINGS_ID },
-    data: {
-      integrationPublicBaseUrl: before.integrationPreviousBaseUrl,
-      integrationPreviousBaseUrl: before.integrationPublicBaseUrl,
-      integrationDraftBaseUrl: null,
-      integrationDraftValidatedAt: null,
-      updatedById: req.user!.sub,
-    },
-  });
+  const { before, saved } = result;
   await recordAudit(req, {
     action: "host_setup.restored",
     entityType: "AppSetting",
