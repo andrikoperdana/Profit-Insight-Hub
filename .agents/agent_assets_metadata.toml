@@ -977,3 +977,17 @@ mtime_ms = 1788414890650
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/28db3f3f-b195-44c2-8514-b2ecf654296c/f3363c94-3f4c-4fdd-84aa-0c60245243de"
 storage_version_token = "1788414897942462"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "8dOMe0WmSSDBNzAbHZ7Zg"
+uri = "file://downloads/SPH-14-FSD-v1.01-Final-Technical-Review-and-Required-Revisions-ID.docx"
+type = "word_document"
+title = "SPH 14 FSD — Final Technical Review"
+description = "Versi review 14 FSD dengan gaya penjelasan seperti dokumen contoh: temuan dijelaskan secara naratif, dilengkapi alasan teknis, redaksi perbaikan, contoh kontrak/kode, status summary, dan final assessment."
+logical_id = "6b18c9c0-e574-4bd5-99f4-31bd2beddfe9"
+content_hash = "sha256:0540f26291aa506e4cef00269d73e5f9c035ff597e327957b5260a2f852fe04a"
+size = 44756
+mtime_ms = 1788415239858
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/6b18c9c0-e574-4bd5-99f4-31bd2beddfe9/834af191-abec-4907-9efb-e527bd1e7a40"
+storage_version_token = "1788415247374854"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
