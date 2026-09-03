@@ -1061,3 +1061,17 @@ mtime_ms = 1788456271728
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/5e0d7d2c-9cc5-402c-9eef-49e8d4650cb3/2670b7ed-f2b3-4d76-bc10-4802fd570c20"
 storage_version_token = "1788456279389554"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "mbkKqsTjrbS4mon_6SJkd"
+uri = "file://downloads/ActivityHub-Xero-and-Pipedrive-Local-Configuration-Guide-ID.docx"
+type = "word_document"
+title = "ActivityHub — Xero and Pipedrive Configuration Guide"
+description = "Panduan Word Bahasa Indonesia untuk mengaktifkan Xero dan Pipedrive pada ActivityHub: backend environment, OAuth callback, webhooks, PM2, Cloudflare, initial sync, polling, mobile security, troubleshooting, dan validation order."
+logical_id = "4b3e08de-509e-4993-b3e8-9eeff859b116"
+content_hash = "sha256:f9278d5a73ccd9ef7b0a8c306b37d428c2c53a2f5c76f7eefbac80f569e5032c"
+size = 42715
+mtime_ms = 1788456616008
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/4b3e08de-509e-4993-b3e8-9eeff859b116/86b65d1d-7a84-4671-bce0-36153a076333"
+storage_version_token = "1788456623845764"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
