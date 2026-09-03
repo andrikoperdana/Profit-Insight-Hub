@@ -823,3 +823,17 @@ mtime_ms = 1788322382906
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/c47fb3df-a672-428c-8e31-f4030db8ec1b/6a8a84a7-4a7e-45b1-9fd1-035721550431"
 storage_version_token = "1788322394423672"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "tm2qYRf5TkZ77uk3veiXn"
+uri = "file://downloads/SPH-14-FSD-DEMO-13-14-Review-and-3-Phase-Recommendation-ID.docx"
+type = "word_document"
+title = "SPH 14 FSD — Review DEMO-13 dan DEMO-14"
+description = "Review teknis dua FSD tambahan beserta revisi wajib, dependencies, dan rekomendasi implementasi tiga fase yang diperbarui."
+logical_id = "889cd672-5af5-4737-bd5e-5fd275e844be"
+content_hash = "sha256:953e6275bb932e9e5029652819fed7496baa41ef23c9749ee3e8aeacb1788f79"
+size = 15081
+mtime_ms = 1788402740398
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/889cd672-5af5-4737-bd5e-5fd275e844be/c9f74d00-066b-4603-b6d4-3d00c1319c43"
+storage_version_token = "1788402755336466"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
