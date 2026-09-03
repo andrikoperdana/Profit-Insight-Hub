@@ -16,7 +16,13 @@ export function getAiConfiguration() {
   };
 }
 
-const configuration = getAiConfiguration();
+export function requireAiConfiguration(): void {
+  if (!getAiConfiguration().configured) {
+    throw new Error(
+      "OpenAI AI integration is not configured. Set both required AI integration environment variables before using AI operations.",
+    );
+  }
+}
 
 // Keep the API available when AI is not configured so administrators can open
 // the AI Setup diagnostics page. The loopback discard endpoint prevents a
