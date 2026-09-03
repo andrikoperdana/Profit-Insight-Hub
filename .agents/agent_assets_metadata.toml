@@ -1033,3 +1033,17 @@ mtime_ms = 1788435819872
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/c82c581a-3856-4e04-9c55-4cedf9e6a6d9/41c4eeb1-7d17-4974-b390-36e7ad0e306c"
 storage_version_token = "1788435825692152"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "8TFVEn9Efms7s1o2UMX2k"
+uri = "file://downloads/ActivityHub-Local-AI-Not-Working-Diagnosis-and-Fix-ID.docx"
+type = "word_document"
+title = "ActivityHub Local AI — Diagnosis and Fix"
+description = "Laporan Word Bahasa Indonesia mengenai penyebab seluruh fitur AI gagal pada deployment lokal ActivityHub, konfigurasi provider yang diperlukan, risiko model gpt-5.4, interpretasi HTTP 401/502, langkah restart PM2, dan validation checklist."
+logical_id = "d49f18f2-cd9a-49d8-8e24-e5bfeb7a2a67"
+content_hash = "sha256:a2c6a23f6ce68de69bd6d66893c8aafa7cb999c7d64b6e3ac06e92a02b7df03b"
+size = 41013
+mtime_ms = 1788456008961
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/d49f18f2-cd9a-49d8-8e24-e5bfeb7a2a67/a477af7d-1ff6-4b61-ad4e-76f0719a0b16"
+storage_version_token = "1788456020643318"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
