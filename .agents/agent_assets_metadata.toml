@@ -1005,3 +1005,17 @@ mtime_ms = 1788421563333
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/e892febf-2a01-4d31-8c8d-58841e301179/1028e2de-9ed7-4d24-9130-71d2da483fae"
 storage_version_token = "1788421573179134"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "VucaG5jbKfXWyXoXW5xsx"
+uri = "file://downloads/SPH-14-FSD-v1.04-Final-Technical-Acceptance-and-Minor-Edits-ID.docx"
+type = "word_document"
+title = "SPH 14 FSD v1.04 — Final Technical Acceptance"
+description = "Final technical assessment atas balasan terbaru. Arsitektur dinilai technically acceptable dengan dua edit dokumen tersisa: penyelarasan replacementForId pada DEMO-13 dan pemisahan technical baseline dari stakeholder/stage-gate approval package."
+logical_id = "91f492ad-9a40-4028-ba15-44cc13a69f5e"
+content_hash = "sha256:e7d394a180aff48a3b7a21687aea1ae76231887d80d01b290682c01244a0a0be"
+size = 40692
+mtime_ms = 1788433316764
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/91f492ad-9a40-4028-ba15-44cc13a69f5e/e15fd620-8deb-484b-bf99-595da6a6fd95"
+storage_version_token = "1788433323010540"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
