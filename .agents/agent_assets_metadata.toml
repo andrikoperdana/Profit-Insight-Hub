@@ -921,3 +921,17 @@ mtime_ms = 1788407448279
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/b06c0d29-efd6-4aae-82b9-f83270497b7b/ffb30bea-8579-4842-8f3d-b56584438626"
 storage_version_token = "1788407454328412"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "1qyp47TeUFnlwcALBop0w"
+uri = "file://downloads/SPH-Sales-Module-and-Pipedrive-Integration-Analysis-EN.docx"
+type = "word_document"
+title = "Sales Module & Pipedrive Integration Analysis — English"
+description = "English Microsoft Word version covering feasibility, three implementation options, pros and cons, functional gaps, integration risks, system-of-record allocation, assessment matrix, and the recommended hybrid model."
+logical_id = "1acee4d7-553b-4811-89d2-8fb0b86297a3"
+content_hash = "sha256:934f9de7f94d5e008ae17e1f6215c0f54ffad04986f7b0d243f7156fe208309a"
+size = 42404
+mtime_ms = 1788407624679
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/1acee4d7-553b-4811-89d2-8fb0b86297a3/410f06d5-4f28-4830-83e1-314275229ee3"
+storage_version_token = "1788407630489476"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
