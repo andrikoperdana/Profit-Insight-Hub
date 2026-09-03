@@ -1019,3 +1019,17 @@ mtime_ms = 1788433316764
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/91f492ad-9a40-4028-ba15-44cc13a69f5e/e15fd620-8deb-484b-bf99-595da6a6fd95"
 storage_version_token = "1788433323010540"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "m1d3ylGWGUXCfReQGQwdK"
+uri = "file://downloads/Website-Speed-Comparison-Profit-Insight-Hub-vs-ActivityHub-ID.docx"
+type = "word_document"
+title = "Website Speed Comparison — Profit Insight Hub vs ActivityHub"
+description = "Laporan Word Bahasa Indonesia berisi hasil Lighthouse mobile dan desktop, pengukuran TTFB, ukuran JavaScript/CSS, analisis bottleneck, serta rekomendasi optimasi prioritas untuk kedua website."
+logical_id = "c82c581a-3856-4e04-9c55-4cedf9e6a6d9"
+content_hash = "sha256:0e54508bc81449ed90c2dad166e4f32ba79c95c25f21f5d8d662bfa5091e7b0f"
+size = 40711
+mtime_ms = 1788435819872
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/c82c581a-3856-4e04-9c55-4cedf9e6a6d9/41c4eeb1-7d17-4974-b390-36e7ad0e306c"
+storage_version_token = "1788435825692152"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
