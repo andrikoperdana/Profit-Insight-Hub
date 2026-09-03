@@ -949,3 +949,17 @@ mtime_ms = 1788408270684
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/d4bf1baf-c54d-4c33-a48c-23a269f9ae2b/54bd5631-8c01-422a-9a6c-c984e337fc18"
 storage_version_token = "1788408279718336"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "pfrb8yqj6Egec1lxrAtM0"
+uri = "file://downloads/SPH-14-DEMO-Detail-Request-Only-ID.docx"
+type = "word_document"
+title = "SecureProfit Hub — 14 DEMO Detail Request Only"
+description = "Dokumen Word Bahasa Indonesia yang hanya berisi daftar detail request/perubahan DEMO-01 sampai DEMO-14, tanpa penjelasan tambahan, acceptance criteria, dampak, risiko, atau status."
+logical_id = "bb553878-4785-41f1-ad75-26ee0431b98d"
+content_hash = "sha256:02916b88e77a09e3d2ce43bfc51e4c2e7e1580af62661ab7d040e169690ba33f"
+size = 41149
+mtime_ms = 1788408505847
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/bb553878-4785-41f1-ad75-26ee0431b98d/9ee84309-4442-4371-8401-8b044cdcb26a"
+storage_version_token = "1788408512196932"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
