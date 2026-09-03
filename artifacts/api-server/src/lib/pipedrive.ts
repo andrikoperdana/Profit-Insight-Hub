@@ -99,6 +99,45 @@ async function pdFetch<T>(path: string, init?: RequestInit): Promise<T> {
   return (await res.json()) as T;
 }
 
+type PdWebhook = {
+  id: number;
+  subscription_url?: string;
+};
+
+export async function replaceManagedPipedriveWebhook(input: {
+  subscriptionUrl: string;
+  secret: string;
+  previousId?: string | null;
+}): Promise<{ id: string; url: string }> {
+  const created = await pdFetch<{ data?: PdWebhook }>("/webhooks", {
+    method: "POST",
+    body: JSON.stringify({
+      subscription_url: input.subscriptionUrl,
+      event_action: "*",
+      event_object: "deal",
+      http_auth_user: "secureprofit",
+      http_auth_password: input.secret,
+      version: "2.0",
+    }),
+  });
+  const id = created.data?.id;
+  if (!id) throw new Error("Pipedrive did not return a webhook id");
+
+  // Creation comes first: a provider/API failure must never remove the
+  // previously working webhook.
+  if (input.previousId && input.previousId !== String(id)) {
+    try {
+      await pdFetch(`/webhooks/${encodeURIComponent(input.previousId)}`, {
+        method: "DELETE",
+      });
+    } catch {
+      // The replacement is already active. A stale old webhook is safer than
+      // deleting the new one or reporting the repair as failed.
+    }
+  }
+  return { id: String(id), url: input.subscriptionUrl };
+}
+
 // ---------------------------------------------------------------------------
 // Pipedrive REST shapes (tolerant: refs come back as a bare id or an object)
 // ---------------------------------------------------------------------------

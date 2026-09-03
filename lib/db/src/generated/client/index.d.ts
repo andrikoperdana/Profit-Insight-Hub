@@ -54441,6 +54441,12 @@ export namespace Prisma {
     pipedriveSyncStartedAt: Date | null
     pipedriveSyncFinishedAt: Date | null
     pipedriveSyncError: string | null
+    integrationPublicBaseUrl: string | null
+    integrationDraftBaseUrl: string | null
+    integrationPreviousBaseUrl: string | null
+    integrationDraftValidatedAt: Date | null
+    pipedriveManagedWebhookId: string | null
+    pipedriveManagedWebhookUrl: string | null
     notificationChecksLastRunAt: Date | null
     updatedAt: Date | null
     updatedById: string | null
@@ -54465,6 +54471,12 @@ export namespace Prisma {
     pipedriveSyncStartedAt: Date | null
     pipedriveSyncFinishedAt: Date | null
     pipedriveSyncError: string | null
+    integrationPublicBaseUrl: string | null
+    integrationDraftBaseUrl: string | null
+    integrationPreviousBaseUrl: string | null
+    integrationDraftValidatedAt: Date | null
+    pipedriveManagedWebhookId: string | null
+    pipedriveManagedWebhookUrl: string | null
     notificationChecksLastRunAt: Date | null
     updatedAt: Date | null
     updatedById: string | null
@@ -54490,6 +54502,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt: number
     pipedriveSyncError: number
     pipedriveSyncResult: number
+    integrationPublicBaseUrl: number
+    integrationDraftBaseUrl: number
+    integrationPreviousBaseUrl: number
+    integrationDraftValidatedAt: number
+    pipedriveManagedWebhookId: number
+    pipedriveManagedWebhookUrl: number
     notificationChecksLastRunAt: number
     updatedAt: number
     updatedById: number
@@ -54536,6 +54554,12 @@ export namespace Prisma {
     pipedriveSyncStartedAt?: true
     pipedriveSyncFinishedAt?: true
     pipedriveSyncError?: true
+    integrationPublicBaseUrl?: true
+    integrationDraftBaseUrl?: true
+    integrationPreviousBaseUrl?: true
+    integrationDraftValidatedAt?: true
+    pipedriveManagedWebhookId?: true
+    pipedriveManagedWebhookUrl?: true
     notificationChecksLastRunAt?: true
     updatedAt?: true
     updatedById?: true
@@ -54560,6 +54584,12 @@ export namespace Prisma {
     pipedriveSyncStartedAt?: true
     pipedriveSyncFinishedAt?: true
     pipedriveSyncError?: true
+    integrationPublicBaseUrl?: true
+    integrationDraftBaseUrl?: true
+    integrationPreviousBaseUrl?: true
+    integrationDraftValidatedAt?: true
+    pipedriveManagedWebhookId?: true
+    pipedriveManagedWebhookUrl?: true
     notificationChecksLastRunAt?: true
     updatedAt?: true
     updatedById?: true
@@ -54585,6 +54615,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: true
     pipedriveSyncError?: true
     pipedriveSyncResult?: true
+    integrationPublicBaseUrl?: true
+    integrationDraftBaseUrl?: true
+    integrationPreviousBaseUrl?: true
+    integrationDraftValidatedAt?: true
+    pipedriveManagedWebhookId?: true
+    pipedriveManagedWebhookUrl?: true
     notificationChecksLastRunAt?: true
     updatedAt?: true
     updatedById?: true
@@ -54697,6 +54733,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt: Date | null
     pipedriveSyncError: string | null
     pipedriveSyncResult: JsonValue | null
+    integrationPublicBaseUrl: string | null
+    integrationDraftBaseUrl: string | null
+    integrationPreviousBaseUrl: string | null
+    integrationDraftValidatedAt: Date | null
+    pipedriveManagedWebhookId: string | null
+    pipedriveManagedWebhookUrl: string | null
     notificationChecksLastRunAt: Date | null
     updatedAt: Date
     updatedById: string | null
@@ -54741,6 +54783,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: boolean
     pipedriveSyncError?: boolean
     pipedriveSyncResult?: boolean
+    integrationPublicBaseUrl?: boolean
+    integrationDraftBaseUrl?: boolean
+    integrationPreviousBaseUrl?: boolean
+    integrationDraftValidatedAt?: boolean
+    pipedriveManagedWebhookId?: boolean
+    pipedriveManagedWebhookUrl?: boolean
     notificationChecksLastRunAt?: boolean
     updatedAt?: boolean
     updatedById?: boolean
@@ -54766,6 +54814,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: boolean
     pipedriveSyncError?: boolean
     pipedriveSyncResult?: boolean
+    integrationPublicBaseUrl?: boolean
+    integrationDraftBaseUrl?: boolean
+    integrationPreviousBaseUrl?: boolean
+    integrationDraftValidatedAt?: boolean
+    pipedriveManagedWebhookId?: boolean
+    pipedriveManagedWebhookUrl?: boolean
     notificationChecksLastRunAt?: boolean
     updatedAt?: boolean
     updatedById?: boolean
@@ -54791,6 +54845,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: boolean
     pipedriveSyncError?: boolean
     pipedriveSyncResult?: boolean
+    integrationPublicBaseUrl?: boolean
+    integrationDraftBaseUrl?: boolean
+    integrationPreviousBaseUrl?: boolean
+    integrationDraftValidatedAt?: boolean
+    pipedriveManagedWebhookId?: boolean
+    pipedriveManagedWebhookUrl?: boolean
     notificationChecksLastRunAt?: boolean
     updatedAt?: boolean
     updatedById?: boolean
@@ -54820,6 +54880,12 @@ export namespace Prisma {
       pipedriveSyncFinishedAt: Date | null
       pipedriveSyncError: string | null
       pipedriveSyncResult: Prisma.JsonValue | null
+      integrationPublicBaseUrl: string | null
+      integrationDraftBaseUrl: string | null
+      integrationPreviousBaseUrl: string | null
+      integrationDraftValidatedAt: Date | null
+      pipedriveManagedWebhookId: string | null
+      pipedriveManagedWebhookUrl: string | null
       notificationChecksLastRunAt: Date | null
       updatedAt: Date
       updatedById: string | null
@@ -55235,6 +55301,12 @@ export namespace Prisma {
     readonly pipedriveSyncFinishedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly pipedriveSyncError: FieldRef<"AppSetting", 'String'>
     readonly pipedriveSyncResult: FieldRef<"AppSetting", 'Json'>
+    readonly integrationPublicBaseUrl: FieldRef<"AppSetting", 'String'>
+    readonly integrationDraftBaseUrl: FieldRef<"AppSetting", 'String'>
+    readonly integrationPreviousBaseUrl: FieldRef<"AppSetting", 'String'>
+    readonly integrationDraftValidatedAt: FieldRef<"AppSetting", 'DateTime'>
+    readonly pipedriveManagedWebhookId: FieldRef<"AppSetting", 'String'>
+    readonly pipedriveManagedWebhookUrl: FieldRef<"AppSetting", 'String'>
     readonly notificationChecksLastRunAt: FieldRef<"AppSetting", 'DateTime'>
     readonly updatedAt: FieldRef<"AppSetting", 'DateTime'>
     readonly updatedById: FieldRef<"AppSetting", 'String'>
@@ -59953,6 +60025,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt: 'pipedriveSyncFinishedAt',
     pipedriveSyncError: 'pipedriveSyncError',
     pipedriveSyncResult: 'pipedriveSyncResult',
+    integrationPublicBaseUrl: 'integrationPublicBaseUrl',
+    integrationDraftBaseUrl: 'integrationDraftBaseUrl',
+    integrationPreviousBaseUrl: 'integrationPreviousBaseUrl',
+    integrationDraftValidatedAt: 'integrationDraftValidatedAt',
+    pipedriveManagedWebhookId: 'pipedriveManagedWebhookId',
+    pipedriveManagedWebhookUrl: 'pipedriveManagedWebhookUrl',
     notificationChecksLastRunAt: 'notificationChecksLastRunAt',
     updatedAt: 'updatedAt',
     updatedById: 'updatedById'
@@ -64920,6 +64998,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     pipedriveSyncError?: StringNullableFilter<"AppSetting"> | string | null
     pipedriveSyncResult?: JsonNullableFilter<"AppSetting">
+    integrationPublicBaseUrl?: StringNullableFilter<"AppSetting"> | string | null
+    integrationDraftBaseUrl?: StringNullableFilter<"AppSetting"> | string | null
+    integrationPreviousBaseUrl?: StringNullableFilter<"AppSetting"> | string | null
+    integrationDraftValidatedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
+    pipedriveManagedWebhookId?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveManagedWebhookUrl?: StringNullableFilter<"AppSetting"> | string | null
     notificationChecksLastRunAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
@@ -64945,6 +65029,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: SortOrderInput | SortOrder
     pipedriveSyncError?: SortOrderInput | SortOrder
     pipedriveSyncResult?: SortOrderInput | SortOrder
+    integrationPublicBaseUrl?: SortOrderInput | SortOrder
+    integrationDraftBaseUrl?: SortOrderInput | SortOrder
+    integrationPreviousBaseUrl?: SortOrderInput | SortOrder
+    integrationDraftValidatedAt?: SortOrderInput | SortOrder
+    pipedriveManagedWebhookId?: SortOrderInput | SortOrder
+    pipedriveManagedWebhookUrl?: SortOrderInput | SortOrder
     notificationChecksLastRunAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
@@ -64973,6 +65063,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     pipedriveSyncError?: StringNullableFilter<"AppSetting"> | string | null
     pipedriveSyncResult?: JsonNullableFilter<"AppSetting">
+    integrationPublicBaseUrl?: StringNullableFilter<"AppSetting"> | string | null
+    integrationDraftBaseUrl?: StringNullableFilter<"AppSetting"> | string | null
+    integrationPreviousBaseUrl?: StringNullableFilter<"AppSetting"> | string | null
+    integrationDraftValidatedAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
+    pipedriveManagedWebhookId?: StringNullableFilter<"AppSetting"> | string | null
+    pipedriveManagedWebhookUrl?: StringNullableFilter<"AppSetting"> | string | null
     notificationChecksLastRunAt?: DateTimeNullableFilter<"AppSetting"> | Date | string | null
     updatedAt?: DateTimeFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableFilter<"AppSetting"> | string | null
@@ -64998,6 +65094,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: SortOrderInput | SortOrder
     pipedriveSyncError?: SortOrderInput | SortOrder
     pipedriveSyncResult?: SortOrderInput | SortOrder
+    integrationPublicBaseUrl?: SortOrderInput | SortOrder
+    integrationDraftBaseUrl?: SortOrderInput | SortOrder
+    integrationPreviousBaseUrl?: SortOrderInput | SortOrder
+    integrationDraftValidatedAt?: SortOrderInput | SortOrder
+    pipedriveManagedWebhookId?: SortOrderInput | SortOrder
+    pipedriveManagedWebhookUrl?: SortOrderInput | SortOrder
     notificationChecksLastRunAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrderInput | SortOrder
@@ -65031,6 +65133,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
     pipedriveSyncError?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
     pipedriveSyncResult?: JsonNullableWithAggregatesFilter<"AppSetting">
+    integrationPublicBaseUrl?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+    integrationDraftBaseUrl?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+    integrationPreviousBaseUrl?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+    integrationDraftValidatedAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
+    pipedriveManagedWebhookId?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
+    pipedriveManagedWebhookUrl?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
     notificationChecksLastRunAt?: DateTimeNullableWithAggregatesFilter<"AppSetting"> | Date | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"AppSetting"> | Date | string
     updatedById?: StringNullableWithAggregatesFilter<"AppSetting"> | string | null
@@ -70128,6 +70236,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: Date | string | null
     pipedriveSyncError?: string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    integrationPublicBaseUrl?: string | null
+    integrationDraftBaseUrl?: string | null
+    integrationPreviousBaseUrl?: string | null
+    integrationDraftValidatedAt?: Date | string | null
+    pipedriveManagedWebhookId?: string | null
+    pipedriveManagedWebhookUrl?: string | null
     notificationChecksLastRunAt?: Date | string | null
     updatedAt?: Date | string
     updatedById?: string | null
@@ -70153,6 +70267,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: Date | string | null
     pipedriveSyncError?: string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    integrationPublicBaseUrl?: string | null
+    integrationDraftBaseUrl?: string | null
+    integrationPreviousBaseUrl?: string | null
+    integrationDraftValidatedAt?: Date | string | null
+    pipedriveManagedWebhookId?: string | null
+    pipedriveManagedWebhookUrl?: string | null
     notificationChecksLastRunAt?: Date | string | null
     updatedAt?: Date | string
     updatedById?: string | null
@@ -70178,6 +70298,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    integrationPublicBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationDraftBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationPreviousBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationDraftValidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveManagedWebhookId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveManagedWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70203,6 +70329,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    integrationPublicBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationDraftBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationPreviousBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationDraftValidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveManagedWebhookId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveManagedWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70228,6 +70360,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: Date | string | null
     pipedriveSyncError?: string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    integrationPublicBaseUrl?: string | null
+    integrationDraftBaseUrl?: string | null
+    integrationPreviousBaseUrl?: string | null
+    integrationDraftValidatedAt?: Date | string | null
+    pipedriveManagedWebhookId?: string | null
+    pipedriveManagedWebhookUrl?: string | null
     notificationChecksLastRunAt?: Date | string | null
     updatedAt?: Date | string
     updatedById?: string | null
@@ -70253,6 +70391,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    integrationPublicBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationDraftBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationPreviousBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationDraftValidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveManagedWebhookId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveManagedWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70278,6 +70422,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pipedriveSyncError?: NullableStringFieldUpdateOperationsInput | string | null
     pipedriveSyncResult?: NullableJsonNullValueInput | InputJsonValue
+    integrationPublicBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationDraftBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationPreviousBaseUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    integrationDraftValidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pipedriveManagedWebhookId?: NullableStringFieldUpdateOperationsInput | string | null
+    pipedriveManagedWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notificationChecksLastRunAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74115,6 +74265,12 @@ export namespace Prisma {
     pipedriveSyncFinishedAt?: SortOrder
     pipedriveSyncError?: SortOrder
     pipedriveSyncResult?: SortOrder
+    integrationPublicBaseUrl?: SortOrder
+    integrationDraftBaseUrl?: SortOrder
+    integrationPreviousBaseUrl?: SortOrder
+    integrationDraftValidatedAt?: SortOrder
+    pipedriveManagedWebhookId?: SortOrder
+    pipedriveManagedWebhookUrl?: SortOrder
     notificationChecksLastRunAt?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
@@ -74149,6 +74305,12 @@ export namespace Prisma {
     pipedriveSyncStartedAt?: SortOrder
     pipedriveSyncFinishedAt?: SortOrder
     pipedriveSyncError?: SortOrder
+    integrationPublicBaseUrl?: SortOrder
+    integrationDraftBaseUrl?: SortOrder
+    integrationPreviousBaseUrl?: SortOrder
+    integrationDraftValidatedAt?: SortOrder
+    pipedriveManagedWebhookId?: SortOrder
+    pipedriveManagedWebhookUrl?: SortOrder
     notificationChecksLastRunAt?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder
@@ -74173,6 +74335,12 @@ export namespace Prisma {
     pipedriveSyncStartedAt?: SortOrder
     pipedriveSyncFinishedAt?: SortOrder
     pipedriveSyncError?: SortOrder
+    integrationPublicBaseUrl?: SortOrder
+    integrationDraftBaseUrl?: SortOrder
+    integrationPreviousBaseUrl?: SortOrder
+    integrationDraftValidatedAt?: SortOrder
+    pipedriveManagedWebhookId?: SortOrder
+    pipedriveManagedWebhookUrl?: SortOrder
     notificationChecksLastRunAt?: SortOrder
     updatedAt?: SortOrder
     updatedById?: SortOrder

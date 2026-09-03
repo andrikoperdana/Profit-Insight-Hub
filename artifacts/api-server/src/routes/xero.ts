@@ -38,11 +38,19 @@ const ADMIN_ROLES = ["MANAGEMENT", "FINANCE"] as const;
  *  attacker-controllable and would allow redirect_uri poisoning of the OAuth
  *  flow. Returns null when no trusted origin is configured, and callers must
  *  refuse to proceed. */
-function redirectUri(): string | null {
-  const env = process.env["XERO_REDIRECT_URI"]?.trim();
-  if (env) return env;
-  // Trusted server-side origins, in preference order: explicit app base URL,
-  // the published Replit domain, then the dev domain.
+async function redirectUri(): Promise<string | null> {
+  const setting = await prisma.appSetting.findUnique({
+    where: { id: "default" },
+    select: { integrationPublicBaseUrl: true },
+  });
+  // A SUPER_ADMIN-validated active host is trusted server-side configuration
+  // and intentionally overrides legacy environment values. Environment and
+  // Replit metadata remain fallbacks for deployments that never use the wizard.
+  if (setting?.integrationPublicBaseUrl?.trim()) {
+    return `${setting.integrationPublicBaseUrl.trim().replace(/\/+$/, "")}/api/xero/callback`;
+  }
+  const explicit = process.env["XERO_REDIRECT_URI"]?.trim();
+  if (explicit) return explicit;
   const base =
     process.env["APP_BASE_URL"]?.trim() ||
     process.env["REPLIT_DOMAINS"]?.split(",")[0]?.trim() ||
@@ -106,7 +114,7 @@ router.post("/xero/connect-url", requireAuth, requireRole(...ADMIN_ROLES), async
     res.status(409).json({ error: "Xero is not configured on the server" });
     return;
   }
-  const uri = redirectUri();
+  const uri = await redirectUri();
   if (!uri) {
     res.status(409).json({
       error:
@@ -145,7 +153,7 @@ router.get("/xero/callback", async (req, res) => {
     } catch {
       userId = null;
     }
-    const uri = redirectUri();
+    const uri = await redirectUri();
     if (!uri) {
       logger.error("Xero OAuth callback received but no trusted redirect URI is configured");
       res.redirect(dest("xero=error"));

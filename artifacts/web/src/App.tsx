@@ -60,6 +60,7 @@ const PerformanceReviewDetailPage = lazy(() => import("@/pages/performance-revie
 const SurveyTemplateEditor = lazy(() => import("@/pages/settings/SurveyTemplate"));
 const PublicSurveyPage = lazy(() => import("@/pages/survey/[token]"));
 const PublicClientPortal = lazy(() => import("@/pages/portal/[token]"));
+const SetupNewHostPage = lazy(() => import("@/pages/setup-new-host"));
 import { ThemeProvider } from "@/lib/theme";
 
 // Personal "My …" views are open to PMs (who can be staffed as a project
@@ -170,6 +171,7 @@ function Router() {
         <Route path="/users/:id" component={() => <ProtectedRoute component={UserDetail} />} />
         <Route path="/settings" component={() => <ProtectedRoute component={Settings} />} />
         <Route path="/audit-logs" component={() => <ProtectedRoute component={AuditLogPage} />} />
+        <Route path="/setup-new-host" component={() => <ProtectedRoute component={SetupNewHostPage} allowRoles={["SUPER_ADMIN"]} />} />
         <Route path="/business-intelligence" component={() => <ProtectedRoute component={BusinessIntelligence} />} />
         <Route path="/pm-dashboards" component={() => <ProtectedRoute component={PmDashboardsPage} allowRoles={["MANAGEMENT"]} />} />
         <Route path="/portfolio-monitor" component={() => <ProtectedRoute component={PortfolioMonitorPage} allowRoles={["MANAGEMENT"]} />} />

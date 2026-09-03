@@ -54,6 +54,7 @@ import pipedriveRouter from "./pipedrive.js";
 import clientPortalRouter from "./client-portal.js";
 import executiveCopilotRouter from "./executive-copilot.js";
 import accessRequestsRouter from "./access-requests.js";
+import hostSetupRouter from "./host-setup.js";
 
 const router: IRouter = Router();
 
@@ -110,6 +111,7 @@ router.use(billingMilestonesRouter);
 router.use(revenueRecognitionRouter);
 router.use(invoiceSettingsRouter);
 router.use(appSettingsRouter);
+router.use(hostSetupRouter);
 router.use(reportsRouter);
 router.use(leadsRouter);
 router.use(skillMatrixRouter);

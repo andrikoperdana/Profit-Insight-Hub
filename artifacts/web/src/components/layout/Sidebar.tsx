@@ -32,6 +32,7 @@ import {
   Sparkles,
   CircleDollarSign,
   BellRing,
+  ServerCog,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -157,6 +158,7 @@ export default function Sidebar() {
     ...(sa || user?.role === "MANAGEMENT" || user?.role === "SALES" ? [{ href: "/survey-results", label: "Survey Results", icon: ClipboardList }] : []),
     ...(sa || user?.role === "MANAGEMENT" ? [{ href: "/settings/survey-template", label: "Survey Template", icon: ClipboardList }] : []),
     ...(canViewAuditLogs(user?.role) ? [{ href: "/audit-logs", label: "Audit Log", icon: ScrollText }] : []),
+    ...(sa ? [{ href: "/setup-new-host", label: "Setup New Host", icon: ServerCog }] : []),
   ];
 
   const initials = user?.name
