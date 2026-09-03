@@ -991,3 +991,17 @@ mtime_ms = 1788415239858
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/6b18c9c0-e574-4bd5-99f4-31bd2beddfe9/834af191-abec-4907-9efb-e527bd1e7a40"
 storage_version_token = "1788415247374854"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "hh4I2_ERGhd7t4h0si4qc"
+uri = "file://downloads/SPH-14-FSD-v1.02-Final-Review-and-Minor-Revisions-ID.docx"
+type = "word_document"
+title = "SPH 14 FSD v1.02 — Final Review & Minor Revisions"
+description = "Review atas dokumen balasan v1.02. Mayoritas koreksi sudah diselesaikan; dokumen mencatat enam revisi minor wajib sebelum final technical acceptance, termasuk field isCurrent, literal backticks, status DEMO-08, scope sign-off, wording DEMO-12, dan RevRec relation naming."
+logical_id = "e892febf-2a01-4d31-8c8d-58841e301179"
+content_hash = "sha256:dfa0224517a158a9ac2a93b316968c15cfdb6b68d3780e01a09cea55bfab6cc7"
+size = 42343
+mtime_ms = 1788421563333
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/e892febf-2a01-4d31-8c8d-58841e301179/1028e2de-9ed7-4d24-9130-71d2da483fae"
+storage_version_token = "1788421573179134"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
