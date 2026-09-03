@@ -837,3 +837,17 @@ mtime_ms = 1788402740398
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/889cd672-5af5-4737-bd5e-5fd275e844be/c9f74d00-066b-4603-b6d4-3d00c1319c43"
 storage_version_token = "1788402755336466"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "QEjMPaqau-Jtq7c6eTRSP"
+uri = "file://downloads/SPH-DEMO-13-14-Recommendation-and-Clarification-Baseline-ID.docx"
+type = "word_document"
+title = "SPH DEMO-13/14 — Recommendation & Clarification Baseline"
+description = "Dokumen rekomendasi dan klarifikasi DEMO-13 dan DEMO-14 tanpa strategi implementasi tiga fase dan tanpa stakeholder sign-off."
+logical_id = "ae3a51f4-8f17-4c97-aa2f-a80273c69b40"
+content_hash = "sha256:315795afe65703c9a218d964eaf1d259f9d4769fd86567ae6d8ea4ae9bcbfc07"
+size = 19598
+mtime_ms = 1788402938556
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/ae3a51f4-8f17-4c97-aa2f-a80273c69b40/fd6408ba-7af1-4c5e-b76a-4cbb9712c9fb"
+storage_version_token = "1788402962853210"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
