@@ -175,9 +175,9 @@ export default function SetupNewHostPage() {
                   <BookOpen className="h-5 w-5" />
                 </div>
                 <div>
-                  <CardTitle>Panduan Setup New Host</CardTitle>
+                  <CardTitle>Setup New Host Guide</CardTitle>
                   <CardDescription className="mt-1">
-                    Buka bagian di bawah ini dan ikuti urutannya sebelum mengaktifkan host baru.
+                    Open the sections below and follow the steps in order before activating a new host.
                   </CardDescription>
                 </div>
               </div>
@@ -185,110 +185,110 @@ export default function SetupNewHostPage() {
             <CardContent>
               <Accordion type="multiple" defaultValue={["before-start", "safe-steps"]}>
                 <AccordionItem value="before-start">
-                  <AccordionTrigger>Sebelum memulai</AccordionTrigger>
+                  <AccordionTrigger>Before you begin</AccordionTrigger>
                   <AccordionContent className="space-y-3 text-sm text-muted-foreground">
                     <p>
-                      Gunakan menu ini hanya ketika alamat publik server SecureProfit benar-benar
-                      berubah. Jangan gunakan untuk mengganti credential atau pengaturan bisnis.
+                      Use this menu only when the SecureProfit server&apos;s public address is
+                      changing. Do not use it to replace credentials or business settings.
                     </p>
                     <ul className="list-disc space-y-1 pl-5">
-                      <li>Pastikan aplikasi dan API sudah berjalan pada server baru.</li>
-                      <li>DNS domain baru sudah mengarah ke IP publik server yang benar.</li>
-                      <li>Sertifikat HTTPS valid dan bukan self-signed.</li>
-                      <li>Semua environment variable Xero dan Pipedrive tersedia di server baru.</li>
-                      <li>Jangan matikan host lama sebelum validasi dan aktivasi selesai.</li>
+                      <li>Confirm that the application and API are running on the new server.</li>
+                      <li>Confirm that the new domain&apos;s DNS points to the correct public server IP.</li>
+                      <li>Use a valid HTTPS certificate that is not self-signed.</li>
+                      <li>Ensure all Xero and Pipedrive environment variables exist on the new server.</li>
+                      <li>Keep the old host online until validation and activation are complete.</li>
                     </ul>
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="safe-steps">
-                  <AccordionTrigger>Urutan setup yang aman</AccordionTrigger>
+                  <AccordionTrigger>Safe setup sequence</AccordionTrigger>
                   <AccordionContent>
                     <ol className="list-decimal space-y-2 pl-5 text-sm text-muted-foreground">
                       <li>
-                        Masukkan origin HTTPS tanpa path, misalnya{" "}
+                        Enter the HTTPS origin without a path, for example{" "}
                         <span className="font-mono text-foreground">https://activityhub.itsecasia.dev</span>.
                       </li>
                       <li>
-                        Klik <strong className="text-foreground">Save draft</strong>. Langkah ini
-                        belum mengubah host aktif.
+                        Click <strong className="text-foreground">Save draft</strong>. This does
+                        not change the active host.
                       </li>
                       <li>
-                        Klik <strong className="text-foreground">Validate DNS, TLS and API</strong>{" "}
-                        dan lanjutkan hanya jika validasi berhasil.
+                        Click <strong className="text-foreground">Validate DNS, TLS and API</strong>{" "}
+                        and continue only when validation succeeds.
                       </li>
-                      <li>Salin URL callback dan webhook yang dihasilkan.</li>
+                      <li>Copy the generated callback and webhook URLs.</li>
                       <li>
-                        Daftarkan callback serta webhook Xero di Xero Developer Portal, kemudian
-                        klik <strong className="text-foreground">Register / repair webhook</strong>{" "}
-                        untuk Pipedrive.
+                        Register the Xero callback and webhook in the Xero Developer Portal, then
+                        click <strong className="text-foreground">Register / repair webhook</strong>{" "}
+                        for Pipedrive.
                       </li>
                       <li>
-                        Klik <strong className="text-foreground">Activate new host</strong> setelah
-                        konfigurasi provider selesai.
+                        Click <strong className="text-foreground">Activate new host</strong> after
+                        completing the provider configuration.
                       </li>
-                      <li>Uji koneksi Xero, impor Pipedrive, dan penerimaan webhook.</li>
+                      <li>Test the Xero connection, Pipedrive import, and webhook delivery.</li>
                     </ol>
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="status">
-                  <AccordionTrigger>Memahami status dan tombol</AccordionTrigger>
+                  <AccordionTrigger>Understanding statuses and controls</AccordionTrigger>
                   <AccordionContent className="space-y-3 text-sm text-muted-foreground">
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div className="rounded-md border p-3">
                         <p className="font-medium text-foreground">Active host</p>
-                        <p>Host yang saat ini dipercaya untuk callback integrasi.</p>
+                        <p>The host currently trusted for integration callbacks.</p>
                       </div>
                       <div className="rounded-md border p-3">
                         <p className="font-medium text-foreground">Validated draft</p>
-                        <p>Calon host yang sudah lulus pemeriksaan DNS, TLS, dan API.</p>
+                        <p>The proposed host that has passed DNS, TLS, and API checks.</p>
                       </div>
                       <div className="rounded-md border p-3">
                         <p className="font-medium text-foreground">Previous host</p>
-                        <p>Host sebelumnya yang dapat dipulihkan jika terjadi masalah.</p>
+                        <p>The previous host that can be restored if a problem occurs.</p>
                       </div>
                       <div className="rounded-md border p-3">
                         <p className="font-medium text-foreground">Ready / Needs setup</p>
-                        <p>Ketersediaan konfigurasi provider tanpa menampilkan secret-nya.</p>
+                        <p>Provider configuration readiness without exposing its secrets.</p>
                       </div>
                     </div>
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="after-activation">
-                  <AccordionTrigger>Setelah aktivasi</AccordionTrigger>
+                  <AccordionTrigger>After activation</AccordionTrigger>
                   <AccordionContent className="space-y-3 text-sm text-muted-foreground">
                     <ul className="list-disc space-y-1 pl-5">
-                      <li>Login ulang dan pastikan API utama dapat diakses.</li>
-                      <li>Reconnect tenant Xero bila sesi OAuth masih menunjuk host lama.</li>
-                      <li>Uji satu sinkronisasi atau callback Xero.</li>
-                      <li>Uji impor lead dan pengiriman webhook Pipedrive.</li>
-                      <li>Periksa Audit Log untuk memastikan semua perubahan tercatat.</li>
+                      <li>Sign in again and confirm that the main API is accessible.</li>
+                      <li>Reconnect the Xero tenant if its OAuth session still points to the old host.</li>
+                      <li>Test one Xero synchronization or callback.</li>
+                      <li>Test a Pipedrive lead import and webhook delivery.</li>
+                      <li>Check the Audit Log to confirm that every change was recorded.</li>
                     </ul>
                     <Alert>
                       <Info className="h-4 w-4" />
-                      <AlertTitle>Perubahan di luar wizard</AlertTitle>
+                      <AlertTitle>Changes outside this wizard</AlertTitle>
                       <AlertDescription>
-                        Wizard tidak mengubah DNS, Nginx, PM2, firewall, certificate, atau
-                        environment variable pada server.
+                        This wizard does not change DNS, Nginx, PM2, firewall rules, certificates,
+                        or environment variables on the server.
                       </AlertDescription>
                     </Alert>
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="rollback">
-                  <AccordionTrigger>Jika host baru bermasalah</AccordionTrigger>
+                  <AccordionTrigger>If the new host has a problem</AccordionTrigger>
                   <AccordionContent className="space-y-2 text-sm text-muted-foreground">
                     <p>
-                      Klik <strong className="text-foreground">Restore previous host</strong> untuk
-                      mengembalikan host integrasi sebelumnya. Setelah itu:
+                      Click <strong className="text-foreground">Restore previous host</strong> to
+                      restore the previous integration host. Then:
                     </p>
                     <ol className="list-decimal space-y-1 pl-5">
-                      <li>Pastikan host lama masih online.</li>
-                      <li>Kembalikan callback Xero bila sebelumnya sudah diubah.</li>
-                      <li>Jalankan kembali Register / repair webhook untuk Pipedrive bila perlu.</li>
-                      <li>Periksa Audit Log dan ulangi pengujian integrasi.</li>
+                      <li>Confirm that the old host is still online.</li>
+                      <li>Restore the previous Xero callback if it was changed.</li>
+                      <li>Run Register / repair webhook for Pipedrive again if needed.</li>
+                      <li>Check the Audit Log and repeat the integration tests.</li>
                     </ol>
                   </AccordionContent>
                 </AccordionItem>
