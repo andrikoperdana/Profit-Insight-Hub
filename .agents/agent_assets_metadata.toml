@@ -865,3 +865,45 @@ mtime_ms = 1788403145365
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/91ff075c-0cb5-4d83-89ea-7636773f9e4b/49f5f786-aee1-4b26-b6d4-5e668585752b"
 storage_version_token = "1788403156357460"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "I9JxBpDicTlDWBORDZt9O"
+uri = "file://downloads/SecureProfit-Application-Source-No-Data-2026-09-03.zip"
+type = "unspecified"
+title = "SecureProfit Application Source — Tanpa Data"
+description = "Source web, API, mobile, library, serta konfigurasi build yang diperlukan. Tidak menyertakan database, uploads, assets lampiran, deck, mockup, secrets, cache, node_modules, atau hasil build."
+logical_id = "83038f2c-b28f-459f-8a71-e760f1d63107"
+content_hash = "sha256:110f6ad25df0cf67a90d5e5e8df83b3f0ac7b3936d7fbf215f491cee702b79db"
+size = 11159581
+mtime_ms = 1788407060935
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/83038f2c-b28f-459f-8a71-e760f1d63107/05d3de97-da93-498c-8eee-e2f62827ae98"
+storage_version_token = "1788407072094920"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "VeEo0hDZbNtrPYkeSFuy5"
+uri = "file://downloads/SecureProfit-PostgreSQL-Schema-Only-2026-09-03.dump"
+type = "unspecified"
+title = "SecureProfit PostgreSQL — Schema Only"
+description = "PostgreSQL custom dump berisi struktur database saja, tanpa data tabel, ownership, atau privileges. Dapat dipulihkan menggunakan pg_restore."
+logical_id = "7d84b876-6f25-46ee-ab93-90d778943253"
+content_hash = "sha256:dba5d561bcb3b8c990d47b5a49cae46d180878a4394a9d9fc5f4d164fc17468a"
+size = 136045
+mtime_ms = 1788407061095
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/7d84b876-6f25-46ee-ab93-90d778943253/5e6038d4-53af-4e06-8ba5-616a3e9dfd53"
+storage_version_token = "1788407074232883"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "z-BazP9YdTRnTZBNmNeLn"
+uri = "file://downloads/SecureProfit-Download-Manifest-2026-09-03.txt"
+type = "text"
+title = "Manifest Paket SecureProfit"
+description = "Daftar cakupan paket, commit sumber, hasil validasi, petunjuk restore, dan checksum SHA-256."
+logical_id = "5cacc6b9-c2f3-4ea6-8b36-106a6099705e"
+content_hash = "sha256:a516deb30c5cf13c87b2075ded485b0185f918db403563d07916c1954d4d7746"
+size = 1028
+mtime_ms = 1788407061355
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/5cacc6b9-c2f3-4ea6-8b36-106a6099705e/b37f77ad-432c-46d5-938f-4d3be4f008cc"
+storage_version_token = "1788407075690672"
+content_type = "text/plain"

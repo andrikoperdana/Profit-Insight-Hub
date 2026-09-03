@@ -1,0 +1,19 @@
+SecureProfit download package
+Generated: 2026-09-03 (Asia/Bangkok)
+
+1. SecureProfit-Application-Source-No-Data-2026-09-03.zip
+   Scope: artifacts/web, artifacts/api-server, artifacts/mobile, lib, scripts, vendor, and required root workspace/build configuration.
+   Source: Git-tracked files at commit 28c05181334e44cd139ad43b93fc3737e6910427.
+   Excluded: database rows, uploads, attached assets, decks, mockup sandbox, secrets, .env files, caches, node_modules, and build outputs.
+   Files: 1003
+   SHA-256: 110f6ad25df0cf67a90d5e5e8df83b3f0ac7b3936d7fbf215f491cee702b79db
+
+2. SecureProfit-PostgreSQL-Schema-Only-2026-09-03.dump
+   Format: PostgreSQL custom dump
+   Content: schema only; no table data; ownership and privileges excluded.
+   TABLE DATA entries found during validation: 0
+   SHA-256: dba5d561bcb3b8c990d47b5a49cae46d180878a4394a9d9fc5f4d164fc17468a
+
+Restore schema example:
+  createdb secureprofit
+  pg_restore --no-owner --no-privileges --dbname=secureprofit SecureProfit-PostgreSQL-Schema-Only-2026-09-03.dump
