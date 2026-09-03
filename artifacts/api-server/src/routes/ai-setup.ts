@@ -33,7 +33,10 @@ function safeBaseUrl(value: string) {
   if (!value) return { displayValue: null, valid: false };
   try {
     const url = new URL(value);
-    const valid = url.protocol === "https:" && !url.username && !url.password;
+    const valid =
+      (url.protocol === "https:" || url.protocol === "http:") &&
+      !url.username &&
+      !url.password;
     url.username = "";
     url.password = "";
     url.search = "";
@@ -85,12 +88,12 @@ router.post("/ai-setup/test", async (req, res) => {
   if (!configuration.configured || !safeUrl.valid) {
     return res.status(422).json({
       error: "AI_CONFIGURATION_INCOMPLETE",
-      message: "Set a valid HTTPS AI base URL and API key on the server before testing.",
+      message: "Set a valid AI base URL and API key on the server before testing.",
       missing: [
         ...(!configuration.baseUrlConfigured ? ["AI_INTEGRATIONS_OPENAI_BASE_URL"] : []),
         ...(!configuration.apiKeyConfigured ? ["AI_INTEGRATIONS_OPENAI_API_KEY"] : []),
         ...(configuration.baseUrlConfigured && !safeUrl.valid
-          ? ["VALID_HTTPS_AI_BASE_URL"]
+          ? ["VALID_AI_BASE_URL"]
           : []),
       ],
     });

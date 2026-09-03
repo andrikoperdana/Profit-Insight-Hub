@@ -293,7 +293,10 @@ export default function AiSetupPage() {
                         Choose a provider that supports the OpenAI Chat Completions contract,
                         including the request options required by the selected model.
                       </li>
-                      <li>Confirm that the server can reach the provider over HTTPS.</li>
+                      <li>
+                        Prefer HTTPS for external providers. HTTP is acceptable only for a trusted
+                        internal or loopback provider endpoint.
+                      </li>
                       <li>Check provider quota, rate limits, and model permissions.</li>
                       <li>Use a server-side key; never embed it in the web or mobile app.</li>
                     </ul>
