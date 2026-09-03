@@ -963,3 +963,17 @@ mtime_ms = 1788408505847
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/bb553878-4785-41f1-ad75-26ee0431b98d/9ee84309-4442-4371-8401-8b044cdcb26a"
 storage_version_token = "1788408512196932"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "uqu8gS3SIHRk0_M8MtQB6"
+uri = "file://downloads/SPH-14-FSD-v1.01-Technical-Review-and-Required-Revisions-ID.docx"
+type = "word_document"
+title = "SecureProfit Hub — 14 FSD v1.01 Technical Review"
+description = "Hasil pemeriksaan teknis Bahasa Indonesia terhadap dokumen jawaban 14 FSD, berisi verdict, temuan berdasarkan severity, revisi wajib, disposisi per DEMO, bagian yang dapat dipertahankan, dan kriteria penerimaan revisi."
+logical_id = "28db3f3f-b195-44c2-8514-b2ecf654296c"
+content_hash = "sha256:7484c5b7fb10ac58a997b6c58ce247e55d0fc9b4d5f72ae4d011977d3b25916c"
+size = 43557
+mtime_ms = 1788414890650
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/28db3f3f-b195-44c2-8514-b2ecf654296c/f3363c94-3f4c-4fdd-84aa-0c60245243de"
+storage_version_token = "1788414897942462"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
