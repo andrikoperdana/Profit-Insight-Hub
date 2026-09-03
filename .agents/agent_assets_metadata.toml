@@ -907,3 +907,17 @@ mtime_ms = 1788407061355
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/5cacc6b9-c2f3-4ea6-8b36-106a6099705e/b37f77ad-432c-46d5-938f-4d3be4f008cc"
 storage_version_token = "1788407075690672"
 content_type = "text/plain"
+
+[[outputs]]
+id = "GyaDbjjnBxBR1aj4Ep9zD"
+uri = "file://downloads/SPH-Analisis-Modul-Sales-Pipedrive-Pro-Con-ID.docx"
+type = "word_document"
+title = "Analisis Modul Sales & Integrasi Pipedrive"
+description = "Dokumen Microsoft Word berbahasa Indonesia berisi analisis kelayakan, perbandingan tiga opsi, pro-kontra, risiko, gap modul, dan rekomendasi hybrid untuk SecureProfit Hub."
+logical_id = "b06c0d29-efd6-4aae-82b9-f83270497b7b"
+content_hash = "sha256:798dd11e8f7f429a296095620c2bc934b43c9bbfa062387785ce93496284150b"
+size = 42540
+mtime_ms = 1788407448279
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:c82b66a8-f4a7-47f1-bdbd-9ebba5cc2312/b06c0d29-efd6-4aae-82b9-f83270497b7b/ffb30bea-8579-4842-8f3d-b56584438626"
+storage_version_token = "1788407454328412"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
